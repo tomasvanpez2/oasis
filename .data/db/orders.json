@@ -1,0 +1,112 @@
+{
+  "version": "1.0",
+  "updatedAt": "2026-10-26T00:46:41.888Z",
+  "orders": [
+    {
+      "id": "order-1792973406792-orzvg",
+      "wompiReference": "OC-MVOI2MVC-BG5EF",
+      "status": "pending",
+      "customer": {
+        "fullName": "Tomás Vanegas Lopez",
+        "email": "tomasvanpez@gmail.com",
+        "phone": "3245259548",
+        "documentType": "CC",
+        "document": "24339762",
+        "city": "Boyaca",
+        "address": "sdfdvgbnm",
+        "notes": "oerfe"
+      },
+      "items": [
+        {
+          "productId": "prod-007",
+          "productName": "Oasis Cumbre",
+          "productSlug": "oasis-cumbre",
+          "size": "King",
+          "dimensions": "200 × 200 cm",
+          "price": 4050000,
+          "imageUrl": "https://images.unsplash.com/photo-1588046130717-0eb0c9a3ba15?w=800&q=80",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 4050000,
+      "shipping": 0,
+      "total": 4050000,
+      "currency": "COP",
+      "createdAt": "2026-10-26T00:10:06.793Z",
+      "updatedAt": "2026-10-26T00:10:06.793Z"
+    },
+    {
+      "id": "ord_test_verification",
+      "wompiReference": "OC-2024-TEST-001",
+      "status": "approved",
+      "customer": {
+        "fullName": "Adversarial Auditor Test",
+        "email": "auditor@oasis.co",
+        "phone": "3001234567",
+        "document": "1098765432",
+        "documentType": "CC",
+        "city": "Bogotá",
+        "address": "Zona Industrial Calle 13"
+      },
+      "items": [
+        {
+          "productId": "prod-002",
+          "productName": "Oasis Noche",
+          "productSlug": "oasis-noche",
+          "size": "Queen",
+          "dimensions": "160 × 190 cm",
+          "price": 1950000,
+          "quantity": 1,
+          "imageUrl": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80"
+        }
+      ],
+      "subtotal": 1950000,
+      "shipping": 0,
+      "total": 1950000,
+      "currency": "COP",
+      "createdAt": "2026-10-26T00:26:32.606Z",
+      "updatedAt": "2026-10-26T00:26:32.606Z"
+    },
+    {
+      "id": "ord_1792975601883_qjniw",
+      "wompiReference": "OC-MVOJDOM3-RAVJX",
+      "status": "approved",
+      "customer": {
+        "fullName": "Carlos Alberto Restrepo",
+        "email": "carlos.restrepo@oasis-test.co",
+        "phone": "3104567890",
+        "documentType": "CC",
+        "document": "1020304050",
+        "city": "Bogotá - Usaquén",
+        "address": "Carrera 15 # 119 - 42 Apto 402",
+        "notes": "Entregar en portería, edificio con ascensor grande."
+      },
+      "items": [
+        {
+          "productId": "prod-007",
+          "productName": "Oasis Cumbre",
+          "productSlug": "oasis-cumbre",
+          "size": "King",
+          "dimensions": "200 × 200 cm",
+          "price": 4050000,
+          "imageUrl": "https://images.unsplash.com/photo-1588046130717-0eb0c9a3ba15?w=800&q=80",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 4050000,
+      "shipping": 0,
+      "total": 4050000,
+      "currency": "COP",
+      "createdAt": "2026-10-26T00:46:41.883Z",
+      "updatedAt": "2026-10-26T00:46:41.888Z",
+      "wompiPaymentMethod": "CARD",
+      "wompiTransactionId": "trans_oasis_1792975601887_dqsh9",
+      "wompiPaymentData": {
+        "wompiStatus": "APPROVED",
+        "paymentMethodType": "CARD",
+        "amountInCents": 405000000,
+        "processedLocally": true
+      }
+    }
+  ]
+}
