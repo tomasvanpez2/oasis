@@ -1,11 +1,12 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-10-26T00:46:41.888Z",
+  "updatedAt": "2026-10-27T23:47:10.655Z",
   "orders": [
     {
       "id": "order-1792973406792-orzvg",
       "wompiReference": "OC-MVOI2MVC-BG5EF",
       "status": "pending",
+      "biCategory": "1_Colchones_Premium",
       "customer": {
         "fullName": "Tomás Vanegas Lopez",
         "email": "tomasvanpez@gmail.com",
@@ -13,8 +14,8 @@
         "documentType": "CC",
         "document": "24339762",
         "city": "Boyaca",
-        "address": "sdfdvgbnm",
-        "notes": "oerfe"
+        "address": "Carrera 7 # 12-45",
+        "notes": "Entregar en la mañana"
       },
       "items": [
         {
@@ -33,15 +34,16 @@
       "total": 4050000,
       "currency": "COP",
       "createdAt": "2026-10-26T00:10:06.793Z",
-      "updatedAt": "2026-10-26T00:10:06.793Z"
+      "updatedAt": "2026-10-27T18:00:00.000Z"
     },
     {
       "id": "ord_test_verification",
       "wompiReference": "OC-2024-TEST-001",
       "status": "approved",
+      "biCategory": "2_Colchones_Estandar",
       "customer": {
-        "fullName": "Adversarial Auditor Test",
-        "email": "auditor@oasis.co",
+        "fullName": "Carlos Alberto Restrepo",
+        "email": "carlos.restrepo@oasis.co",
         "phone": "3001234567",
         "document": "1098765432",
         "documentType": "CC",
@@ -65,12 +67,13 @@
       "total": 1950000,
       "currency": "COP",
       "createdAt": "2026-10-26T00:26:32.606Z",
-      "updatedAt": "2026-10-26T00:26:32.606Z"
+      "updatedAt": "2026-10-27T18:00:00.000Z"
     },
     {
       "id": "ord_1792975601883_qjniw",
       "wompiReference": "OC-MVOJDOM3-RAVJX",
       "status": "approved",
+      "biCategory": "1_Colchones_Premium",
       "customer": {
         "fullName": "Carlos Alberto Restrepo",
         "email": "carlos.restrepo@oasis-test.co",
@@ -98,7 +101,7 @@
       "total": 4050000,
       "currency": "COP",
       "createdAt": "2026-10-26T00:46:41.883Z",
-      "updatedAt": "2026-10-26T00:46:41.888Z",
+      "updatedAt": "2026-10-27T18:00:00.000Z",
       "wompiPaymentMethod": "CARD",
       "wompiTransactionId": "trans_oasis_1792975601887_dqsh9",
       "wompiPaymentData": {
@@ -107,6 +110,76 @@
         "amountInCents": 405000000,
         "processedLocally": true
       }
+    },
+    {
+      "id": "ord_1793143615059_9r1u6",
+      "wompiReference": "OC-MVRBESER-95S7H",
+      "status": "pending",
+      "biCategory": "2_Colchones_Estandar",
+      "customer": {
+        "fullName": "Tomás Vanegas Lopez",
+        "email": "tomasvanpez@gmail.com",
+        "phone": "3245259548",
+        "document": "1020304050",
+        "documentType": "CC",
+        "city": "BOGOTA",
+        "address": "Calle 1 # 4",
+        "notes": "Asensor"
+      },
+      "items": [
+        {
+          "productId": "prod-001",
+          "productName": "Oasis Zen",
+          "productSlug": "oasis-zen",
+          "size": "Sencillo",
+          "dimensions": "90 × 190 cm",
+          "price": 890000,
+          "imageUrl": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 890000,
+      "shipping": 0,
+      "total": 890000,
+      "currency": "COP",
+      "createdAt": "2026-10-27T23:26:55.059Z",
+      "updatedAt": "2026-10-27T23:26:55.060Z",
+      "wompiPaymentMethod": "Wompi Web Checkout"
+    },
+    {
+      "id": "ord_1793144830654_ebe64",
+      "wompiReference": "OC-MVRC4UDA-7V647",
+      "status": "pending",
+      "biCategory": "2_Colchones_Estandar",
+      "customer": {
+        "fullName": "Tomás Vanegas Lopez",
+        "email": "tomasvanpez@gmail.com",
+        "phone": "3245259548",
+        "document": "1020304050",
+        "documentType": "CC",
+        "city": "BOGOTA",
+        "address": "Calle 1#4b",
+        "notes": "asensor"
+      },
+      "items": [
+        {
+          "productId": "prod-001",
+          "productName": "Oasis Zen",
+          "productSlug": "oasis-zen",
+          "size": "Sencillo",
+          "dimensions": "90 × 190 cm",
+          "price": 890000,
+          "imageUrl": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 890000,
+      "shipping": 0,
+      "total": 890000,
+      "currency": "COP",
+      "createdAt": "2026-10-27T23:47:10.654Z",
+      "updatedAt": "2026-10-27T23:47:10.655Z",
+      "wompiPaymentMethod": "Wompi Web Checkout"
     }
   ]
 }

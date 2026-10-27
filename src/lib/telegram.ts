@@ -1,86 +1,177 @@
 /**
- * Telegram Bot API — order notification utility
+ * Telegram Bot API Notification Service
+ * Dispatches real-time, structured operational notifications to the factory group.
+ * Strictly details the order, total amount in COP, and strategic BI category.
  */
-import type { Order } from '@/types'
+import type { Order, TelegramApiResponse, TelegramSendMessagePayload } from '@/types'
 import { formatCOP } from '@/lib/utils'
 
-const TELEGRAM_API = 'https://api.telegram.org'
+const TELEGRAM_API_BASE = 'https://api.telegram.org'
+const DISPATCH_TIMEOUT_MS = 10000
 
-export async function sendOrderNotification(order: Order): Promise<void> {
+export interface TelegramNotificationResult {
+  success: boolean
+  messageId?: number
+  error?: string
+}
+
+interface TelegramMessageResult {
+  message_id: number
+  date: number
+  text: string
+  chat: {
+    id: number
+    title?: string
+    type: string
+  }
+}
+
+function escapeHtml(text: string): string {
+  if (!text) return ''
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+/**
+ * Builds a clean, high-impact HTML notification for factory floor operations.
+ */
+function buildFactoryOrderMessage(order: Order): string {
+  const statusEmoji: Record<string, string> = {
+    approved: '✅ PAGO APROBADO EN WOMPI',
+    declined: '❌ PAGO DECLINADO',
+    pending: '⏳ TRANSACCIÓN PENDIENTE',
+    voided: '🚫 PAGO ANULADO',
+    error: '⚠️ ERROR EN TRANSACCIÓN',
+  }
+
+  const statusHeader = statusEmoji[order.status] || `📋 ESTADO: ${order.status.toUpperCase()}`
+
+  // Product breakdown
+  const itemsBreakdown = order.items
+    .map((item, index) => {
+      const lineTotal = formatCOP(item.price * item.quantity)
+      return (
+        `  ${index + 1}. <b>${escapeHtml(item.productName)}</b>\n` +
+        `     • Medida: ${escapeHtml(item.size)} (${escapeHtml(item.dimensions)})\n` +
+        `     • Cantidad: ${item.quantity} × ${formatCOP(item.price)} = <b>${lineTotal}</b>`
+      )
+    })
+    .join('\n\n')
+
+  const shippingNote =
+    order.shipping === 0
+      ? '🚛 <i>Envío: Flete directo de fábrica a liquidar por separado</i>'
+      : `🚛 <i>Envío: ${formatCOP(order.shipping)}</i>`
+
+  const dateBogota = new Date(order.createdAt).toLocaleString('es-CO', {
+    timeZone: 'America/Bogota',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  })
+
+  const rawPhone = order.customer.phone || ''
+  const sanitizedTel = rawPhone.replace(/[^0-9+]/g, '')
+
+  return `
+🛏️ <b>OASIS COLCHONES — ORDEN DE PRODUCCIÓN</b>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<b>${statusHeader}</b>
+
+📊 <b>CATEGORÍA BI:</b> <code>${order.biCategory}</code>
+📋 <b>Referencia:</b> <code>${escapeHtml(order.wompiReference)}</code>
+${order.wompiTransactionId ? `🔗 <b>ID Wompi:</b> <code>${escapeHtml(order.wompiTransactionId)}</code>\n` : ''}📅 <b>Fecha (Col):</b> ${dateBogota}
+
+👤 <b>DATOS DE FACTURACIÓN Y DESPACHO</b>
+• <b>Cliente:</b> ${escapeHtml(order.customer.fullName)}
+• <b>Documento:</b> ${escapeHtml(order.customer.documentType)} ${escapeHtml(order.customer.document)}
+• <b>Teléfono:</b> <a href="tel:${sanitizedTel}">${escapeHtml(rawPhone)}</a>
+• <b>Email:</b> ${escapeHtml(order.customer.email)}
+• <b>Ciudad:</b> ${escapeHtml(order.customer.city)}
+• <b>Dirección:</b> ${escapeHtml(order.customer.address)}
+${order.customer.notes ? `• <b>Notas de entrega:</b> <i>${escapeHtml(order.customer.notes)}</i>\n` : ''}
+🛒 <b>DETALLE DE PRODUCTOS</b>
+${itemsBreakdown}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💰 <b>LIQUIDACIÓN FINANCIERA</b>
+• Subtotal: ${formatCOP(order.subtotal)}
+• ${shippingNote}
+• <b>TOTAL PAGADO: ${formatCOP(order.total)} COP</b>
+• <b>Método:</b> ${escapeHtml(order.wompiPaymentMethod || 'Wompi Web Checkout Seguro')}
+`.trim()
+}
+
+/**
+ * Sends an automated, formatted Telegram notification to the factory group.
+ * Validates environment variables, enforces request timeout, and parses typed Telegram response.
+ */
+export async function sendOrderNotification(order: Order): Promise<TelegramNotificationResult> {
   const botToken = process.env.TELEGRAM_BOT_TOKEN
   const chatId = process.env.TELEGRAM_CHAT_ID
 
   if (!botToken || !chatId) {
-    console.warn('[telegram] Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID')
-    return
+    const message = '[telegram:warn] Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID. Skipping dispatch.'
+    console.warn(message)
+    return { success: false, error: message }
   }
 
-  const statusEmoji: Record<string, string> = {
-    approved: '✅',
-    declined: '❌',
-    pending: '⏳',
-    voided: '🚫',
-    error: '⚠️',
+  const messageHtml = buildFactoryOrderMessage(order)
+  const endpoint = `${TELEGRAM_API_BASE}/bot${botToken}/sendMessage`
+
+  const payload: TelegramSendMessagePayload = {
+    chat_id: chatId,
+    text: messageHtml,
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
   }
 
-  const itemsText = order.items
-    .map(
-      (item) =>
-        `  • ${item.productName} (${item.size} — ${item.dimensions})\n` +
-        `    ${item.quantity}x ${formatCOP(item.price)} = ${formatCOP(item.price * item.quantity)}`
-    )
-    .join('\n')
-
-  const shippingText =
-    order.shipping === 0
-      ? '🚛 Envío: A liquidar por separado'
-      : `🚛 Envío: ${formatCOP(order.shipping)}`
-
-  const message = `
-🛏️ *NUEVA ORDEN — OASIS COLCHONES*
-${statusEmoji[order.status] ?? '📋'} Estado: *${order.status.toUpperCase()}*
-
-📋 *Referencia:* \`${order.wompiReference}\`
-${order.wompiTransactionId ? `🔗 *ID Wompi:* \`${order.wompiTransactionId}\`` : ''}
-📅 *Fecha:* ${new Date(order.createdAt).toLocaleString('es-CO', { timeZone: 'America/Bogota' })}
-
-👤 *CLIENTE*
-Nombre: ${order.customer.fullName}
-Email: ${order.customer.email}
-Teléfono: ${order.customer.phone}
-Documento: ${order.customer.documentType} ${order.customer.document}
-Ciudad: ${order.customer.city}
-Dirección: ${order.customer.address}
-${order.customer.notes ? `Notas: ${order.customer.notes}` : ''}
-
-🛒 *PRODUCTOS*
-${itemsText}
-
-💰 *RESUMEN*
-Subtotal: ${formatCOP(order.subtotal)}
-${shippingText}
-*TOTAL: ${formatCOP(order.total)}*
-
-Forma de pago: ${order.wompiPaymentMethod ?? 'Tarjeta'}
-`.trim()
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), DISPATCH_TIMEOUT_MS)
 
   try {
-    const res = await fetch(`${TELEGRAM_API}/bot${botToken}/sendMessage`, {
+    const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: 'Markdown',
-        disable_web_page_preview: true,
-      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+      cache: 'no-store',
     })
 
-    if (!res.ok) {
-      const err = await res.json()
-      console.error('[telegram] Failed to send message:', err)
+    const body: TelegramApiResponse<TelegramMessageResult> = await response.json()
+
+    if (!response.ok || !body.ok) {
+      const errorMsg = `[telegram:error] HTTP ${response.status}: ${body.description || 'Unknown Telegram API error'}`
+      console.error(errorMsg, { errorCode: body.error_code, reference: order.wompiReference })
+      return { success: false, error: errorMsg }
     }
-  } catch (err) {
-    console.error('[telegram] Network error:', err)
+
+    console.info(
+      `[telegram:success] Notification dispatched for ref ${order.wompiReference}. Msg ID: ${body.result?.message_id} (Category: ${order.biCategory})`
+    )
+
+    return {
+      success: true,
+      messageId: body.result?.message_id,
+    }
+  } catch (error) {
+    const isTimeout = error instanceof Error && error.name === 'AbortError'
+    const errorMsg = isTimeout
+      ? `[telegram:timeout] Dispatch exceeded ${DISPATCH_TIMEOUT_MS}ms timeout`
+      : `[telegram:exception] Network error: ${error instanceof Error ? error.message : String(error)}`
+
+    console.error(errorMsg, { reference: order.wompiReference })
+    return { success: false, error: errorMsg }
+  } finally {
+    clearTimeout(timeoutId)
   }
 }

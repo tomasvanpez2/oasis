@@ -1,8 +1,15 @@
 'use client'
 import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
 
-const STORY_STEPS = [
+interface StoryStep {
+  step: string
+  title: string
+  body: string
+  highlight: string
+}
+
+const STORY_STEPS: StoryStep[] = [
   {
     step: '01',
     title: 'Selección Rigurosa de Materiales',
@@ -28,6 +35,51 @@ const STORY_STEPS = [
     highlight: 'Fábrica a hogar.',
   },
 ]
+
+function StoryStepItem({
+  step,
+  index,
+  totalSteps,
+  scrollYProgress,
+}: {
+  step: StoryStep
+  index: number
+  totalSteps: number
+  scrollYProgress: MotionValue<number>
+}) {
+  const start = index / totalSteps
+  const end = (index + 1) / totalSteps
+  const opacity = useTransform(scrollYProgress, [start, start + 0.08, end - 0.08, end], [0, 1, 1, 0])
+  const y = useTransform(scrollYProgress, [start, start + 0.1, end - 0.08, end], [40, 0, 0, -40])
+
+  return (
+    <motion.div
+      style={{ opacity, y }}
+      className="absolute inset-0 flex flex-col justify-center px-4 lg:px-12 pointer-events-none"
+    >
+      <p className="font-display text-[90px] sm:text-[140px] font-light leading-none text-white/5 select-none">
+        {step.step}
+      </p>
+      <div className="-mt-8 sm:-mt-12 space-y-3 sm:space-y-4 border-l border-[#C5A059]/40 pl-6 sm:pl-8 pointer-events-auto">
+        <div className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#C5A059]" />
+          <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059]">
+            Etapa {step.step} de 04
+          </p>
+        </div>
+        <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-white max-w-lg">
+          {step.title}
+        </h3>
+        <p className="font-body text-xs sm:text-sm text-white/70 max-w-md leading-relaxed">
+          {step.body}
+        </p>
+        <p className="font-body text-xs italic text-[#C5A059]/80 pt-1">
+          — {step.highlight}
+        </p>
+      </div>
+    </motion.div>
+  )
+}
 
 export function ScrollStory() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -82,41 +134,15 @@ export function ScrollStory() {
 
         {/* Right: scrolling steps */}
         <div className="relative w-full lg:w-7/12 flex-1 overflow-hidden px-6 lg:px-16 flex items-center justify-center">
-          {STORY_STEPS.map((step, i) => {
-            const start = i / STORY_STEPS.length
-            const end = (i + 1) / STORY_STEPS.length
-            const opacity = useTransform(scrollYProgress, [start, start + 0.08, end - 0.08, end], [0, 1, 1, 0])
-            const y = useTransform(scrollYProgress, [start, start + 0.1, end - 0.08, end], [40, 0, 0, -40])
-
-            return (
-              <motion.div
-                key={step.step}
-                style={{ opacity, y }}
-                className="absolute inset-0 flex flex-col justify-center px-4 lg:px-12 pointer-events-none"
-              >
-                <p className="font-display text-[90px] sm:text-[140px] font-light leading-none text-white/5 select-none">
-                  {step.step}
-                </p>
-                <div className="-mt-8 sm:-mt-12 space-y-3 sm:space-y-4 border-l border-[#C5A059]/40 pl-6 sm:pl-8 pointer-events-auto">
-                  <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#C5A059]" />
-                    <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059]">
-                      Etapa {step.step} de 04
-                    </p>
-                  </div>
-                  <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-white max-w-lg">
-                    {step.title}
-                  </h3>
-                  <p className="font-body text-xs sm:text-sm text-white/70 max-w-md leading-relaxed">
-                    {step.body}
-                  </p>
-                  <p className="font-body text-xs italic text-[#C5A059]/80 pt-1">
-                    — {step.highlight}
-                  </p>
-                </div>
-              </motion.div>
-            )
-          })}
+          {STORY_STEPS.map((step, i) => (
+            <StoryStepItem
+              key={step.step}
+              step={step}
+              index={i}
+              totalSteps={STORY_STEPS.length}
+              scrollYProgress={scrollYProgress}
+            />
+          ))}
         </div>
       </div>
     </section>

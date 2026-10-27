@@ -1,161 +1,333 @@
 /**
- * Vercel Blob — JSON file-based database utilities
- * Reads and writes catalog.json and orders.json as structured JSON
+ * Vercel Blob — Resilient JSON Database Manager
+ * Enterprise-grade persistence for catalog.json and orders.json.
+ * Enforces strict Business Intelligence categorization across all stored orders.
  */
 import { put, list } from '@vercel/blob'
-import type { Catalog, OrdersDB } from '@/types'
 import fs from 'fs'
 import path from 'path'
+import {
+  BI_CATEGORIES,
+  type BICategory,
+  type Catalog,
+  type OrdersDB,
+  type Order,
+  type OrderStatus,
+  type CartItem,
+} from '@/types'
 
-const CATALOG_PATH = 'db/catalog.json'
-const ORDERS_PATH = 'db/orders.json'
+export { BI_CATEGORIES, type BICategory }
 
-function getLocalFallbackPath(pathname: string): string {
+const CATALOG_BLOB_PATH = 'db/catalog.json'
+const ORDERS_BLOB_PATH = 'db/orders.json'
+
+function getLocalFilePath(pathname: string): string {
   const sanitized = pathname.replace(/\//g, path.sep)
   return path.join(process.cwd(), '.data', sanitized)
 }
 
-// ─── Generic Helpers ──────────────────────────────────────────────────────────
-
-async function readJsonBlob<T>(pathname: string): Promise<T | null> {
-  const hasToken =
-    !!process.env.BLOB_READ_WRITE_TOKEN &&
-    !process.env.BLOB_READ_WRITE_TOKEN.startsWith('your_')
-
-  if (hasToken) {
-    try {
-      // List blobs to find exact URL
-      const { blobs } = await list({ prefix: pathname })
-      const blob = blobs.find((b) => b.pathname === pathname)
-      if (blob) {
-        const res = await fetch(blob.url, { cache: 'no-store' })
-        if (res.ok) {
-          const text = await res.text()
-          return JSON.parse(text) as T
-        }
-      }
-    } catch (err) {
-      console.warn(`[blob:read] Vercel Blob access failed for ${pathname}, using local fallback:`, err)
-    }
-  }
-
-  // Local filesystem fallback
-  try {
-    const localFile = getLocalFallbackPath(pathname)
-    if (fs.existsSync(localFile)) {
-      const raw = fs.readFileSync(localFile, 'utf-8')
-      return JSON.parse(raw) as T
-    }
-  } catch (localErr) {
-    console.error(`[blob:local] Read error:`, localErr)
-  }
-
-  return null
+function hasValidBlobToken(): boolean {
+  const token = process.env.BLOB_READ_WRITE_TOKEN
+  return Boolean(token && !token.startsWith('your_') && token.trim().length > 10)
 }
 
-async function writeJsonBlob<T>(pathname: string, data: T): Promise<void> {
-  const json = JSON.stringify(data, null, 2)
-  const hasToken =
-    !!process.env.BLOB_READ_WRITE_TOKEN &&
-    !process.env.BLOB_READ_WRITE_TOKEN.startsWith('your_')
+// ─── Business Intelligence Categorization Engine ─────────────────────────────
 
-  if (hasToken) {
+/**
+ * Validates if a string matches one of the 5 official BI categories.
+ */
+export function isValidBICategory(category: unknown): category is BICategory {
+  return typeof category === 'string' && (BI_CATEGORIES as readonly string[]).includes(category)
+}
+
+/**
+ * Classifies an order strictly into one of the 5 strategic BI categories:
+ * - 1_Colchones_Premium: High-end mattresses (Talalay, Latex, Hybrid, Flagship, or price >= 2.0M COP)
+ * - 2_Colchones_Estandar: Core high-resilience foam and standard spring mattresses
+ * - 3_Bases_y_Muebles: Bed bases, somieres, headboards, bedroom furniture
+ * - 4_Almohadas_y_Complementos: Pillows, mattress protectors, toppers, linens
+ * - 5_Combos_Especiales: Bundles, multi-category packages, or promotional packs
+ */
+export function classifyOrderCategory(items: CartItem[] = [], totalCOP: number = 0): BICategory {
+  if (!items || items.length === 0) {
+    return totalCOP >= 2_000_000 ? '1_Colchones_Premium' : '2_Colchones_Estandar'
+  }
+
+  // Detect explicit combo keywords
+  const hasComboKeyword = items.some((item) => {
+    const text = `${item.productName} ${item.productSlug}`.toLowerCase()
+    return /combo|pack|set|kit|duo|dúo|promoci[oó]n/i.test(text)
+  })
+  if (hasComboKeyword) {
+    return '5_Combos_Especiales'
+  }
+
+  let hasMattress = false
+  let hasBaseOrFurniture = false
+  let hasAccessory = false
+  let hasPremiumMattress = false
+
+  for (const item of items) {
+    const text = `${item.productName} ${item.productSlug}`.toLowerCase()
+
+    const isBase = /base|somier|cama|cabecero|mueble|nocturno|espaldar/i.test(text)
+    const isAccessory = /almohada|protector|s[aá]bana|topper|lino|plum[oó]n|funda|coj[ií]n/i.test(text)
+    const isPremium =
+      /olimpo|nebula|cumbre|aurora|luna|talalay|latex|l[aá]tex|viscoel[aá]stic|h[ií]brid/i.test(text) ||
+      item.price >= 2_000_000
+
+    if (isBase) {
+      hasBaseOrFurniture = true
+    } else if (isAccessory) {
+      hasAccessory = true
+    } else {
+      hasMattress = true
+      if (isPremium) {
+        hasPremiumMattress = true
+      }
+    }
+  }
+
+  // Cross-category order represents a special bundle / combo
+  const distinctCategoriesCount = [hasMattress, hasBaseOrFurniture, hasAccessory].filter(Boolean).length
+  if (distinctCategoriesCount >= 2 || (items.length > 1 && items.some((i) => i.quantity > 1 && totalCOP >= 3_500_000))) {
+    return '5_Combos_Especiales'
+  }
+
+  if (hasBaseOrFurniture && !hasMattress) {
+    return '3_Bases_y_Muebles'
+  }
+
+  if (hasAccessory && !hasMattress && !hasBaseOrFurniture) {
+    return '4_Almohadas_y_Complementos'
+  }
+
+  if (hasPremiumMattress || totalCOP >= 2_500_000) {
+    return '1_Colchones_Premium'
+  }
+
+  return '2_Colchones_Estandar'
+}
+
+// ─── Resilient Blob I/O Helpers ──────────────────────────────────────────────
+
+async function readJsonSafe<T>(pathname: string, defaultFallback: () => T): Promise<T> {
+  // 1. Try Vercel Blob if token is available
+  if (hasValidBlobToken()) {
     try {
-      const blob = new Blob([json], { type: 'application/json' })
-      await put(pathname, blob, {
+      const { blobs } = await list({ prefix: pathname })
+      const matchingBlob = blobs.find((b) => b.pathname === pathname)
+      if (matchingBlob) {
+        const response = await fetch(matchingBlob.url, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' },
+        })
+        if (response.ok) {
+          const rawText = await response.text()
+          try {
+            return JSON.parse(rawText) as T
+          } catch (parseError) {
+            console.error(`[blob:readJsonSafe] Corrupt JSON in Vercel Blob (${pathname}):`, parseError)
+          }
+        }
+      }
+    } catch (blobError) {
+      console.warn(`[blob:readJsonSafe] Network error accessing Vercel Blob for ${pathname}:`, blobError)
+    }
+  }
+
+  // 2. Fallback to local filesystem
+  try {
+    const localPath = getLocalFilePath(pathname)
+    if (fs.existsSync(localPath)) {
+      const rawLocal = fs.readFileSync(localPath, 'utf-8')
+      return JSON.parse(rawLocal) as T
+    }
+  } catch (localError) {
+    console.error(`[blob:readJsonSafe] Error reading local file (${pathname}):`, localError)
+  }
+
+  return defaultFallback()
+}
+
+async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
+  let serialized: string
+  try {
+    serialized = JSON.stringify(data, null, 2)
+  } catch (serializeError) {
+    console.error(`[blob:writeJsonSafe] Failed to serialize data for ${pathname}:`, serializeError)
+    throw new Error(`Error fatal al serializar base de datos: ${String(serializeError)}`)
+  }
+
+  // Write to Vercel Blob if configured
+  if (hasValidBlobToken()) {
+    try {
+      const blobPayload = new Blob([serialized], { type: 'application/json' })
+      await put(pathname, blobPayload, {
         access: 'public',
         addRandomSuffix: false,
         contentType: 'application/json',
       })
-      return
-    } catch (err) {
-      console.warn(`[blob:write] Vercel Blob write failed, writing to local fallback:`, err)
+    } catch (blobWriteError) {
+      console.warn(`[blob:writeJsonSafe] Vercel Blob put failed, falling back to disk mirror:`, blobWriteError)
     }
   }
 
-  // Local filesystem fallback
+  // Always mirror write to local filesystem to protect against data loss
   try {
-    const localFile = getLocalFallbackPath(pathname)
-    const dir = path.dirname(localFile)
+    const localPath = getLocalFilePath(pathname)
+    const dir = path.dirname(localPath)
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
-    fs.writeFileSync(localFile, json, 'utf-8')
-  } catch (localErr) {
-    console.error(`[blob:local] Write error:`, localErr)
+    const tempPath = `${localPath}.tmp.${Date.now()}`
+    fs.writeFileSync(tempPath, serialized, 'utf-8')
+    fs.renameSync(tempPath, localPath)
+  } catch (localWriteError) {
+    console.error(`[blob:writeJsonSafe] Local filesystem write error for ${pathname}:`, localWriteError)
   }
 }
 
-// ─── Catalog ──────────────────────────────────────────────────────────────────
-
-export async function getCatalog(): Promise<Catalog> {
-  const data = await readJsonBlob<Catalog>(CATALOG_PATH)
-  if (data) return data
-
-  // Initialize with seed data if blob doesn't exist
-  const initial = getInitialCatalog()
-  await writeJsonBlob(CATALOG_PATH, initial)
-  return initial
-}
-
-export async function updateCatalog(catalog: Catalog): Promise<void> {
-  const updated: Catalog = {
-    ...catalog,
-    updatedAt: new Date().toISOString(),
-  }
-  await writeJsonBlob(CATALOG_PATH, updated)
-}
-
-// ─── Orders ──────────────────────────────────────────────────────────────────
+// ─── Orders CRUD Manager ─────────────────────────────────────────────────────
 
 export async function getOrders(): Promise<OrdersDB> {
-  const data = await readJsonBlob<OrdersDB>(ORDERS_PATH)
-  if (data) return data
-
-  const initial: OrdersDB = {
+  const db = await readJsonSafe<OrdersDB>(ORDERS_BLOB_PATH, () => ({
     version: '1.0',
     updatedAt: new Date().toISOString(),
     orders: [],
+  }))
+
+  if (!Array.isArray(db.orders)) {
+    db.orders = []
   }
-  await writeJsonBlob(ORDERS_PATH, initial)
-  return initial
+
+  // Ensure all existing orders have a valid biCategory
+  let mutated = false
+  for (const order of db.orders) {
+    if (!isValidBICategory(order.biCategory)) {
+      order.biCategory = classifyOrderCategory(order.items, order.total)
+      mutated = true
+    }
+  }
+
+  if (mutated) {
+    await writeJsonSafe(ORDERS_BLOB_PATH, db).catch((err) =>
+      console.warn('[blob:getOrders] Non-blocking schema migration write failed:', err)
+    )
+  }
+
+  return db
 }
 
-export async function saveOrder(order: import('@/types').Order): Promise<void> {
+export async function getOrderByReference(wompiReference: string): Promise<Order | null> {
+  if (!wompiReference) return null
   const db = await getOrders()
+  return db.orders.find((o) => o.wompiReference === wompiReference) || null
+}
 
-  const existingIndex = db.orders.findIndex((o) => o.id === order.id)
+export async function getOrderById(orderId: string): Promise<Order | null> {
+  if (!orderId) return null
+  const db = await getOrders()
+  return db.orders.find((o) => o.id === orderId) || null
+}
+
+/**
+ * Saves a new order or updates an existing one in Vercel Blob.
+ * Strictly guarantees that order.biCategory is one of the 5 authorized BI categories.
+ */
+export async function saveOrder(order: Order): Promise<Order> {
+  if (!order || !order.id || !order.wompiReference) {
+    throw new Error('Estructura de orden inválida para persistencia en base de datos')
+  }
+
+  // Enforce Business Intelligence categorization
+  if (!isValidBICategory(order.biCategory)) {
+    order.biCategory = classifyOrderCategory(order.items, order.total)
+  }
+
+  const db = await getOrders()
+  const existingIndex = db.orders.findIndex((o) => o.id === order.id || o.wompiReference === order.wompiReference)
+
+  const sanitizedOrder: Order = {
+    ...order,
+    biCategory: order.biCategory,
+    updatedAt: new Date().toISOString(),
+  }
+
   if (existingIndex >= 0) {
-    db.orders[existingIndex] = { ...order, updatedAt: new Date().toISOString() }
+    db.orders[existingIndex] = sanitizedOrder
   } else {
-    db.orders.push(order)
+    db.orders.push(sanitizedOrder)
   }
 
   db.updatedAt = new Date().toISOString()
-  await writeJsonBlob(ORDERS_PATH, db)
+  await writeJsonSafe(ORDERS_BLOB_PATH, db)
+
+  return sanitizedOrder
 }
 
+/**
+ * Atomically updates status and gateway metadata for an order found by Wompi reference.
+ */
 export async function updateOrderStatus(
   wompiReference: string,
-  status: import('@/types').OrderStatus,
+  status: OrderStatus,
   wompiTransactionId?: string,
   wompiPaymentData?: Record<string, unknown>
-): Promise<import('@/types').Order | null> {
+): Promise<Order | null> {
   const db = await getOrders()
   const order = db.orders.find((o) => o.wompiReference === wompiReference)
   if (!order) return null
 
   order.status = status
   order.updatedAt = new Date().toISOString()
-  if (wompiTransactionId) order.wompiTransactionId = wompiTransactionId
-  if (wompiPaymentData) order.wompiPaymentData = wompiPaymentData
+
+  if (wompiTransactionId) {
+    order.wompiTransactionId = wompiTransactionId
+  }
+
+  if (wompiPaymentData) {
+    order.wompiPaymentData = {
+      ...(order.wompiPaymentData || {}),
+      ...wompiPaymentData,
+    }
+  }
+
+  // Ensure category integrity is preserved
+  if (!isValidBICategory(order.biCategory)) {
+    order.biCategory = classifyOrderCategory(order.items, order.total)
+  }
 
   db.updatedAt = new Date().toISOString()
-  await writeJsonBlob(ORDERS_PATH, db)
+  await writeJsonSafe(ORDERS_BLOB_PATH, db)
+
   return order
 }
 
-// ─── Seed Catalog ─────────────────────────────────────────────────────────────
+// ─── Catalog CRUD Manager ────────────────────────────────────────────────────
+
+export async function getCatalog(): Promise<Catalog> {
+  const catalog = await readJsonSafe<Catalog>(CATALOG_BLOB_PATH, () => getInitialCatalog())
+  if (!catalog || !Array.isArray(catalog.products) || catalog.products.length === 0) {
+    const initial = getInitialCatalog()
+    await writeJsonSafe(CATALOG_BLOB_PATH, initial)
+    return initial
+  }
+  return catalog
+}
+
+export async function updateCatalog(catalog: Catalog): Promise<void> {
+  if (!catalog || !Array.isArray(catalog.products)) {
+    throw new Error('Estructura de catálogo inválida para persistencia')
+  }
+  const updated: Catalog = {
+    ...catalog,
+    updatedAt: new Date().toISOString(),
+  }
+  await writeJsonSafe(CATALOG_BLOB_PATH, updated)
+}
+
+// ─── Seed Data ───────────────────────────────────────────────────────────────
 
 function getInitialCatalog(): Catalog {
   return {

@@ -44,6 +44,7 @@ export interface CartItem {
   price: number
   quantity: number
   imageUrl: string
+  biCategory?: BICategory
 }
 
 export interface CartState {
@@ -59,6 +60,18 @@ export interface CartState {
   getTotalItems: () => number
   getTotalPrice: () => number
 }
+
+// ─── Business Intelligence Categories ────────────────────────────────────────
+
+export const BI_CATEGORIES = [
+  '1_Colchones_Premium',
+  '2_Colchones_Estandar',
+  '3_Bases_y_Muebles',
+  '4_Almohadas_y_Complementos',
+  '5_Combos_Especiales',
+] as const
+
+export type BICategory = (typeof BI_CATEGORIES)[number]
 
 // ─── Orders ──────────────────────────────────────────────────────────────────
 
@@ -91,6 +104,7 @@ export interface Order {
   shipping: number // 0 = liquidar por separado
   total: number
   currency: 'COP'
+  biCategory: BICategory
   createdAt: string
   updatedAt: string
   wompiPaymentMethod?: string
@@ -103,64 +117,43 @@ export interface OrdersDB {
   orders: Order[]
 }
 
-// ─── Wompi ───────────────────────────────────────────────────────────────────
+// ─── Wompi Security & Integration ───────────────────────────────────────────
 
-export interface WompiTransactionRequest {
-  amount_in_cents: number
-  currency: 'COP'
-  customer_email: string
+export interface WompiKeysConfig {
+  publicKey: string
+  privateKey: string
+  eventsSecret: string
+  integritySecret: string
+  isProduction: boolean
+}
+
+export interface WompiCheckoutParams {
   reference: string
-  payment_method: WompiCardPaymentMethod
-  customer_data: {
-    phone_number: string
-    full_name: string
-    legal_id: string
-    legal_id_type: string
-  }
-  shipping_address?: {
-    address_line_1: string
-    city: string
-    region: string
-    name: string
-    phone_number: string
-    postal_code?: string
-    country: 'CO'
-  }
+  amountInCents: number
+  currency?: 'COP'
+  customer: CustomerInfo
+  redirectUrl?: string
+  integrityHash?: string
+  publicKey?: string
 }
 
-export interface WompiCardPaymentMethod {
-  type: 'CARD' | 'NEQUI' | 'BANCOLOMBIA_TRANSFER'
-  token?: string
-  installments?: number
-  user_type?: 'PERSON' | 'COMPANY'
-}
-
-export interface WompiWebhookEvent {
-  event: string
-  data: {
-    transaction: WompiTransaction
-  }
-  environment: string
-  signature: {
-    properties: string[]
-    checksum: string
-  }
-  timestamp: number
-  sent_at: string
+export interface WompiWebhookSignature {
+  properties: string[]
+  checksum: string
 }
 
 export interface WompiTransaction {
   id: string
   created_at: string
-  finalized_at: string
+  finalized_at: string | null
   amount_in_cents: number
   reference: string
   customer_email: string
   currency: string
   payment_method_type: string
   payment_method: Record<string, unknown>
-  status: string
-  status_message: string
+  status: 'APPROVED' | 'DECLINED' | 'VOIDED' | 'ERROR' | 'PENDING' | string
+  status_message: string | null
   merchant: Record<string, unknown>
   taxes: unknown[]
   tip_in_cents: number
@@ -170,7 +163,34 @@ export interface WompiTransaction {
   customer_data?: Record<string, unknown>
 }
 
-// ─── Checkout Form ───────────────────────────────────────────────────────────
+export interface WompiWebhookEvent {
+  event: string
+  data: {
+    transaction: WompiTransaction
+  }
+  environment: string
+  signature: WompiWebhookSignature
+  timestamp: number
+  sent_at: string
+}
+
+// ─── Telegram Bot API ────────────────────────────────────────────────────────
+
+export interface TelegramSendMessagePayload {
+  chat_id: string | number
+  text: string
+  parse_mode?: 'Markdown' | 'HTML'
+  disable_web_page_preview?: boolean
+}
+
+export interface TelegramApiResponse<T = unknown> {
+  ok: boolean
+  result?: T
+  error_code?: number
+  description?: string
+}
+
+// ─── Checkout Form Data (Zero PCI Scope) ─────────────────────────────────────
 
 export interface CheckoutFormData {
   fullName: string
@@ -180,11 +200,6 @@ export interface CheckoutFormData {
   document: string
   city: string
   address: string
-  notes: string
-  cardNumber: string
-  cardHolder: string
-  expiryMonth: string
-  expiryYear: string
-  cvv: string
-  installments: number
+  notes?: string
+  acceptTerms: boolean
 }

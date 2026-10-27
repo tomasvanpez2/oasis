@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
 import { formatCOP } from '@/lib/utils'
@@ -8,6 +8,11 @@ import Link from 'next/link'
 export function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQuantity, getTotalPrice, getTotalItems } =
     useCartStore()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Close on Escape
   useEffect(() => {
@@ -30,6 +35,11 @@ export function CartDrawer() {
     }
   }, [isOpen])
 
+  if (!mounted) return null
+
+  const totalItems = getTotalItems()
+  const totalPrice = getTotalPrice()
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -51,26 +61,26 @@ export function CartDrawer() {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-[#0D2266] border-l border-white/10"
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-[#0A1B54] border-l border-white/10"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/10 px-8 py-6">
               <div>
-                <p className="font-body text-xs uppercase tracking-widest text-white/50">
-                  Tu selección
+                <p className="font-body text-2xs uppercase tracking-widest text-white/50">
+                  Tu selección de fábrica
                 </p>
                 <h2 className="font-display text-2xl font-normal text-white">
-                  Carrito {getTotalItems() > 0 && `(${getTotalItems()})`}
+                  Carrito {totalItems > 0 && `(${totalItems})`}
                 </h2>
               </div>
               <button
                 onClick={closeCart}
-                className="flex h-10 w-10 items-center justify-center text-white/60 transition-colors duration-200 hover:text-white"
+                className="flex h-10 w-10 items-center justify-center text-white/60 transition-colors duration-200 hover:text-[#C5A059]"
                 aria-label="Cerrar carrito"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" strokeWidth="1.5"/>
+                  <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               </button>
             </div>
@@ -79,14 +89,14 @@ export function CartDrawer() {
             <div className="flex-1 overflow-y-auto px-8 py-6">
               {items.length === 0 ? (
                 <div className="flex h-full flex-col items-start justify-center">
-                  <p className="font-body text-sm text-white/40">
+                  <p className="font-body text-sm text-white/50">
                     Tu carrito está vacío.
                   </p>
                   <button
                     onClick={closeCart}
-                    className="mt-4 font-body text-sm text-[#C5A059] underline underline-offset-4"
+                    className="mt-4 font-body text-xs uppercase tracking-widest text-[#C5A059] underline underline-offset-4 hover:text-white transition-colors"
                   >
-                    Explorar catálogo →
+                    Explorar catálogo de 13 referencias →
                   </button>
                 </div>
               ) : (
@@ -101,44 +111,46 @@ export function CartDrawer() {
                           <p className="font-display text-lg font-normal text-white">
                             {item.productName}
                           </p>
-                          <p className="mt-0.5 font-body text-xs text-white/50 uppercase tracking-wider">
+                          <p className="mt-0.5 font-body text-2xs text-[#C5A059] uppercase tracking-wider">
                             {item.size} — {item.dimensions}
                           </p>
-                          <p className="mt-2 font-body text-sm text-white">
+                          <p className="mt-2 font-display text-base text-white">
                             {formatCOP(item.price)}
                           </p>
                         </div>
                         <button
                           onClick={() => removeItem(item.productId, item.size)}
-                          className="text-white/30 transition-colors hover:text-[#C5A059]"
-                          aria-label="Eliminar"
+                          className="text-white/30 transition-colors hover:text-red-400"
+                          aria-label={`Eliminar ${item.productName}`}
                         >
                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" strokeWidth="1.2"/>
+                            <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
                           </svg>
                         </button>
                       </div>
 
-                      {/* Quantity */}
-                      <div className="mt-3 flex items-center gap-3">
-                        <button
-                          onClick={() => updateQuantity(item.productId, item.size, item.quantity - 1)}
-                          className="flex h-7 w-7 items-center justify-center border border-white/20 text-white/60 transition-colors hover:border-[#C5A059] hover:text-[#C5A059]"
-                          aria-label="Reducir cantidad"
-                        >
-                          −
-                        </button>
-                        <span className="font-body text-sm text-white w-4 text-center">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => updateQuantity(item.productId, item.size, item.quantity + 1)}
-                          className="flex h-7 w-7 items-center justify-center border border-white/20 text-white/60 transition-colors hover:border-[#C5A059] hover:text-[#C5A059]"
-                          aria-label="Aumentar cantidad"
-                        >
-                          +
-                        </button>
-                        <span className="ml-auto font-body text-sm text-white">
+                      {/* Quantity Controls */}
+                      <div className="mt-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => updateQuantity(item.productId, item.size, item.quantity - 1)}
+                            className="flex h-7 w-7 items-center justify-center border border-white/20 text-white/70 transition-colors hover:border-[#C5A059] hover:text-[#C5A059]"
+                            aria-label="Reducir cantidad"
+                          >
+                            −
+                          </button>
+                          <span className="font-mono text-sm text-white w-4 text-center">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.productId, item.size, item.quantity + 1)}
+                            className="flex h-7 w-7 items-center justify-center border border-white/20 text-white/70 transition-colors hover:border-[#C5A059] hover:text-[#C5A059]"
+                            aria-label="Aumentar cantidad"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="font-body text-sm text-white font-medium">
                           {formatCOP(item.price * item.quantity)}
                         </span>
                       </div>
@@ -150,24 +162,24 @@ export function CartDrawer() {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="border-t border-white/10 px-8 py-6 space-y-4">
+              <div className="border-t border-white/10 px-8 py-6 space-y-4 bg-[#07133B]/40">
                 <div className="flex items-center justify-between">
-                  <p className="font-body text-xs uppercase tracking-widest text-white/50">
-                    Subtotal
+                  <p className="font-body text-2xs uppercase tracking-widest text-white/50">
+                    Subtotal directo de fábrica
                   </p>
-                  <p className="font-display text-xl text-white">
-                    {formatCOP(getTotalPrice())}
+                  <p className="font-display text-2xl text-white">
+                    {formatCOP(totalPrice)}
                   </p>
                 </div>
-                <p className="font-body text-xs text-white/40">
-                  Envío liquidado por separado antes de la entrega.
+                <p className="font-body text-2xs text-white/40 leading-relaxed">
+                  * Flete de transporte directo se liquida por separado antes del despacho.
                 </p>
                 <Link
                   href="/checkout"
                   onClick={closeCart}
-                  className="block w-full border border-white py-4 text-center font-body text-sm uppercase tracking-widest text-white transition-all duration-300 hover:bg-white hover:text-[#0A1B54]"
+                  className="block w-full border border-[#C5A059] bg-[#C5A059] py-4 text-center font-body text-xs uppercase tracking-widest font-semibold text-[#0A1B54] transition-all duration-300 hover:bg-white hover:border-white hover:text-[#0A1B54]"
                 >
-                  Ir al pago
+                  Ir al Pago Seguro
                 </Link>
               </div>
             )}

@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import type { Product, MattressSize } from '@/types'
 import { formatCOP } from '@/lib/utils'
 import { useCartStore } from '@/store/cartStore'
@@ -8,23 +9,18 @@ import { useCartStore } from '@/store/cartStore'
 interface ProductRowProps {
   product: Product
   index: number
+  onHoverStart?: (product: Product) => void
+  onHoverEnd?: () => void
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
-  espuma: 'Espuma Alta Densidad',
+  espuma: 'Espuma Alta Densidad HR',
   resortes: 'Resortes Pocket Ensacados',
-  latex: 'Látex Natural Dunlop',
+  latex: 'Látex Dunlop Certificado',
   premium: 'Híbrido Alta Gama',
 }
 
-const CATEGORY_ACCENT: Record<string, string> = {
-  espuma: '#3B82F6',
-  resortes: '#C5A059',
-  latex: '#10B981',
-  premium: '#F59E0B',
-}
-
-export function ProductRow({ product, index }: ProductRowProps) {
+export function ProductRow({ product, index, onHoverStart, onHoverEnd }: ProductRowProps) {
   const [selectedSize, setSelectedSize] = useState<MattressSize>(product.variants[0]?.size || 'Queen')
   const [showDetails, setShowDetails] = useState(false)
   const [addedAnimation, setAddedAnimation] = useState(false)
@@ -57,22 +53,33 @@ export function ProductRow({ product, index }: ProductRowProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: Math.min(index * 0.05, 0.3), ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={() => onHoverStart?.(product)}
+      onMouseLeave={() => onHoverEnd?.()}
       className="group border-b border-white/10 bg-[#0A1B54] transition-colors duration-300 hover:bg-[#0D2266]/30 list-none"
     >
       <div className="px-6 py-8 lg:px-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-start lg:gap-10">
-          {/* ── 1. PROMINENT MATTRESS IMAGE (Always visible with or without cursor) ─ */}
+          
+          {/* ── 1. PROMINENT MATTRESS IMAGE WITH CLIP-PATH REVEAL ───────────── */}
           <div className="md:col-span-4 lg:col-span-4">
-            <div className="relative aspect-[16/10] w-full overflow-hidden border border-white/15 bg-[#07133B]">
-              <img
+            <motion.div
+              initial={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)' }}
+              whileInView={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative aspect-[16/10] w-full overflow-hidden border border-white/15 bg-[#07133B]"
+            >
+              <Image
                 src={product.imageUrl}
                 alt={`${product.name} — Colchón de fábrica Oasis`}
-                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 loading="lazy"
               />
               <div className="absolute left-3 top-3 flex items-center gap-2">
                 <span className="border border-white/20 bg-[#0A1B54]/90 px-2 py-0.5 font-body text-2xs uppercase tracking-wider text-[#C5A059] backdrop-blur-sm">
-                  {CATEGORY_LABELS[product.category]}
+                  {CATEGORY_LABELS[product.category] || product.category}
                 </span>
                 {product.featured && (
                   <span className="border border-[#C5A059] bg-[#C5A059] px-2 py-0.5 font-body text-[10px] uppercase tracking-wider text-[#0A1B54] font-bold">
@@ -80,12 +87,12 @@ export function ProductRow({ product, index }: ProductRowProps) {
                   </span>
                 )}
               </div>
-              <div className="absolute bottom-3 right-3 border border-white/10 bg-[#0A1B54]/80 px-2 py-0.5 backdrop-blur-sm">
-                <span className="font-mono text-2xs text-white/60">
+              <div className="absolute bottom-3 right-3 border border-white/10 bg-[#0A1B54]/90 px-2 py-0.5 backdrop-blur-sm">
+                <span className="font-mono text-2xs text-white/70">
                   Stock: {selectedVariant.stock} uds
                 </span>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* ── 2. PRODUCT DATA & SPECS ─────────────────────────────────── */}
@@ -140,7 +147,9 @@ export function ProductRow({ product, index }: ProductRowProps) {
                       }`}
                     >
                       <span className="block font-body text-xs font-medium">{v.size}</span>
-                      <span className="block font-mono text-[10px] text-current opacity-70">{v.dimensions.split(' ')[0]} cm</span>
+                      <span className="block font-mono text-[10px] text-current opacity-70">
+                        {v.dimensions.split(' ')[0]} cm
+                      </span>
                     </button>
                   )
                 })}

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -14,11 +14,12 @@ const NAV_LINKS = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const { toggleCart, getTotalItems } = useCartStore()
-  const totalItems = getTotalItems()
 
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => setScrolled(window.scrollY > 30)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
@@ -28,6 +29,8 @@ export function Header() {
   useEffect(() => {
     setMobileMenuOpen(false)
   }, [pathname])
+
+  const totalItems = mounted ? getTotalItems() : 0
 
   return (
     <>

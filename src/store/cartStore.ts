@@ -1,10 +1,22 @@
 /**
  * Oasis Colchones — Global Cart Store
- * Zustand with localStorage persistence
+ * Zustand with resilient SSR-safe localStorage persistence
  */
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import type { CartItem, CartState, MattressSize } from '@/types'
+
+// SSR-safe storage fallback
+const safeStorage = createJSONStorage(() => {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    return window.localStorage
+  }
+  return {
+    getItem: () => null,
+    setItem: () => {},
+    removeItem: () => {},
+  }
+})
 
 export const useCartStore = create<CartState>()(
   persist(
@@ -77,8 +89,8 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: 'oasis-colchones-cart',
-      storage: createJSONStorage(() => localStorage),
-      // Only persist items array, not UI state (isOpen)
+      storage: safeStorage,
+      // Only persist items array, not ephemeral UI state (isOpen)
       partialize: (state) => ({ items: state.items }),
     }
   )

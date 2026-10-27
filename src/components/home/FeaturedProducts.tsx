@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -32,7 +32,7 @@ export function FeaturedProducts() {
           <h2 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-normal text-white">
             Modelos de Alta Ingeniería.
           </h2>
-          <p className="mt-2 font-body text-xs sm:text-sm text-white/50 max-w-lg">
+          <p className="mt-2 font-body text-xs sm:text-sm text-white/60 max-w-lg">
             Referencias con aprobación biomecánica y ensamblado de precisión en fábrica.
           </p>
         </div>
@@ -58,25 +58,33 @@ export function FeaturedProducts() {
               className="group border border-white/10 bg-[#0D2266]/20 p-6 lg:p-8 transition-colors duration-300 hover:border-[#C5A059]/60 hover:bg-[#0D2266]/40 flex flex-col justify-between"
             >
               <div>
-                {/* Product Image Showcase */}
-                <div className="relative mb-6 h-60 sm:h-72 w-full overflow-hidden border border-white/10 bg-[#07133B]">
-                  <img
+                {/* Product Image Showcase with Clip-Path Reveal */}
+                <motion.div
+                  initial={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)' }}
+                  whileInView={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative mb-6 h-60 sm:h-72 w-full overflow-hidden border border-white/10 bg-[#07133B]"
+                >
+                  <Image
                     src={product.imageUrl}
                     alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
-                  <div className="absolute left-3 top-3 border border-white/20 bg-[#0A1B54]/80 px-2.5 py-1 backdrop-blur-sm">
+                  <div className="absolute left-3 top-3 border border-white/20 bg-[#0A1B54]/90 px-2.5 py-1 backdrop-blur-sm">
                     <span className="font-body text-2xs uppercase tracking-wider text-[#C5A059]">
                       {product.category}
                     </span>
                   </div>
-                  <div className="absolute right-3 top-3 border border-white/20 bg-[#0A1B54]/80 px-2.5 py-1 backdrop-blur-sm">
-                    <span className="font-body text-2xs text-white/70">
+                  <div className="absolute right-3 top-3 border border-white/20 bg-[#0A1B54]/90 px-2.5 py-1 backdrop-blur-sm">
+                    <span className="font-mono text-2xs text-white/70">
                       5 Medidas
                     </span>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Details */}
                 <div className="space-y-2">
@@ -93,7 +101,7 @@ export function FeaturedProducts() {
                   {product.technology.slice(0, 3).map((tech) => (
                     <span
                       key={tech}
-                      className="border border-white/15 bg-white/5 px-2.5 py-1 font-body text-2xs uppercase tracking-wider text-white/50"
+                      className="border border-white/15 bg-white/5 px-2.5 py-1 font-body text-2xs uppercase tracking-wider text-white/60"
                     >
                       {tech}
                     </span>

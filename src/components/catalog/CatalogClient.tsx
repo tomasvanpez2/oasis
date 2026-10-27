@@ -1,8 +1,10 @@
 'use client'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { Product } from '@/types'
 import { FilterBar } from './FilterBar'
 import { ProductRow } from './ProductRow'
+import { CursorReveal } from './CursorReveal'
+import { TextSplitReveal } from '@/components/ui/TextSplitReveal'
 import { motion } from 'framer-motion'
 
 type CategoryFilter = 'todos' | 'espuma' | 'resortes' | 'latex' | 'premium'
@@ -11,6 +13,7 @@ export function CatalogClient() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>('todos')
+  const [hoveredProduct, setHoveredProduct] = useState<Product | null>(null)
 
   useEffect(() => {
     fetch('/api/catalog')
@@ -34,7 +37,10 @@ export function CatalogClient() {
 
   return (
     <div className="relative min-h-screen pt-28 pb-24">
-      {/* Editorial Page Header */}
+      {/* 60fps Custom Cursor Image Reveal on Hover */}
+      <CursorReveal product={hoveredProduct} />
+
+      {/* Editorial Page Header with Text-Splitting */}
       <div className="border-b border-white/10 px-6 pb-12 lg:px-16">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
@@ -46,14 +52,15 @@ export function CatalogClient() {
             >
               Catálogo de Fábrica Directa
             </motion.p>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-2 font-display text-4xl sm:text-5xl lg:text-6xl font-normal text-white"
-            >
-              13 Referencias Técnicas.
-            </motion.h1>
+            <div className="mt-2">
+              <TextSplitReveal
+                text="13 Referencias Técnicas."
+                as="h1"
+                className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal text-white"
+                delay={0.1}
+                stagger={0.07}
+              />
+            </div>
           </div>
           <motion.p
             initial={{ opacity: 0 }}
@@ -94,6 +101,8 @@ export function CatalogClient() {
               key={product.id}
               product={product}
               index={i}
+              onHoverStart={(prod) => setHoveredProduct(prod)}
+              onHoverEnd={() => setHoveredProduct(null)}
             />
           ))}
         </ul>

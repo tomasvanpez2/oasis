@@ -1,11 +1,13 @@
 'use client'
+import React from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { TextSplitReveal } from '@/components/ui/TextSplitReveal'
 
 export function Manifesto() {
   return (
     <section className="relative overflow-hidden border-t border-white/10 px-6 lg:px-16 py-24 lg:py-36">
-      {/* Background watermark word */}
+      {/* Background architectural watermark */}
       <div
         aria-hidden
         className="pointer-events-none absolute -right-6 top-1/2 -translate-y-1/2 font-display text-[18vw] font-normal leading-none text-white/[0.02] select-none"
@@ -24,15 +26,15 @@ export function Manifesto() {
           Manifiesto Industrial
         </motion.p>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-4 font-display text-3xl sm:text-5xl lg:text-6xl font-normal leading-tight text-white"
-        >
-          El descanso biomecánico<br />no debería ser un lujo.
-        </motion.h2>
+        <div className="mt-4">
+          <TextSplitReveal
+            text="El descanso biomecánico no debería ser un lujo."
+            as="h2"
+            className="font-display text-3xl sm:text-5xl lg:text-6xl font-normal leading-tight text-white"
+            delay={0.1}
+            stagger={0.05}
+          />
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}

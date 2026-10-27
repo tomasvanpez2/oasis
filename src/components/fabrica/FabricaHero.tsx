@@ -1,6 +1,8 @@
 'use client'
+import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { TextSplitReveal } from '@/components/ui/TextSplitReveal'
 
 export function FabricaHero() {
   return (
@@ -36,14 +38,13 @@ export function FabricaHero() {
           </motion.p>
 
           <div className="mt-3">
-            <motion.h1
+            <TextSplitReveal
+              text="Nuestra Fábrica."
+              as="h1"
               className="font-display text-4xl sm:text-6xl lg:text-7xl font-normal text-white leading-tight"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              Nuestra Fábrica.
-            </motion.h1>
+              delay={0.6}
+              stagger={0.08}
+            />
           </div>
 
           <motion.p

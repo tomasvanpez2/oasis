@@ -1,117 +1,147 @@
+/**
+ * Wompi Checkout Session Initialization Endpoint
+ * Strictly 0% PCI-DSS Scope: Zero card data captured on our infrastructure.
+ * Generates cryptographic integrity signature (SHA-256) and returns official Wompi redirect URL.
+ * Categorizes and persists the pending order into Vercel Blob with mandatory BI category.
+ */
 import { NextRequest, NextResponse } from 'next/server'
-import { createTransaction } from '@/lib/wompi'
-import { saveOrder, updateOrderStatus } from '@/lib/blob'
+import { generateIntegrityHash, buildWompiCheckoutUrl, getWompiKeys } from '@/lib/wompi'
+import { saveOrder, classifyOrderCategory } from '@/lib/blob'
 import { generateOrderReference } from '@/lib/utils'
-import { sendOrderNotification } from '@/lib/telegram'
-import type { Order, WompiTransactionRequest } from '@/types'
+import type { Order, CartItem, CustomerInfo } from '@/types'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
+interface WompiCheckoutRequestBody {
+  customer: CustomerInfo
+  items: CartItem[]
+  subtotal: number
+  shipping?: number
+  total?: number
+  redirectUrl?: string
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
-    const { customer, items, subtotal, shipping = 0, total, cardToken, installments = 1, paymentMethodType = 'CARD' } = body
-
-    if (!customer || !customer.fullName || !customer.email || !customer.phone || !customer.document || !items || !items.length) {
+    let body: WompiCheckoutRequestBody
+    try {
+      body = await req.json()
+    } catch {
       return NextResponse.json(
-        { error: 'Información incompleta para registrar y procesar la orden' },
+        { error: 'Cuerpo de solicitud JSON inválido' },
         { status: 400 }
       )
     }
 
-    const calculatedTotal = total || subtotal + shipping
-    const reference = generateOrderReference()
+    const { customer, items, subtotal, shipping = 0, total, redirectUrl } = body
 
-    // Create order with pending status
+    // ── 1. Validate Customer Information ─────────────────────────────────────────
+    if (!customer || typeof customer !== 'object') {
+      return NextResponse.json(
+        { error: 'Faltan los datos de facturación y entrega del cliente' },
+        { status: 400 }
+      )
+    }
+
+    const { fullName, email, phone, document, documentType, city, address } = customer
+
+    if (!fullName || !email || !phone || !document || !city || !address) {
+      return NextResponse.json(
+        { error: 'Todos los campos obligatorios del cliente deben estar completos' },
+        { status: 400 }
+      )
+    }
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json(
+        { error: 'El carrito no contiene productos para procesar' },
+        { status: 400 }
+      )
+    }
+
+    // ── 2. Financial Calculations ────────────────────────────────────────────────
+    const calculatedSubtotal = subtotal || items.reduce((acc, i) => acc + i.price * i.quantity, 0)
+    const calculatedTotal = total || calculatedSubtotal + shipping
+    const amountInCents = Math.round(calculatedTotal * 100)
+
+    if (amountInCents <= 0) {
+      return NextResponse.json(
+        { error: 'El monto total a pagar debe ser mayor a cero' },
+        { status: 400 }
+      )
+    }
+
+    // ── 3. Reference and BI Categorization ──────────────────────────────────────
+    const reference = generateOrderReference()
+    const biCategory = classifyOrderCategory(items, calculatedTotal)
+
+    // ── 4. Persist Pending Order to Vercel Blob ──────────────────────────────────
     const order: Order = {
       id: `ord_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       wompiReference: reference,
       status: 'pending',
-      customer,
+      biCategory,
+      customer: {
+        fullName: fullName.trim(),
+        email: email.trim().toLowerCase(),
+        phone: phone.trim(),
+        document: document.trim(),
+        documentType: documentType || 'CC',
+        city: city.trim(),
+        address: address.trim(),
+        notes: customer.notes?.trim() || '',
+      },
       items,
-      subtotal,
+      subtotal: calculatedSubtotal,
       shipping,
       total: calculatedTotal,
       currency: 'COP',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      wompiPaymentMethod: paymentMethodType,
+      wompiPaymentMethod: 'Wompi Web Checkout',
     }
 
-    // Persist to Vercel Blob (or local .data file fallback)
     await saveOrder(order)
 
-    // Build Wompi transaction payload
-    const transactionPayload: WompiTransactionRequest = {
-      amount_in_cents: calculatedTotal * 100, // Centavos COP
-      currency: 'COP',
-      customer_email: customer.email,
+    // ── 5. Generate SHA-256 Integrity Hash ───────────────────────────────────────
+    // Concatenates: reference + amountInCents + currency + WOMPI_INTEGRITY_SECRET
+    const integrityHash = generateIntegrityHash(reference, amountInCents, 'COP')
+
+    // ── 6. Build Official Hosted Checkout URL ────────────────────────────────────
+    const requestOrigin =
+      req.headers.get('origin') ||
+      req.headers.get('referer')?.split('/').slice(0, 3).join('/') ||
+      'https://oasiscolchones.co'
+
+    const returnUrl = redirectUrl || `${requestOrigin}/checkout?reference=${encodeURIComponent(reference)}`
+
+    const checkoutUrl = buildWompiCheckoutUrl({
       reference,
-      payment_method: {
-        type: paymentMethodType === 'CARD' ? 'CARD' : 'NEQUI',
-        token: cardToken || `tok_test_${Date.now()}`,
-        installments: Number(installments) || 1,
-      },
-      customer_data: {
-        phone_number: customer.phone,
-        full_name: customer.fullName,
-        legal_id: customer.document,
-        legal_id_type: customer.documentType || 'CC',
-      },
-      shipping_address: {
-        address_line_1: customer.address,
-        city: customer.city,
-        region: 'CO',
-        name: customer.fullName,
-        phone_number: customer.phone,
-        country: 'CO',
-      },
-    }
-
-    // Process transaction via Wompi service
-    const transaction = await createTransaction(transactionPayload)
-
-    const finalStatus =
-      transaction.status === 'APPROVED'
-        ? 'approved'
-        : transaction.status === 'DECLINED'
-        ? 'declined'
-        : transaction.status === 'ERROR'
-        ? 'error'
-        : 'pending'
-
-    // Update order status in database
-    const updatedOrder = await updateOrderStatus(reference, finalStatus, transaction.id, {
-      wompiStatus: transaction.status,
-      paymentMethodType,
-      amountInCents: transaction.amount_in_cents,
-      processedLocally: process.env.NODE_ENV !== 'production',
+      amountInCents,
+      currency: 'COP',
+      customer: order.customer,
+      redirectUrl: returnUrl,
+      integrityHash,
     })
 
-    const finalizedOrder = updatedOrder || { ...order, status: finalStatus, wompiTransactionId: transaction.id }
-
-    // If order was approved immediately, send Telegram notification if configured
-    if (finalStatus === 'approved') {
-      try {
-        await sendOrderNotification(finalizedOrder)
-      } catch (telegramErr) {
-        console.warn('[checkout:telegram] Notification failed:', telegramErr)
-      }
-    }
+    const { publicKey } = getWompiKeys()
 
     return NextResponse.json({
-      success: finalStatus === 'approved',
-      status: finalStatus,
+      success: true,
       reference,
-      transactionId: transaction.id,
-      order: finalizedOrder,
+      checkoutUrl,
+      amountInCents,
+      currency: 'COP',
+      biCategory,
+      integrityHash,
+      publicKey,
     })
   } catch (err) {
-    console.error('[api/wompi-checkout error]', err)
+    console.error('[api/wompi-checkout:error]', err)
     return NextResponse.json(
       {
-        error: err instanceof Error ? err.message : 'Error procesando el pago en el servidor',
+        error: err instanceof Error ? err.message : 'Error al inicializar sesión de pago segura con Wompi',
       },
       { status: 500 }
     )
