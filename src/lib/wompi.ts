@@ -290,7 +290,7 @@ export function buildWompiCheckoutUrl(params: WompiCheckoutParams): string {
     searchParams.set('redirect-url', params.redirectUrl)
   }
 
-  // Customer Data pre-fill
+  // 1. Datos básicos del cliente
   if (params.customer) {
     if (params.customer.email) {
       searchParams.set('customer-data:email', params.customer.email.trim())
@@ -303,26 +303,24 @@ export function buildWompiCheckoutUrl(params: WompiCheckoutParams): string {
     }
     if (params.customer.document) {
       searchParams.set('customer-data:legal-id', params.customer.document.trim())
-    }
-    if (params.customer.documentType) {
-      searchParams.set('customer-data:legal-id-type', params.customer.documentType)
+      searchParams.set('customer-data:legal-id-type', params.customer.documentType || 'CC')
     }
 
-    // Shipping address pre-fill
+    // 2. Datos de Envío (FIX: Wompi exige los 5 parámetros obligatoriamente si envías la dirección)
     if (params.customer.address) {
       searchParams.set('shipping-address:address-line-1', params.customer.address.trim())
-    }
-    if (params.customer.city) {
+      searchParams.set('shipping-address:country', 'CO')
       searchParams.set('shipping-address:city', params.customer.city.trim())
+      
+      // Añadimos los dos parámetros que Wompi estaba reclamando
+      searchParams.set('shipping-address:phone-number', params.customer.phone.replace(/\D/g, ''))
+      searchParams.set('shipping-address:region', params.customer.city.trim()) // Usamos la ciudad como región por defecto
     }
-    searchParams.set('shipping-address:country', 'CO')
   }
 
-  // Extraemos el string codificado nativamente
   let queryString = searchParams.toString()
-
-  // 🔴 FIX CRÍTICO ANTI-WAF: Restauramos los dos puntos (:) que URLSearchParams 
-  // codificó como %3A, para evitar que el CloudFront de Wompi nos tire error 403.
+  
+  // Restauramos los dos puntos (:) para que Wompi los lea correctamente
   queryString = queryString.replace(/signature%3A/g, 'signature:')
   queryString = queryString.replace(/customer-data%3A/g, 'customer-data:')
   queryString = queryString.replace(/shipping-address%3A/g, 'shipping-address:')
