@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-10-27T23:47:10.655Z",
+  "updatedAt": "2026-10-27T23:56:42.256Z",
   "orders": [
     {
       "id": "order-1792973406792-orzvg",
@@ -179,6 +179,41 @@
       "currency": "COP",
       "createdAt": "2026-10-27T23:47:10.654Z",
       "updatedAt": "2026-10-27T23:47:10.655Z",
+      "wompiPaymentMethod": "Wompi Web Checkout"
+    },
+    {
+      "id": "ord_1793145402255_dqqds",
+      "wompiReference": "OC-MVRCH3F2-A3FHW",
+      "status": "pending",
+      "biCategory": "2_Colchones_Estandar",
+      "customer": {
+        "fullName": "Tomás Vanegas Lopez",
+        "email": "tomasvanpez@gmail.com",
+        "phone": "3245259548",
+        "document": "1020304050",
+        "documentType": "CC",
+        "city": "BOGOTA",
+        "address": "Calle 1#4b",
+        "notes": ""
+      },
+      "items": [
+        {
+          "productId": "prod-001",
+          "productName": "Oasis Zen",
+          "productSlug": "oasis-zen",
+          "size": "Sencillo",
+          "dimensions": "90 × 190 cm",
+          "price": 890000,
+          "imageUrl": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 890000,
+      "shipping": 0,
+      "total": 890000,
+      "currency": "COP",
+      "createdAt": "2026-10-27T23:56:42.255Z",
+      "updatedAt": "2026-10-27T23:56:42.256Z",
       "wompiPaymentMethod": "Wompi Web Checkout"
     }
   ]
