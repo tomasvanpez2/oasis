@@ -91,6 +91,8 @@ export interface CustomerInfo {
   city: string
   address: string
   notes?: string
+  shippingZoneId?: string
+  shippingZoneName?: string
 }
 
 export interface Order {
@@ -101,13 +103,15 @@ export interface Order {
   customer: CustomerInfo
   items: CartItem[]
   subtotal: number
-  shipping: number // 0 = liquidar por separado
+  shipping: number
+  shippingZone?: string
   total: number
   currency: 'COP'
   biCategory: BICategory
   createdAt: string
   updatedAt: string
   wompiPaymentMethod?: string
+  wompiInstallments?: number
   wompiPaymentData?: Record<string, unknown>
 }
 
@@ -198,6 +202,7 @@ export interface CheckoutFormData {
   phone: string
   documentType: 'CC' | 'CE' | 'NIT' | 'PP'
   document: string
+  shippingZoneId: string
   city: string
   address: string
   notes?: string

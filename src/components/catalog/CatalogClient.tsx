@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react'
 import type { Product } from '@/types'
 import { FilterBar } from './FilterBar'
 import { ProductRow } from './ProductRow'
-import { CursorReveal } from './CursorReveal'
 import { TextSplitReveal } from '@/components/ui/TextSplitReveal'
 import { motion } from 'framer-motion'
 
@@ -13,7 +12,6 @@ export function CatalogClient() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>('todos')
-  const [hoveredProduct, setHoveredProduct] = useState<Product | null>(null)
 
   useEffect(() => {
     fetch('/api/catalog')
@@ -37,9 +35,6 @@ export function CatalogClient() {
 
   return (
     <div className="relative min-h-screen pt-28 pb-24">
-      {/* 60fps Custom Cursor Image Reveal on Hover */}
-      <CursorReveal product={hoveredProduct} />
-
       {/* Editorial Page Header with Text-Splitting */}
       <div className="border-b border-white/10 px-6 pb-12 lg:px-16">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
@@ -82,7 +77,7 @@ export function CatalogClient() {
           Mostrando {filtered.length} de {products.length} referencias
         </span>
         <span className="font-body text-2xs text-[#C5A059]">
-          Garantía directa de 10 a 15 años
+          Garantía directa de 10 a 15 años • Despacho Coordinadora
         </span>
       </div>
 
@@ -101,8 +96,6 @@ export function CatalogClient() {
               key={product.id}
               product={product}
               index={i}
-              onHoverStart={(prod) => setHoveredProduct(prod)}
-              onHoverEnd={() => setHoveredProduct(null)}
             />
           ))}
         </ul>

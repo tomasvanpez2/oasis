@@ -171,8 +171,8 @@ export function CartDrawer() {
                     {formatCOP(totalPrice)}
                   </p>
                 </div>
-                <p className="font-body text-2xs text-white/40 leading-relaxed">
-                  * Flete de transporte directo se liquida por separado antes del despacho.
+                <p className="font-body text-2xs text-[#C5A059] leading-relaxed">
+                  * Flete Coordinadora Mercantil calculado en checkout según tu zona.
                 </p>
                 <Link
                   href="/checkout"

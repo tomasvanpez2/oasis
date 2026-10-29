@@ -9,8 +9,6 @@ import { useCartStore } from '@/store/cartStore'
 interface ProductRowProps {
   product: Product
   index: number
-  onHoverStart?: (product: Product) => void
-  onHoverEnd?: () => void
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -20,7 +18,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   premium: 'Híbrido Alta Gama',
 }
 
-export function ProductRow({ product, index, onHoverStart, onHoverEnd }: ProductRowProps) {
+export function ProductRow({ product, index }: ProductRowProps) {
   const [selectedSize, setSelectedSize] = useState<MattressSize>(product.variants[0]?.size || 'Queen')
   const [showDetails, setShowDetails] = useState(false)
   const [addedAnimation, setAddedAnimation] = useState(false)
@@ -53,8 +51,6 @@ export function ProductRow({ product, index, onHoverStart, onHoverEnd }: Product
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: Math.min(index * 0.05, 0.3), ease: [0.16, 1, 0.3, 1] }}
-      onMouseEnter={() => onHoverStart?.(product)}
-      onMouseLeave={() => onHoverEnd?.()}
       className="group border-b border-white/10 bg-[#0A1B54] transition-colors duration-300 hover:bg-[#0D2266]/30 list-none"
     >
       <div className="px-6 py-8 lg:px-16">
@@ -179,7 +175,7 @@ export function ProductRow({ product, index, onHoverStart, onHoverEnd }: Product
                 IVA incluido • Sin intermediarios
               </p>
               <p className="mt-3 font-body text-2xs text-white/40 leading-tight">
-                * El flete de transporte se coordina por separado antes del despacho.
+                * Flete asegurado Coordinadora liquidado en checkout según zona de destino.
               </p>
             </div>
 

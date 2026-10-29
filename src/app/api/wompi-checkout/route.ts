@@ -18,6 +18,7 @@ interface WompiCheckoutRequestBody {
   items: CartItem[]
   subtotal: number
   shipping?: number
+  shippingZone?: string
   total?: number
   redirectUrl?: string
 }
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { customer, items, subtotal, shipping = 0, total, redirectUrl } = body
+    const { customer, items, subtotal, shipping = 0, shippingZone = '', total, redirectUrl } = body
 
     // ── 1. Validate Customer Information ─────────────────────────────────────────
     if (!customer || typeof customer !== 'object') {
@@ -95,6 +96,7 @@ export async function POST(req: NextRequest) {
       items,
       subtotal: calculatedSubtotal,
       shipping,
+      shippingZone: shippingZone || customer.shippingZoneName || '',
       total: calculatedTotal,
       currency: 'COP',
       createdAt: new Date().toISOString(),
@@ -114,7 +116,7 @@ export async function POST(req: NextRequest) {
       req.headers.get('referer')?.split('/').slice(0, 3).join('/') ||
       'https://oasiscolchones.co'
 
-    const returnUrl = redirectUrl || `${requestOrigin}/checkout?reference=${encodeURIComponent(reference)}`
+    const returnUrl = redirectUrl || `${requestOrigin}/checkout/success?reference=${encodeURIComponent(reference)}`
 
     const checkoutUrl = buildWompiCheckoutUrl({
       reference,

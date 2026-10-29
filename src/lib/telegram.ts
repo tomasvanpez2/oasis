@@ -62,9 +62,14 @@ function buildFactoryOrderMessage(order: Order): string {
     .join('\n\n')
 
   const shippingNote =
-    order.shipping === 0
-      ? '🚛 <i>Envío: Flete directo de fábrica a liquidar por separado</i>'
-      : `🚛 <i>Envío: ${formatCOP(order.shipping)}</i>`
+    order.shippingZone
+      ? `🚛 <b>Flete Coordinadora:</b> ${formatCOP(order.shipping)} (Origen: Bodega Normandía → ${escapeHtml(order.shippingZone)})`
+      : `🚛 <b>Flete Coordinadora:</b> ${formatCOP(order.shipping)} (Origen: Bodega Normandía)`
+
+  const installmentsText =
+    order.wompiInstallments && order.wompiInstallments > 1
+      ? `${order.wompiInstallments} cuotas diferidas`
+      : '1 cuota (Pago de contado / Débito directo)'
 
   const dateBogota = new Date(order.createdAt).toLocaleString('es-CO', {
     timeZone: 'America/Bogota',
@@ -106,6 +111,7 @@ ${itemsBreakdown}
 • ${shippingNote}
 • <b>TOTAL PAGADO: ${formatCOP(order.total)} COP</b>
 • <b>Método:</b> ${escapeHtml(order.wompiPaymentMethod || 'Wompi Web Checkout Seguro')}
+• <b>Cuotas (Installments):</b> ${escapeHtml(installmentsText)}
 `.trim()
 }
 
