@@ -78,6 +78,9 @@ export type BICategory = (typeof BI_CATEGORIES)[number]
 export type OrderStatus =
   | 'pending'
   | 'approved'
+  | 'production'
+  | 'dispatched'
+  | 'delivered'
   | 'declined'
   | 'voided'
   | 'error'
@@ -180,11 +183,22 @@ export interface WompiWebhookEvent {
 
 // ─── Telegram Bot API ────────────────────────────────────────────────────────
 
+export interface TelegramInlineKeyboardButton {
+  text: string
+  url?: string
+  callback_data?: string
+}
+
+export interface TelegramInlineKeyboardMarkup {
+  inline_keyboard: TelegramInlineKeyboardButton[][]
+}
+
 export interface TelegramSendMessagePayload {
   chat_id: string | number
   text: string
   parse_mode?: 'Markdown' | 'HTML'
   disable_web_page_preview?: boolean
+  reply_markup?: TelegramInlineKeyboardMarkup
 }
 
 export interface TelegramApiResponse<T = unknown> {
@@ -192,6 +206,23 @@ export interface TelegramApiResponse<T = unknown> {
   result?: T
   error_code?: number
   description?: string
+}
+
+// ─── Admin Authentication & 2FA ─────────────────────────────────────────────
+
+export interface AdminSessionPayload {
+  role: 'admin'
+  authTime: number
+  exp: number
+}
+
+export interface AdminOtpRecord {
+  otp: string
+  challengeId: string
+  createdAt: number
+  expiresAt: number
+  attempts: number
+  consumed: boolean
 }
 
 // ─── Checkout Form Data (Zero PCI Scope) ─────────────────────────────────────

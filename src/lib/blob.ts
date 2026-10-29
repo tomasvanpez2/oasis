@@ -14,6 +14,7 @@ import {
   type Order,
   type OrderStatus,
   type CartItem,
+  type AdminOtpRecord,
 } from '@/types'
 
 export { BI_CATEGORIES, type BICategory }
@@ -112,15 +113,29 @@ export function classifyOrderCategory(items: CartItem[] = [], totalCOP: number =
 // ─── Resilient Blob I/O Helpers ──────────────────────────────────────────────
 
 async function readJsonSafe<T>(pathname: string, defaultFallback: () => T): Promise<T> {
-  // 1. Try Vercel Blob if token is available
+  // 1. Try Vercel Blob if token is available (destroying all Next.js / Edge cache)
   if (hasValidBlobToken()) {
     try {
       const { blobs } = await list({ prefix: pathname })
-      const matchingBlob = blobs.find((b) => b.pathname === pathname)
+      const matchingBlob =
+        blobs.find((b) => b.pathname === pathname) ||
+        (blobs.length > 0
+          ? blobs.sort(
+              (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+            )[0]
+          : undefined)
+
       if (matchingBlob) {
-        const response = await fetch(matchingBlob.url, {
+        // Cache-buster query parameter to defeat edge/CDN caching
+        const freshUrl = `${matchingBlob.url}${matchingBlob.url.includes('?') ? '&' : '?'}t=${Date.now()}`
+        const response = await fetch(freshUrl, {
           cache: 'no-store',
-          headers: { 'Cache-Control': 'no-cache' },
+          next: { revalidate: 0 },
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
         })
         if (response.ok) {
           const rawText = await response.text()
@@ -159,7 +174,9 @@ async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
     throw new Error(`Error fatal al serializar base de datos: ${String(serializeError)}`)
   }
 
-  // Write to Vercel Blob if configured
+  let blobSuccess = false
+
+  // 1. Primary write to Vercel Blob: addRandomSuffix: false and access: 'public' are mandatory
   if (hasValidBlobToken()) {
     try {
       const blobPayload = new Blob([serialized], { type: 'application/json' })
@@ -168,12 +185,16 @@ async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
         addRandomSuffix: false,
         contentType: 'application/json',
       })
+      blobSuccess = true
     } catch (blobWriteError) {
-      console.warn(`[blob:writeJsonSafe] Vercel Blob put failed, falling back to disk mirror:`, blobWriteError)
+      console.error(
+        `[blob:writeJsonSafe] Vercel Blob put failed for ${pathname}, falling back to disk mirror:`,
+        blobWriteError
+      )
     }
   }
 
-  // Always mirror write to local filesystem to protect against data loss
+  // 2. Local filesystem mirror & functional fallback
   try {
     const localPath = getLocalFilePath(pathname)
     const dir = path.dirname(localPath)
@@ -185,17 +206,91 @@ async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
     fs.renameSync(tempPath, localPath)
   } catch (localWriteError) {
     console.error(`[blob:writeJsonSafe] Local filesystem write error for ${pathname}:`, localWriteError)
+    if (!blobSuccess) {
+      throw new Error(`Local write fallback failed for ${pathname}: ${String(localWriteError)}`)
+    }
   }
 }
 
 // ─── Orders CRUD Manager ─────────────────────────────────────────────────────
 
+/**
+ * Retrieves the complete orders database with aggressive anti-cache measures.
+ * Direct fetch adds ?t=${Date.now()} and { cache: 'no-store', next: { revalidate: 0 } }.
+ * Falls back to disk storage if Vercel Blob is unavailable or unconfigured.
+ */
 export async function getOrders(): Promise<OrdersDB> {
-  const db = await readJsonSafe<OrdersDB>(ORDERS_BLOB_PATH, () => ({
+  const fallbackOrdersDB: OrdersDB = {
     version: '1.0',
     updatedAt: new Date().toISOString(),
     orders: [],
-  }))
+  }
+
+  let db: OrdersDB | null = null
+
+  // 1. Fetch fresh orders directly from Vercel Blob without caching
+  if (hasValidBlobToken()) {
+    try {
+      const { blobs } = await list({ prefix: ORDERS_BLOB_PATH })
+      const matchingBlob =
+        blobs.find((b) => b.pathname === ORDERS_BLOB_PATH) ||
+        (blobs.length > 0
+          ? blobs.sort(
+              (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+            )[0]
+          : undefined)
+
+      if (matchingBlob) {
+        // Cache-buster query parameter to defeat Next.js & edge/CDN caching
+        const freshUrl = `${matchingBlob.url}${matchingBlob.url.includes('?') ? '&' : '?'}t=${Date.now()}`
+        const response = await fetch(freshUrl, {
+          cache: 'no-store',
+          next: { revalidate: 0 },
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
+        })
+
+        if (response.ok) {
+          const rawText = await response.text()
+          try {
+            db = JSON.parse(rawText) as OrdersDB
+          } catch (parseError) {
+            console.error('[blob:getOrders] Error al parsear JSON recibido de Vercel Blob:', parseError)
+          }
+        } else {
+          console.error(
+            `[blob:getOrders] Respuesta HTTP no satisfactoria de Vercel Blob: ${response.status} ${response.statusText}`
+          )
+        }
+      }
+    } catch (blobError) {
+      console.warn(
+        '[blob:getOrders] Error de red al consultar Vercel Blob, recurriendo a fallback local:',
+        blobError
+      )
+    }
+  }
+
+  // 2. Functional fallback to local filesystem
+  if (!db) {
+    try {
+      const localPath = getLocalFilePath(ORDERS_BLOB_PATH)
+      if (fs.existsSync(localPath)) {
+        const rawLocal = fs.readFileSync(localPath, 'utf-8')
+        db = JSON.parse(rawLocal) as OrdersDB
+      }
+    } catch (localError) {
+      console.error('[blob:getOrders] Error al leer archivo local de órdenes:', localError)
+    }
+  }
+
+  // 3. Fallback to fresh initial database if no data exists anywhere
+  if (!db) {
+    db = fallbackOrdersDB
+  }
 
   if (!Array.isArray(db.orders)) {
     db.orders = []
@@ -222,31 +317,42 @@ export async function getOrders(): Promise<OrdersDB> {
 export async function getOrderByReference(wompiReference: string): Promise<Order | null> {
   if (!wompiReference) return null
   const db = await getOrders()
-  return db.orders.find((o) => o.wompiReference === wompiReference) || null
+  const normalized = wompiReference.trim().toLowerCase()
+  return (
+    db.orders.find((o) => o.wompiReference?.trim().toLowerCase() === normalized) ||
+    null
+  )
 }
 
 export async function getOrderById(orderId: string): Promise<Order | null> {
   if (!orderId) return null
   const db = await getOrders()
-  return db.orders.find((o) => o.id === orderId) || null
+  const normalized = orderId.trim()
+  return db.orders.find((o) => o.id === normalized) || null
 }
 
 /**
  * Saves a new order or updates an existing one in Vercel Blob.
  * Strictly guarantees that order.biCategory is one of the 5 authorized BI categories.
+ * Enforces addRandomSuffix: false and access: 'public' on put to prevent orphaned blobs.
+ * Features an automatic fallback to local disk mirror in case Vercel Blob put fails.
  */
 export async function saveOrder(order: Order): Promise<Order> {
   if (!order || !order.id || !order.wompiReference) {
     throw new Error('Estructura de orden inválida para persistencia en base de datos')
   }
 
-  // Enforce Business Intelligence categorization
+  // 1. Enforce strict Business Intelligence categorization
   if (!isValidBICategory(order.biCategory)) {
     order.biCategory = classifyOrderCategory(order.items, order.total)
   }
 
+  // 2. Retrieve fresh database snapshot
   const db = await getOrders()
-  const existingIndex = db.orders.findIndex((o) => o.id === order.id || o.wompiReference === order.wompiReference)
+  const normalizedRef = order.wompiReference.trim().toLowerCase()
+  const existingIndex = db.orders.findIndex(
+    (o) => o.id === order.id || o.wompiReference?.trim().toLowerCase() === normalizedRef
+  )
 
   const sanitizedOrder: Order = {
     ...order,
@@ -261,22 +367,76 @@ export async function saveOrder(order: Order): Promise<Order> {
   }
 
   db.updatedAt = new Date().toISOString()
-  await writeJsonSafe(ORDERS_BLOB_PATH, db)
+  const serialized = JSON.stringify(db, null, 2)
+
+  let blobPutSuccess = false
+
+  // 3. Primary write to Vercel Blob with addRandomSuffix: false & access: 'public'
+  if (hasValidBlobToken()) {
+    try {
+      const blobPayload = new Blob([serialized], { type: 'application/json' })
+      await put(ORDERS_BLOB_PATH, blobPayload, {
+        access: 'public',
+        addRandomSuffix: false,
+        contentType: 'application/json',
+      })
+      blobPutSuccess = true
+    } catch (putError) {
+      console.error(
+        '[blob:saveOrder] ERROR CRÍTICO al ejecutar put en Vercel Blob (activando fallback local):',
+        putError
+      )
+    }
+  } else {
+    console.warn(
+      '[blob:saveOrder] BLOB_READ_WRITE_TOKEN no configurado; persistiendo exclusivamente en almacenamiento local.'
+    )
+  }
+
+  // 4. Functional fallback and atomic disk mirror to guarantee zero data loss
+  try {
+    const localPath = getLocalFilePath(ORDERS_BLOB_PATH)
+    const dir = path.dirname(localPath)
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true })
+    }
+    const tempPath = `${localPath}.tmp.${Date.now()}`
+    fs.writeFileSync(tempPath, serialized, 'utf-8')
+    fs.renameSync(tempPath, localPath)
+  } catch (localWriteError) {
+    console.error(
+      '[blob:saveOrder] ERROR CRÍTICO al escribir en almacenamiento local fallback:',
+      localWriteError
+    )
+    if (!blobPutSuccess) {
+      throw new Error(
+        `Fallo catastrófico de persistencia: tanto Vercel Blob como el fallback local fallaron (${String(
+          localWriteError
+        )})`
+      )
+    }
+  }
 
   return sanitizedOrder
 }
 
 /**
- * Atomically updates status and gateway metadata for an order found by Wompi reference.
+ * Atomically updates status and gateway metadata for an order found by Wompi reference or ID.
+ * Persists immediately via saveOrder guaranteeing BI classification, anti-cache and disk mirroring.
  */
 export async function updateOrderStatus(
-  wompiReference: string,
+  orderIdentifier: string,
   status: OrderStatus,
   wompiTransactionId?: string,
   wompiPaymentData?: Record<string, unknown>
 ): Promise<Order | null> {
   const db = await getOrders()
-  const order = db.orders.find((o) => o.wompiReference === wompiReference)
+  const normalizedId = orderIdentifier.trim().toLowerCase()
+  const order = db.orders.find(
+    (o) =>
+      o.id === orderIdentifier ||
+      o.wompiReference?.trim().toLowerCase() === normalizedId
+  )
   if (!order) return null
 
   order.status = status
@@ -293,15 +453,66 @@ export async function updateOrderStatus(
     }
   }
 
-  // Ensure category integrity is preserved
-  if (!isValidBICategory(order.biCategory)) {
-    order.biCategory = classifyOrderCategory(order.items, order.total)
+  return saveOrder(order)
+}
+
+// ─── 2FA OTP Persistence Manager ─────────────────────────────────────────────
+
+const OTP_BLOB_PATH = 'db/admin-otp.json'
+
+interface OtpStore {
+  records: Record<string, AdminOtpRecord>
+}
+
+export async function saveAdminOtp(
+  otp: string,
+  challengeId: string,
+  ttlMs: number = 5 * 60 * 1000
+): Promise<AdminOtpRecord> {
+  const store = await readJsonSafe<OtpStore>(OTP_BLOB_PATH, () => ({ records: {} }))
+  if (!store.records) store.records = {}
+
+  const now = Date.now()
+  const record: AdminOtpRecord = {
+    otp,
+    challengeId,
+    createdAt: now,
+    expiresAt: now + ttlMs,
+    attempts: 0,
+    consumed: false,
   }
 
-  db.updatedAt = new Date().toISOString()
-  await writeJsonSafe(ORDERS_BLOB_PATH, db)
+  // Auto purge expired challenges
+  for (const cid of Object.keys(store.records)) {
+    if (store.records[cid].expiresAt < now) {
+      delete store.records[cid]
+    }
+  }
 
-  return order
+  store.records[challengeId] = record
+  await writeJsonSafe(OTP_BLOB_PATH, store)
+  return record
+}
+
+export async function getAdminOtp(challengeId: string): Promise<AdminOtpRecord | null> {
+  const store = await readJsonSafe<OtpStore>(OTP_BLOB_PATH, () => ({ records: {} }))
+  return store.records?.[challengeId] || null
+}
+
+export async function consumeAdminOtp(challengeId: string): Promise<boolean> {
+  const store = await readJsonSafe<OtpStore>(OTP_BLOB_PATH, () => ({ records: {} }))
+  if (!store.records || !store.records[challengeId]) return false
+  store.records[challengeId].consumed = true
+  await writeJsonSafe(OTP_BLOB_PATH, store)
+  return true
+}
+
+export async function recordOtpFailure(challengeId: string): Promise<number> {
+  const store = await readJsonSafe<OtpStore>(OTP_BLOB_PATH, () => ({ records: {} }))
+  if (!store.records || !store.records[challengeId]) return 0
+  store.records[challengeId].attempts = (store.records[challengeId].attempts || 0) + 1
+  await writeJsonSafe(OTP_BLOB_PATH, store)
+  return store.records[challengeId].attempts
 }
 
 // ─── Catalog CRUD Manager ────────────────────────────────────────────────────
