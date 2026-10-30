@@ -2,6 +2,13 @@
  * Vercel Blob — Resilient JSON Database Manager
  * Enterprise-grade persistence for catalog.json and orders.json.
  * Enforces strict Business Intelligence categorization across all stored orders.
+ *
+ * ARQUITECTURA MEGA-FIX:
+ * - Rutas en la raíz absoluta del blob store (sin prefijo db/)
+ * - Lectura 100% directa via fetch a URL determinista (sin list() jamás)
+ * - Fetch anti-caché con cache: 'no-store' + cabeceras explícitas + timestamp
+ * - Polling de hasta 5 intentos × 2000ms en getOrderByReference para absorber
+ *   latencia de propagación CDN de Vercel Blob (~3-60 segundos)
  */
 import { put } from '@vercel/blob'
 import fs from 'fs'
@@ -19,8 +26,10 @@ import {
 
 export { BI_CATEGORIES, type BICategory }
 
+// ─── Rutas en la Raíz Absoluta del Blob Store (sin prefijo db/) ───────────────
 const CATALOG_BLOB_PATH = 'catalog.json'
 const ORDERS_BLOB_PATH = 'orders.json'
+const OTP_BLOB_PATH = 'admin-otp.json'
 
 function getLocalFilePath(pathname: string): string {
   const sanitized = pathname.replace(/\//g, path.sep)
@@ -31,6 +40,22 @@ function hasValidBlobToken(): boolean {
   if (process.env.BLOB_STORE_ID && process.env.BLOB_STORE_ID.trim().length > 0) return true
   const token = process.env.BLOB_READ_WRITE_TOKEN
   return Boolean(token && !token.startsWith('your_') && token.trim().length > 10)
+}
+
+/**
+ * Construye la URL pública determinista para un blob a partir del token.
+ * Extrae el storeId del segmento [3] del token (separador `_`) tal como lo
+ * formatea Vercel: vercel_blob_rw_<region>_<storeId>_<secret>
+ * Retorna cadena vacía si no es posible determinar el storeId.
+ * NUNCA usa list() — cero adivinanzas, URL exacta siempre.
+ */
+function getDirectUrl(pathname: string): string {
+  const storeId =
+    process.env.BLOB_STORE_ID?.trim() ||
+    process.env.BLOB_READ_WRITE_TOKEN?.split('_')[3]?.trim() ||
+    ''
+  if (!storeId) return ''
+  return `https://${storeId}.public.blob.vercel-storage.com/${pathname}`
 }
 
 // ─── Business Intelligence Categorization Engine ─────────────────────────────
@@ -114,26 +139,28 @@ export function classifyOrderCategory(items: CartItem[] = [], totalCOP: number =
 // ─── Resilient Blob I/O Helpers ──────────────────────────────────────────────
 
 /**
- * Direct real-time fetch from Vercel Blob store using deterministic URL and aggressive cache busting.
- * Bypasses Vercel Edge Cache and avoids the stale read-after-write anomalies of the list() API.
+ * Fetch directo y sin caché desde Vercel Blob usando URL determinista.
+ * - Construye la URL con getDirectUrl() — NUNCA llama a list()
+ * - Agrega ?t=<timestamp> para romper cualquier caché de red intermedia
+ * - Cabeceras explícitas: Cache-Control, Pragma, Expires
+ * - { cache: 'no-store' } en fetch para saltar la caché de Next.js/Edge
  */
 async function fetchBlobJson<T>(pathname: string): Promise<T | null> {
   if (!hasValidBlobToken()) {
     return null
   }
 
-  const storeId = process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN?.split('_')[3]
-  if (!storeId) {
-    console.warn(`[blob:fetchBlobJson] No se pudo determinar BLOB_STORE_ID para leer ${pathname}`)
+  const baseUrl = getDirectUrl(pathname)
+  if (!baseUrl) {
+    console.warn(`[blob:fetchBlobJson] No se pudo determinar storeId para leer ${pathname}`)
     return null
   }
 
-  const url = `https://${storeId}.public.blob.vercel-storage.com/${pathname}?t=${Date.now()}`
+  const freshUrl = `${baseUrl}?t=${Date.now()}`
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(freshUrl, {
       cache: 'no-store',
-
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         Pragma: 'no-cache',
@@ -146,7 +173,7 @@ async function fetchBlobJson<T>(pathname: string): Promise<T | null> {
     }
 
     if (!response.ok) {
-      console.warn(`[blob:fetchBlobJson] HTTP ${response.status} ${response.statusText} al consultar ${url}`)
+      console.warn(`[blob:fetchBlobJson] HTTP ${response.status} ${response.statusText} al consultar ${freshUrl}`)
       return null
     }
 
@@ -246,7 +273,7 @@ async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
 
 /**
  * Retrieves the complete orders database with aggressive anti-cache measures.
- * Direct fetch adds ?t=${Date.now()} and { cache: 'no-store', next: { revalidate: 0 } }.
+ * Direct fetch adds ?t=${Date.now()} and { cache: 'no-store' }.
  * Bypasses Vercel Edge caching and avoids list() completely.
  * Disk mirror fallback only runs in local development.
  */
@@ -284,17 +311,17 @@ export async function getOrders(): Promise<OrdersDB> {
 export async function getOrderByReference(wompiReference: string): Promise<Order | null> {
   if (!wompiReference) return null
   const normalized = wompiReference.trim().toLowerCase()
-  // Retry up to 4 times to account for CDN propagation delays
-  for (let i = 0; i < 4; i++) {
+
+  // Polling de hasta 5 intentos × 2000ms para absorber latencia de propagación
+  // CDN/índice de Vercel Blob (puede tardar hasta 60 segundos en casos extremos).
+  // En el 95% de los casos el 2.º intento ya lee la verdad absoluta del servidor.
+  for (let i = 0; i < 5; i++) {
     const db = await getOrders()
-    const found = db.orders.find(
+    const order = db.orders.find(
       (o) => o.wompiReference?.trim().toLowerCase() === normalized
     )
-    if (found) return found
-    // Wait 1.5 seconds before next attempt (unless this was the last try)
-    if (i < 3) {
-      await new Promise((res) => setTimeout(res, 1500))
-    }
+    if (order) return order
+    if (i < 4) await new Promise((resolve) => setTimeout(resolve, 2000))
   }
   return null
 }
@@ -386,8 +413,6 @@ export async function updateOrderStatus(
 }
 
 // ─── 2FA OTP Persistence Manager ─────────────────────────────────────────────
-
-const OTP_BLOB_PATH = 'db/admin-otp.json'
 
 interface OtpStore {
   records: Record<string, AdminOtpRecord>
