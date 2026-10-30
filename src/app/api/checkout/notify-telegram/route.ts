@@ -18,6 +18,7 @@ import type { Order } from '@/types'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 function formatPaymentMethodName(
   type: string = '',

@@ -12,6 +12,7 @@ import type { Order, CartItem, CustomerInfo } from '@/types'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 interface WompiCheckoutRequestBody {
   customer: CustomerInfo

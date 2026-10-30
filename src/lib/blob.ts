@@ -3,7 +3,7 @@
  * Enterprise-grade persistence for catalog.json and orders.json.
  * Enforces strict Business Intelligence categorization across all stored orders.
  */
-import { put, list } from '@vercel/blob'
+import { put } from '@vercel/blob'
 import fs from 'fs'
 import path from 'path'
 import {
@@ -28,6 +28,7 @@ function getLocalFilePath(pathname: string): string {
 }
 
 function hasValidBlobToken(): boolean {
+  if (process.env.BLOB_STORE_ID && process.env.BLOB_STORE_ID.trim().length > 0) return true
   const token = process.env.BLOB_READ_WRITE_TOKEN
   return Boolean(token && !token.startsWith('your_') && token.trim().length > 10)
 }
@@ -112,56 +113,79 @@ export function classifyOrderCategory(items: CartItem[] = [], totalCOP: number =
 
 // ─── Resilient Blob I/O Helpers ──────────────────────────────────────────────
 
-async function readJsonSafe<T>(pathname: string, defaultFallback: () => T): Promise<T> {
-  // 1. Try Vercel Blob if token is available (destroying all Next.js / Edge cache)
-  if (hasValidBlobToken()) {
-    try {
-      const { blobs } = await list({ prefix: pathname })
-      const matchingBlob =
-        blobs.find((b) => b.pathname === pathname) ||
-        (blobs.length > 0
-          ? blobs.sort(
-              (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
-            )[0]
-          : undefined)
-
-      if (matchingBlob) {
-        // Cache-buster query parameter to defeat edge/CDN caching
-        const freshUrl = `${matchingBlob.url}${matchingBlob.url.includes('?') ? '&' : '?'}t=${Date.now()}`
-        const response = await fetch(freshUrl, {
-          cache: 'no-store',
-          next: { revalidate: 0 },
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            Pragma: 'no-cache',
-            Expires: '0',
-          },
-        })
-        if (response.ok) {
-          const rawText = await response.text()
-          try {
-            return JSON.parse(rawText) as T
-          } catch (parseError) {
-            console.error(`[blob:readJsonSafe] Corrupt JSON in Vercel Blob (${pathname}):`, parseError)
-          }
-        }
-      }
-    } catch (blobError) {
-      console.warn(`[blob:readJsonSafe] Network error accessing Vercel Blob for ${pathname}:`, blobError)
-    }
+/**
+ * Direct real-time fetch from Vercel Blob store using deterministic URL and aggressive cache busting.
+ * Bypasses Vercel Edge Cache and avoids the stale read-after-write anomalies of the list() API.
+ */
+async function fetchBlobJson<T>(pathname: string): Promise<T | null> {
+  if (!hasValidBlobToken()) {
+    return null
   }
 
-  // 2. Fallback to local filesystem
+  const storeId = process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN?.split('_')[3]
+  if (!storeId) {
+    console.warn(`[blob:fetchBlobJson] No se pudo determinar BLOB_STORE_ID para leer ${pathname}`)
+    return null
+  }
+
+  const url = `https://${storeId}.public.blob.vercel-storage.com/${pathname}?t=${Date.now()}`
+
   try {
-    const localPath = getLocalFilePath(pathname)
-    if (fs.existsSync(localPath)) {
-      const rawLocal = fs.readFileSync(localPath, 'utf-8')
-      return JSON.parse(rawLocal) as T
+    const response = await fetch(url, {
+      cache: 'no-store',
+      next: { revalidate: 0 },
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0',
+      },
+    })
+
+    if (response.status === 404) {
+      return null
     }
-  } catch (localError) {
-    console.error(`[blob:readJsonSafe] Error reading local file (${pathname}):`, localError)
+
+    if (!response.ok) {
+      console.warn(`[blob:fetchBlobJson] HTTP ${response.status} ${response.statusText} al consultar ${url}`)
+      return null
+    }
+
+    const rawText = await response.text()
+    try {
+      return JSON.parse(rawText) as T
+    } catch (parseError) {
+      console.error(`[blob:fetchBlobJson] JSON corrupto en Vercel Blob (${pathname}):`, parseError)
+      return null
+    }
+  } catch (error) {
+    console.warn(`[blob:fetchBlobJson] Error de red al leer directamente de Vercel Blob (${pathname}):`, error)
+    return null
+  }
+}
+
+async function readJsonSafe<T>(pathname: string, defaultFallback: () => T): Promise<T> {
+  // 1. Lectura directa determinista desde Vercel Blob Store (omitiendo por completo list() y Edge Cache)
+  if (hasValidBlobToken()) {
+    const remoteData = await fetchBlobJson<T>(pathname)
+    if (remoteData !== null) {
+      return remoteData
+    }
   }
 
+  // 2. Fallback a disco local EXCLUSIVAMENTE en entorno de desarrollo (evita crash EROFS en Vercel Serverless)
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const localPath = getLocalFilePath(pathname)
+      if (fs.existsSync(localPath)) {
+        const rawLocal = fs.readFileSync(localPath, 'utf-8')
+        return JSON.parse(rawLocal) as T
+      }
+    } catch (localError) {
+      console.error(`[blob:readJsonSafe] Error leyendo archivo local (${pathname}):`, localError)
+    }
+  }
+
+  // 3. Fallback en memoria por defecto
   return defaultFallback()
 }
 
@@ -188,27 +212,33 @@ async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
       blobSuccess = true
     } catch (blobWriteError) {
       console.error(
-        `[blob:writeJsonSafe] Vercel Blob put failed for ${pathname}, falling back to disk mirror:`,
+        `[blob:writeJsonSafe] Vercel Blob put failed for ${pathname}:`,
         blobWriteError
       )
     }
   }
 
-  // 2. Local filesystem mirror & functional fallback
-  try {
-    const localPath = getLocalFilePath(pathname)
-    const dir = path.dirname(localPath)
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true })
+  // 2. Local filesystem mirror (solo en desarrollo - en Vercel Serverless NO debe tocar fs para evitar EROFS)
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const localPath = getLocalFilePath(pathname)
+      const dir = path.dirname(localPath)
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true })
+      }
+      const tempPath = `${localPath}.tmp.${Date.now()}`
+      fs.writeFileSync(tempPath, serialized, 'utf-8')
+      fs.renameSync(tempPath, localPath)
+    } catch (localWriteError) {
+      console.error(`[blob:writeJsonSafe] Local filesystem write error for ${pathname}:`, localWriteError)
+      if (!blobSuccess) {
+        throw new Error(`Local write fallback failed for ${pathname}: ${String(localWriteError)}`)
+      }
     }
-    const tempPath = `${localPath}.tmp.${Date.now()}`
-    fs.writeFileSync(tempPath, serialized, 'utf-8')
-    fs.renameSync(tempPath, localPath)
-  } catch (localWriteError) {
-    console.error(`[blob:writeJsonSafe] Local filesystem write error for ${pathname}:`, localWriteError)
-    if (!blobSuccess) {
-      throw new Error(`Local write fallback failed for ${pathname}: ${String(localWriteError)}`)
-    }
+  } else if (!blobSuccess) {
+    throw new Error(
+      `Fallo de persistencia en Vercel Blob para ${pathname}. El mirror local de disco está desactivado en producción (Serverless Read-Only).`
+    )
   }
 }
 
@@ -217,7 +247,8 @@ async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
 /**
  * Retrieves the complete orders database with aggressive anti-cache measures.
  * Direct fetch adds ?t=${Date.now()} and { cache: 'no-store', next: { revalidate: 0 } }.
- * Falls back to disk storage if Vercel Blob is unavailable or unconfigured.
+ * Bypasses Vercel Edge caching and avoids list() completely.
+ * Disk mirror fallback only runs in local development.
  */
 export async function getOrders(): Promise<OrdersDB> {
   const fallbackOrdersDB: OrdersDB = {
@@ -226,74 +257,10 @@ export async function getOrders(): Promise<OrdersDB> {
     orders: [],
   }
 
-  let db: OrdersDB | null = null
+  let db = await readJsonSafe<OrdersDB>(ORDERS_BLOB_PATH, () => fallbackOrdersDB)
 
-  // 1. Fetch fresh orders directly from Vercel Blob without caching
-  if (hasValidBlobToken()) {
-    try {
-      const { blobs } = await list({ prefix: ORDERS_BLOB_PATH })
-      const matchingBlob =
-        blobs.find((b) => b.pathname === ORDERS_BLOB_PATH) ||
-        (blobs.length > 0
-          ? blobs.sort(
-              (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
-            )[0]
-          : undefined)
-
-      if (matchingBlob) {
-        // Cache-buster query parameter to defeat Next.js & edge/CDN caching
-        const freshUrl = `${matchingBlob.url}${matchingBlob.url.includes('?') ? '&' : '?'}t=${Date.now()}`
-        const response = await fetch(freshUrl, {
-          cache: 'no-store',
-          next: { revalidate: 0 },
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            Pragma: 'no-cache',
-            Expires: '0',
-          },
-        })
-
-        if (response.ok) {
-          const rawText = await response.text()
-          try {
-            db = JSON.parse(rawText) as OrdersDB
-          } catch (parseError) {
-            console.error('[blob:getOrders] Error al parsear JSON recibido de Vercel Blob:', parseError)
-          }
-        } else {
-          console.error(
-            `[blob:getOrders] Respuesta HTTP no satisfactoria de Vercel Blob: ${response.status} ${response.statusText}`
-          )
-        }
-      }
-    } catch (blobError) {
-      console.warn(
-        '[blob:getOrders] Error de red al consultar Vercel Blob, recurriendo a fallback local:',
-        blobError
-      )
-    }
-  }
-
-  // 2. Functional fallback to local filesystem
-  if (!db) {
-    try {
-      const localPath = getLocalFilePath(ORDERS_BLOB_PATH)
-      if (fs.existsSync(localPath)) {
-        const rawLocal = fs.readFileSync(localPath, 'utf-8')
-        db = JSON.parse(rawLocal) as OrdersDB
-      }
-    } catch (localError) {
-      console.error('[blob:getOrders] Error al leer archivo local de órdenes:', localError)
-    }
-  }
-
-  // 3. Fallback to fresh initial database if no data exists anywhere
-  if (!db) {
+  if (!db || !Array.isArray(db.orders)) {
     db = fallbackOrdersDB
-  }
-
-  if (!Array.isArray(db.orders)) {
-    db.orders = []
   }
 
   // Ensure all existing orders have a valid biCategory
@@ -335,7 +302,7 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
  * Saves a new order or updates an existing one in Vercel Blob.
  * Strictly guarantees that order.biCategory is one of the 5 authorized BI categories.
  * Enforces addRandomSuffix: false and access: 'public' on put to prevent orphaned blobs.
- * Features an automatic fallback to local disk mirror in case Vercel Blob put fails.
+ * Completely eliminates list() dependencies and EROFS crashes by delegating to writeJsonSafe.
  */
 export async function saveOrder(order: Order): Promise<Order> {
   if (!order || !order.id || !order.wompiReference) {
@@ -347,7 +314,7 @@ export async function saveOrder(order: Order): Promise<Order> {
     order.biCategory = classifyOrderCategory(order.items, order.total)
   }
 
-  // 2. Retrieve fresh database snapshot
+  // 2. Retrieve fresh database snapshot via direct anti-cache fetch
   const db = await getOrders()
   const normalizedRef = order.wompiReference.trim().toLowerCase()
   const existingIndex = db.orders.findIndex(
@@ -367,55 +334,9 @@ export async function saveOrder(order: Order): Promise<Order> {
   }
 
   db.updatedAt = new Date().toISOString()
-  const serialized = JSON.stringify(db, null, 2)
 
-  let blobPutSuccess = false
-
-  // 3. Primary write to Vercel Blob with addRandomSuffix: false & access: 'public'
-  if (hasValidBlobToken()) {
-    try {
-      const blobPayload = new Blob([serialized], { type: 'application/json' })
-      await put(ORDERS_BLOB_PATH, blobPayload, {
-        access: 'public',
-        addRandomSuffix: false,
-        contentType: 'application/json',
-      })
-      blobPutSuccess = true
-    } catch (putError) {
-      console.error(
-        '[blob:saveOrder] ERROR CRÍTICO al ejecutar put en Vercel Blob (activando fallback local):',
-        putError
-      )
-    }
-  } else {
-    console.warn(
-      '[blob:saveOrder] BLOB_READ_WRITE_TOKEN no configurado; persistiendo exclusivamente en almacenamiento local.'
-    )
-  }
-
-  // 4. Functional fallback and atomic disk mirror to guarantee zero data loss
-  try {
-    const localPath = getLocalFilePath(ORDERS_BLOB_PATH)
-    const dir = path.dirname(localPath)
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true })
-    }
-    const tempPath = `${localPath}.tmp.${Date.now()}`
-    fs.writeFileSync(tempPath, serialized, 'utf-8')
-    fs.renameSync(tempPath, localPath)
-  } catch (localWriteError) {
-    console.error(
-      '[blob:saveOrder] ERROR CRÍTICO al escribir en almacenamiento local fallback:',
-      localWriteError
-    )
-    if (!blobPutSuccess) {
-      throw new Error(
-        `Fallo catastrófico de persistencia: tanto Vercel Blob como el fallback local fallaron (${String(
-          localWriteError
-        )})`
-      )
-    }
-  }
+  // 3. Atomically persist to Vercel Blob (and local disk only in development)
+  await writeJsonSafe(ORDERS_BLOB_PATH, db)
 
   return sanitizedOrder
 }
