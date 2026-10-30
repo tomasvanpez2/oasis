@@ -7,14 +7,12 @@ import type { AdminSessionPayload } from '@/types'
 
 export const ADMIN_COOKIE_NAME = 'oasis_admin_session'
 export const CHALLENGE_COOKIE_NAME = 'oasis_admin_challenge'
-export const DEFAULT_ADMIN_PASSWORD = 'OasisMaster2026!'
 
 export function getAdminJwtSecret(): string {
   return (
     process.env.ADMIN_JWT_SECRET ||
-    process.env.ADMIN_PASSWORD ||
-    process.env.WOMPI_EVENTS_SECRET ||
-    'oasis-colchones-luxury-secret-key-2026'
+    process.env.ADMIN_TOTP_SECRET ||
+    'oasis-jwt-session-key-2026'
   )
 }
 
@@ -116,7 +114,7 @@ export async function verifyAdminJWT(
 
     // Strict expiration check (seconds)
     const nowInSeconds = Math.floor(Date.now() / 1000)
-    if (payload.exp && nowInSeconds > payload.exp) {
+    if (!payload.exp || nowInSeconds > payload.exp) {
       return null
     }
 
@@ -130,11 +128,11 @@ export async function verifyAdminJWT(
  * Constant-time master password verification to prevent timing attacks.
  */
 export function verifyMasterPassword(providedPassword: string): boolean {
-  if (!providedPassword || typeof providedPassword !== 'string') {
+  const master = process.env.ADMIN_PASSWORD
+  if (!master || !providedPassword || typeof providedPassword !== 'string') {
     return false
   }
 
-  const master = process.env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD
   if (providedPassword.length !== master.length) {
     return false
   }

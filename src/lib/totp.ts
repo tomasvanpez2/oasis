@@ -1,20 +1,25 @@
 /**
  * RFC 6238 TOTP Engine for Google Authenticator & Apple Passwords
  * Implements HMAC-SHA1 dynamic truncation, Base32 decoding, clock skew window
- * validation, and QR Code generation.
+ * validation, anti-replay protection, and QR Code generation.
  */
 import QRCode from 'qrcode'
 
-export const DEFAULT_TOTP_SECRET = 'OASISCOLCHONESAUTHKEYENTERPRISE2FA'
 export const TOTP_ISSUER = 'Oasis Colchones'
 export const TOTP_ACCOUNT = 'admin@oasis.co'
 
 const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
 
+// Anti-replay cache: stores code -> timestamp when consumed
+const usedTotpCodes = new Map<string, number>()
+
 export function getAdminTotpSecret(): string {
-  const secret = process.env.ADMIN_TOTP_SECRET || DEFAULT_TOTP_SECRET
+  const secret = process.env.ADMIN_TOTP_SECRET || ''
   const sanitized = secret.trim().toUpperCase().replace(/[^A-Z2-7]/g, '')
-  return sanitized.length >= 16 ? sanitized : DEFAULT_TOTP_SECRET
+  if (sanitized.length < 16) {
+    throw new Error('ADMIN_TOTP_SECRET no está configurada o es demasiado corta en las variables de entorno.')
+  }
+  return sanitized
 }
 
 /**
@@ -84,7 +89,7 @@ export async function generateTOTP(
 
 /**
  * Validates a 6-digit TOTP code against the secret.
- * Checks current 30s window, plus/minus window step (e.g. +/- 30s tolerance).
+ * Includes Anti-Replay protection: once verified, a code cannot be reused for 120 seconds.
  */
 export async function verifyTOTP(
   token: string,
@@ -95,12 +100,33 @@ export async function verifyTOTP(
   const cleanToken = token.trim().replace(/\D/g, '')
   if (cleanToken.length !== 6) return false
 
-  const secret = secretBase32 || getAdminTotpSecret()
+  let secret: string
+  try {
+    secret = secretBase32 || getAdminTotpSecret()
+  } catch {
+    return false
+  }
+
   const now = Math.floor(Date.now() / 1000)
+
+  // Anti-replay check
+  const lastUsed = usedTotpCodes.get(cleanToken)
+  if (lastUsed && now - lastUsed < 120) {
+    return false
+  }
 
   for (let errorWindow = -window; errorWindow <= window; errorWindow++) {
     const expected = await generateTOTP(secret, now + errorWindow * 30)
     if (expected === cleanToken) {
+      // Mark code as used to prevent replay attacks
+      usedTotpCodes.set(cleanToken, now)
+
+      // Clean expired codes from memory (> 120 seconds old)
+      usedTotpCodes.forEach((ts, code) => {
+        if (now - ts > 120) {
+          usedTotpCodes.delete(code)
+        }
+      })
       return true
     }
   }
@@ -136,4 +162,3 @@ export async function generateTotpQrCodeDataUrl(otpauthUri: string): Promise<str
     },
   })
 }
-

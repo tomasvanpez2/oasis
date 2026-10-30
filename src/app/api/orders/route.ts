@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getOrders, saveOrder, classifyOrderCategory } from '@/lib/blob'
 import { generateOrderReference } from '@/lib/utils'
+import { verifyAdminJWT, ADMIN_COOKIE_NAME } from '@/lib/auth'
 import type { Order } from '@/types'
 
 export const runtime = 'nodejs'
@@ -18,6 +19,16 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Orden no encontrada' }, { status: 404 })
       }
       return NextResponse.json(order)
+    }
+
+    // Si no hay referencia, solo administradores autenticados pueden ver la lista completa
+    const cookie = req.cookies.get(ADMIN_COOKIE_NAME)?.value
+    const session = cookie ? await verifyAdminJWT(cookie) : null
+    if (!session || session.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Acceso restringido. Solo administradores pueden consultar todas las órdenes.' },
+        { status: 401 }
+      )
     }
 
     return NextResponse.json(db)

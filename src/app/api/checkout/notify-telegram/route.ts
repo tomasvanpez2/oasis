@@ -200,8 +200,5 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  // Support both GET and POST for maximum integration flexibility
-  return POST(req)
-}
+
 

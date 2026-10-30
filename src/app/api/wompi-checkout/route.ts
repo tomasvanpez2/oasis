@@ -126,7 +126,18 @@ export async function POST(req: NextRequest) {
       req.headers.get('referer')?.split('/').slice(0, 3).join('/') ||
       'https://oasiscolchones.co'
 
-    const returnUrl = redirectUrl || `${requestOrigin}/checkout/success?reference=${encodeURIComponent(reference)}`
+    let returnUrl = `${requestOrigin}/checkout/success?reference=${encodeURIComponent(reference)}`
+    if (redirectUrl && typeof redirectUrl === 'string') {
+      try {
+        const parsed = new URL(redirectUrl, requestOrigin)
+        const allowedOrigin = new URL(requestOrigin).origin
+        if (parsed.origin === allowedOrigin) {
+          returnUrl = parsed.toString()
+        }
+      } catch {
+        // Ignorar redirect externo inseguro y usar la URL por defecto
+      }
+    }
 
     const checkoutUrl = buildWompiCheckoutUrl({
       reference,

@@ -280,7 +280,7 @@ export async function sendTelegramOTP(otp: string): Promise<TelegramNotification
   const chatId = process.env.TELEGRAM_CHAT_ID
 
   if (!botToken || !chatId) {
-    const message = `[telegram:warn] Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID. 2FA OTP generated: ${otp}`
+    const message = `[telegram:warn] Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID. OTP dispatch skipped.`
     console.warn(message)
     return { success: false, error: message }
   }
