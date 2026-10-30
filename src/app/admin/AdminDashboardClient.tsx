@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { Order, OrderStatus, BICategory } from '@/types'
@@ -126,27 +126,37 @@ export default function AdminDashboardClient({ initialOrders }: AdminDashboardCl
     setTimeout(() => setFeedbackToast(null), 3500)
   }
 
-  // Refresh data from server
-  const handleRefresh = async () => {
-    setIsRefreshing(true)
+  // Refresh data from server (silently in background or manually)
+  const handleRefresh = async (silent: boolean = false) => {
+    if (!silent) setIsRefreshing(true)
     try {
       const res = await fetch('/api/admin/orders')
       if (!res.ok) throw new Error('Error al sincronizar pedidos')
       const data = await res.json()
-      setOrders(data.orders || [])
-      showToast('Datos sincronizados con Vercel Blob correctamente')
+      if (Array.isArray(data.orders)) {
+        setOrders(data.orders)
+      }
+      if (!silent) showToast('Datos sincronizados correctamente')
     } catch {
-      showToast('Error al refrescar datos del servidor', 'error')
+      if (!silent) showToast('Error al refrescar datos del servidor', 'error')
     } finally {
-      setIsRefreshing(false)
+      if (!silent) setIsRefreshing(false)
     }
   }
 
-  // Update order operational status
+  // Auto-polling en background cada 20s para mantener el panel siempre actualizado
+  useEffect(() => {
+    const timer = setInterval(() => {
+      handleRefresh(true)
+    }, 20000)
+    return () => clearInterval(timer)
+  }, [])
+
+  // Update order operational status (Auto-save instantáneo)
   const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
     setUpdatingOrderId(orderId)
 
-    // Optimistic update
+    // 1. Optimistic update: la UI y las métricas de BI cambian al instante
     const previousOrders = [...orders]
     setOrders((current) =>
       current.map((order) =>
@@ -157,6 +167,7 @@ export default function AdminDashboardClient({ initialOrders }: AdminDashboardCl
     )
 
     try {
+      // 2. Persistencia automática inmediata en el backend
       const res = await fetch('/api/admin/orders', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -168,11 +179,12 @@ export default function AdminDashboardClient({ initialOrders }: AdminDashboardCl
         throw new Error(data.error || 'No se pudo actualizar el estado')
       }
 
-      showToast(`Pedido actualizado a estado: "${STATUS_CONFIG[newStatus]?.label || newStatus}"`)
+      showToast(`✓ Estado guardado automáticamente: "${STATUS_CONFIG[newStatus]?.label || newStatus}"`)
+      router.refresh()
     } catch (err: unknown) {
-      // Rollback on failure
+      // Rollback en caso de fallo de red
       setOrders(previousOrders)
-      showToast(err instanceof Error ? err.message : 'Error al actualizar estado', 'error')
+      showToast(err instanceof Error ? err.message : 'Error al guardar estado', 'error')
     } finally {
       setUpdatingOrderId(null)
     }
@@ -329,16 +341,21 @@ export default function AdminDashboardClient({ initialOrders }: AdminDashboardCl
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Auto-save status badge */}
+            <div className="hidden sm:flex items-center gap-2 bg-emerald-950/40 border border-emerald-500/30 px-3 py-1.5 rounded-xl text-2xs text-emerald-300 font-medium tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Auto-guardado activo</span>
+            </div>
+
             <button
-              onClick={handleRefresh}
+              onClick={() => handleRefresh(false)}
               disabled={isRefreshing}
-              className="bg-[#0D2266] hover:bg-[#1A2E6B] text-gold border border-gold/30 px-3.5 py-2 rounded-xl text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
-              title="Refrescar datos de Vercel Blob"
+              className="bg-[#0D2266] hover:bg-[#1A2E6B] text-gold/80 hover:text-gold border border-gold/25 p-2 rounded-xl text-xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+              title="Sincronización en vivo activa (Click para forzar chequeo)"
             >
               <span className={`inline-block text-sm ${isRefreshing ? 'animate-spin' : ''}`}>
                 ↻
               </span>
-              <span className="hidden md:inline">Actualizar</span>
             </button>
 
             <button

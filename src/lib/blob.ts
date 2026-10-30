@@ -13,6 +13,7 @@
 import { put } from '@vercel/blob'
 import fs from 'fs'
 import path from 'path'
+import crypto from 'crypto'
 import {
   BI_CATEGORIES,
   type BICategory,
@@ -55,6 +56,86 @@ function getDirectUrl(pathname: string): string {
   const storeId = withoutPrefix.substring(0, withoutPrefix.lastIndexOf('_'))
   if (!storeId) return ''
   return `https://${storeId}.public.blob.vercel-storage.com/${pathname}`
+}
+
+// ─── Transparent Envelope Encryption (AES-256-GCM) ───────────────────────────
+// Protege datos sensibles (órdenes de clientes PII y OTPs) antes de enviarlos
+// a Vercel Blob o almacenarlos en disco, evitando exposición pública no autorizada.
+
+interface EncryptedEnvelope {
+  _encrypted: true
+  alg: 'aes-256-gcm'
+  iv: string
+  tag: string
+  ciphertext: string
+}
+
+function getBlobEncryptionKey(): Buffer {
+  const secret =
+    process.env.BLOB_ENCRYPTION_KEY ||
+    process.env.ADMIN_TOTP_SECRET ||
+    'oasis-colchones-blob-secure-key-2026'
+  return crypto.createHash('sha256').update(secret).digest()
+}
+
+function shouldEncryptPath(pathname: string): boolean {
+  return pathname === ORDERS_BLOB_PATH || pathname === OTP_BLOB_PATH
+}
+
+function encryptBlobData(plainText: string): string {
+  try {
+    const key = getBlobEncryptionKey()
+    const iv = crypto.randomBytes(12) // 96-bit IV para GCM
+    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
+
+    let encrypted = cipher.update(plainText, 'utf8', 'hex')
+    encrypted += cipher.final('hex')
+    const tag = cipher.getAuthTag().toString('hex')
+
+    const envelope: EncryptedEnvelope = {
+      _encrypted: true,
+      alg: 'aes-256-gcm',
+      iv: iv.toString('hex'),
+      tag,
+      ciphertext: encrypted,
+    }
+
+    return JSON.stringify(envelope)
+  } catch (err) {
+    console.error('[blob:encryptBlobData] Error al cifrar:', err)
+    return plainText
+  }
+}
+
+function decryptBlobData(rawText: string): string {
+  try {
+    const trimmed = rawText.trim()
+    if (!trimmed.startsWith('{') || !trimmed.includes('"_encrypted":true')) {
+      return rawText // Retorna texto plano si es información previa no cifrada
+    }
+
+    const envelope = JSON.parse(trimmed) as Partial<EncryptedEnvelope>
+    if (
+      envelope._encrypted === true &&
+      envelope.alg === 'aes-256-gcm' &&
+      envelope.iv &&
+      envelope.tag &&
+      envelope.ciphertext
+    ) {
+      const key = getBlobEncryptionKey()
+      const iv = Buffer.from(envelope.iv, 'hex')
+      const tag = Buffer.from(envelope.tag, 'hex')
+      const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv)
+      decipher.setAuthTag(tag)
+
+      let decrypted = decipher.update(envelope.ciphertext, 'hex', 'utf8')
+      decrypted += decipher.final('utf8')
+      return decrypted
+    }
+  } catch (err) {
+    console.warn('[blob:decryptBlobData] Fallo al descifrar o payload no cifrado:', err)
+  }
+  return rawText
 }
 
 // ─── Business Intelligence Categorization Engine ─────────────────────────────
@@ -178,7 +259,8 @@ async function fetchBlobJson<T>(pathname: string): Promise<T | null> {
 
     const rawText = await response.text()
     try {
-      return JSON.parse(rawText) as T
+      const textToParse = shouldEncryptPath(pathname) ? decryptBlobData(rawText) : rawText
+      return JSON.parse(textToParse) as T
     } catch (parseError) {
       console.error(`[blob:fetchBlobJson] JSON corrupto en Vercel Blob (${pathname}):`, parseError)
       return null
@@ -204,7 +286,8 @@ async function readJsonSafe<T>(pathname: string, defaultFallback: () => T): Prom
       const localPath = getLocalFilePath(pathname)
       if (fs.existsSync(localPath)) {
         const rawLocal = fs.readFileSync(localPath, 'utf-8')
-        return JSON.parse(rawLocal) as T
+        const textToParse = shouldEncryptPath(pathname) ? decryptBlobData(rawLocal) : rawLocal
+        return JSON.parse(textToParse) as T
       }
     } catch (localError) {
       console.error(`[blob:readJsonSafe] Error leyendo archivo local (${pathname}):`, localError)
@@ -218,7 +301,8 @@ async function readJsonSafe<T>(pathname: string, defaultFallback: () => T): Prom
 async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
   let serialized: string
   try {
-    serialized = JSON.stringify(data, null, 2)
+    const rawJson = JSON.stringify(data, null, 2)
+    serialized = shouldEncryptPath(pathname) ? encryptBlobData(rawJson) : rawJson
   } catch (serializeError) {
     console.error(`[blob:writeJsonSafe] Failed to serialize data for ${pathname}:`, serializeError)
     throw new Error(`Error fatal al serializar base de datos: ${String(serializeError)}`)
