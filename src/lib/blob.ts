@@ -133,7 +133,7 @@ async function fetchBlobJson<T>(pathname: string): Promise<T | null> {
   try {
     const response = await fetch(url, {
       cache: 'no-store',
-      next: { revalidate: 0 },
+
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         Pragma: 'no-cache',
@@ -283,12 +283,20 @@ export async function getOrders(): Promise<OrdersDB> {
 
 export async function getOrderByReference(wompiReference: string): Promise<Order | null> {
   if (!wompiReference) return null
-  const db = await getOrders()
   const normalized = wompiReference.trim().toLowerCase()
-  return (
-    db.orders.find((o) => o.wompiReference?.trim().toLowerCase() === normalized) ||
-    null
-  )
+  // Retry up to 4 times to account for CDN propagation delays
+  for (let i = 0; i < 4; i++) {
+    const db = await getOrders()
+    const found = db.orders.find(
+      (o) => o.wompiReference?.trim().toLowerCase() === normalized
+    )
+    if (found) return found
+    // Wait 1.5 seconds before next attempt (unless this was the last try)
+    if (i < 3) {
+      await new Promise((res) => setTimeout(res, 1500))
+    }
+  }
+  return null
 }
 
 export async function getOrderById(orderId: string): Promise<Order | null> {
