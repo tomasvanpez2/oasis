@@ -204,11 +204,11 @@ async function writeJsonSafe<T>(pathname: string, data: T): Promise<void> {
   if (hasValidBlobToken()) {
     try {
       const blobPayload = new Blob([serialized], { type: 'application/json' })
-      await put(pathname, blobPayload, {
-        access: 'public',
-        addRandomSuffix: false,
-        contentType: 'application/json',
-      })
+     await put(pathname, blobPayload, {
+      access: 'private' as any,
+      addRandomSuffix: false,
+      contentType: 'application/json',
+    })
       blobSuccess = true
     } catch (blobWriteError) {
       console.error(
