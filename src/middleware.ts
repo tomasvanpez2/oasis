@@ -10,7 +10,9 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // 1. Allow public authentication endpoints
-  const isAuthApi = pathname.startsWith('/api/admin/auth')
+  const isAuthApi =
+    pathname.startsWith('/api/admin/auth') ||
+    pathname.startsWith('/api/admin/verify-totp')
   const isLoginPage = pathname === '/admin/login'
 
   const sessionCookie = req.cookies.get(ADMIN_COOKIE_NAME)?.value

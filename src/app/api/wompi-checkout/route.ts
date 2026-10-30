@@ -104,7 +104,16 @@ export async function POST(req: NextRequest) {
       wompiPaymentMethod: 'Wompi Web Checkout',
     }
 
-    await saveOrder(order)
+    // ── 4. Persist Pending Order to Vercel Blob (Non-blocking Resilient Pre-save)
+    try {
+      await saveOrder(order)
+      console.info(`[api/wompi-checkout:saveOrder] Pre-order persisted successfully: ${reference}`)
+    } catch (saveError) {
+      console.error(
+        `[api/wompi-checkout:saveOrder:error] Vercel Blob pre-save failed for order ${reference}, but proceeding with Wompi checkout:`,
+        saveError
+      )
+    }
 
     // ── 5. Generate SHA-256 Integrity Hash ───────────────────────────────────────
     // Concatenates: reference + amountInCents + currency + WOMPI_INTEGRITY_SECRET

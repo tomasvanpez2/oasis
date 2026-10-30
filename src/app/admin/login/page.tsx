@@ -9,89 +9,65 @@ function AdminLoginForm() {
   const searchParams = useSearchParams()
   const fromPath = searchParams.get('from') || '/admin'
 
-  const [step, setStep] = useState<1 | 2>(1)
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [challengeId, setChallengeId] = useState('')
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', ''])
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [infoMessage, setInfoMessage] = useState<string | null>(null)
   const [devHint, setDevHint] = useState<string | null>(null)
 
-  // TOTP Authenticator Data
+  // TOTP Setup / QR Data
   const [totpSecret, setTotpSecret] = useState('')
   const [totpQrCode, setTotpQrCode] = useState('')
   const [totpUri, setTotpUri] = useState('')
-  const [showQrModal, setShowQrModal] = useState(false)
+  const [showQrSetup, setShowQrSetup] = useState(false)
+  const [loadingSetup, setLoadingSetup] = useState(false)
   const [copiedSecret, setCopiedSecret] = useState(false)
 
-  // 30-second rolling countdown for TOTP
-  const [secondsRemaining, setSecondsRemaining] = useState(30 - (Math.floor(Date.now() / 1000) % 30))
+  // 30-second rolling countdown for TOTP RFC 6238
+  const [secondsRemaining, setSecondsRemaining] = useState(
+    30 - (Math.floor(Date.now() / 1000) % 30)
+  )
 
   const otpInputsRef = useRef<(HTMLInputElement | null)[]>([])
 
+  // Rolling 30s countdown
   useEffect(() => {
-    if (step !== 2) return
     const interval = setInterval(() => {
       const now = Math.floor(Date.now() / 1000)
       setSecondsRemaining(30 - (now % 30))
     }, 1000)
     return () => clearInterval(interval)
-  }, [step])
+  }, [])
 
-  // Step 1: Submit Master Password
-  const handleStep1Submit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!password.trim()) {
-      setError('Por favor ingresa la contraseña maestra.')
-      return
-    }
+  // Auto-focus first input on mount & load dev hint if in dev mode
+  useEffect(() => {
+    otpInputsRef.current[0]?.focus()
 
-    setLoading(true)
-    setError(null)
-    setInfoMessage(null)
-
-    try {
-      const res = await fetch('/api/admin/auth/step1', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: password.trim() }),
+    // Fetch setup parameters silently so devHint & QR data are ready if needed
+    fetch('/api/admin/verify-totp')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setTotpSecret(data.secret || '')
+          setTotpQrCode(data.qrCode || '')
+          setTotpUri(data.otpauthUri || '')
+          if (data.devTotpHint) {
+            setDevHint(`[Modo Local] Código TOTP activo: ${data.devTotpHint}`)
+          }
+        }
       })
+      .catch(() => {
+        // Silently ignore setup pre-fetch errors
+      })
+  }, [])
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Contraseña maestra inválida')
-      }
-
-      setChallengeId(data.challengeId)
-      setTotpSecret(data.secret || '')
-      setTotpQrCode(data.qrCode || '')
-      setTotpUri(data.otpauthUri || '')
-      setStep(2)
-
-      if (data.devTotpHint) {
-        setDevHint(`[Modo Local] Código TOTP activo: ${data.devTotpHint}`)
-      }
-
-      // Auto-focus first input
-      setTimeout(() => {
-        otpInputsRef.current[0]?.focus()
-      }, 100)
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Error de autenticación')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // Handle digit input in Step 2
+  // Handle individual digit change or paste into any slot
   const handleDigitChange = (index: number, value: string) => {
     const clean = value.replace(/\D/g, '')
     const newDigits = [...otpDigits]
 
     if (clean.length > 1) {
+      // User pasted multiple digits into one slot
       const pasted = clean.slice(0, 6).split('')
       pasted.forEach((char, i) => {
         if (i < 6) newDigits[i] = char
@@ -113,54 +89,123 @@ function AdminLoginForm() {
       otpInputsRef.current[index + 1]?.focus()
     }
 
+    // Auto-submit if all 6 slots are completed
     if (newDigits.every((d) => d.length === 1)) {
       verifyOtpCode(newDigits.join(''))
     }
   }
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
+  // Keyboard navigation across slots
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === 'Backspace') {
+      if (!otpDigits[index] && index > 0) {
+        otpInputsRef.current[index - 1]?.focus()
+      }
+    } else if (e.key === 'ArrowLeft' && index > 0) {
       otpInputsRef.current[index - 1]?.focus()
+    } else if (e.key === 'ArrowRight' && index < 5) {
+      otpInputsRef.current[index + 1]?.focus()
     }
   }
 
-  // Step 2: Verify TOTP Code
+  // Handle direct paste event on any slot
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+    if (!pastedData) return
+
+    const newDigits = [...otpDigits]
+    pastedData.split('').forEach((char, i) => {
+      if (i < 6) newDigits[i] = char
+    })
+    setOtpDigits(newDigits)
+
+    const nextFocus = Math.min(pastedData.length, 5)
+    otpInputsRef.current[nextFocus]?.focus()
+
+    if (pastedData.length === 6) {
+      verifyOtpCode(newDigits.join(''))
+    }
+  }
+
+  // Primary verification call to /api/admin/verify-totp
   const verifyOtpCode = async (otpString: string) => {
-    if (otpString.length !== 6) return
-    setLoading(true)
+    const cleanOtp = otpString.trim().replace(/\D/g, '')
+
+    if (cleanOtp.length !== 6) {
+      setError('Por favor ingresa el código completo de 6 dígitos.')
+      return
+    }
+
+    setIsLoading(true)
     setError(null)
+    setInfoMessage(null)
 
     try {
-      const res = await fetch('/api/admin/auth/step2', {
+      const res = await fetch('/api/admin/verify-totp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          otp: otpString,
-          challengeId,
-        }),
+        body: JSON.stringify({ otp: cleanOtp }),
       })
 
       const data = await res.json()
 
       if (!res.ok) {
-        if (data.restartRequired) {
-          setStep(1)
-          setPassword('')
-          setOtpDigits(['', '', '', '', '', ''])
-          throw new Error(data.error || 'Desafío expirado. Inicia nuevamente.')
-        }
-        throw new Error(data.error || 'Código 2FA incorrecto')
+        throw new Error(data.error || 'Código de verificación incorrecto.')
       }
 
-      // Success! Redirect to target
+      setInfoMessage('✓ Código verificado con éxito. Redirigiendo...')
+
+      // Redirect immediately to target dashboard
       router.push(fromPath)
       router.refresh()
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Error al verificar 2FA')
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Error al verificar el código de autenticación.'
+      )
       setOtpDigits(['', '', '', '', '', ''])
-      otpInputsRef.current[0]?.focus()
+      setTimeout(() => {
+        otpInputsRef.current[0]?.focus()
+      }, 50)
     } finally {
-      setLoading(false)
+      setIsLoading(false)
+    }
+  }
+
+  // Form submit handler
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    verifyOtpCode(otpDigits.join(''))
+  }
+
+  // Toggle QR Setup Accordion
+  const toggleQrSetup = async () => {
+    const nextState = !showQrSetup
+    setShowQrSetup(nextState)
+
+    if (nextState && !totpQrCode) {
+      setLoadingSetup(true)
+      try {
+        const res = await fetch('/api/admin/verify-totp')
+        const data = await res.json()
+        if (data.success) {
+          setTotpSecret(data.secret || '')
+          setTotpQrCode(data.qrCode || '')
+          setTotpUri(data.otpauthUri || '')
+          if (data.devTotpHint) {
+            setDevHint(`[Modo Local] Código TOTP activo: ${data.devTotpHint}`)
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching TOTP setup:', err)
+      } finally {
+        setLoadingSetup(false)
+      }
     }
   }
 
@@ -187,16 +232,16 @@ function AdminLoginForm() {
             Manufactura de Colchones
           </span>
         </Link>
-        <div className="flex items-center gap-2 text-2xs text-gold/70 uppercase tracking-widest bg-gold/5 px-3 py-1.5 rounded-full border border-gold/20">
+        <div className="flex items-center gap-2 text-2xs text-gold/80 uppercase tracking-widest bg-gold/10 px-3.5 py-1.5 rounded-full border border-gold/25">
           <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-          Google Authenticator & Apple Passwords
+          Apple Passwords & Google Authenticator
         </div>
       </header>
 
       {/* Main Authentication Card */}
       <main className="w-full max-w-lg mx-auto px-6 py-8 z-10 flex-1 flex flex-col justify-center">
-        <div className="bg-[#0D2266]/80 backdrop-blur-xl border border-gold/25 rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-          {/* Header Monogram */}
+        <div className="bg-[#0D2266]/85 backdrop-blur-xl border border-gold/25 rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+          {/* Header Monogram & Title */}
           <div className="text-center mb-6">
             <div className="w-14 h-14 mx-auto rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center text-gold mb-3 shadow-inner">
               <svg
@@ -216,28 +261,28 @@ function AdminLoginForm() {
             <h1 className="font-display text-2xl tracking-wide text-ivory">
               Panel Administrativo
             </h1>
-            <p className="text-xs text-ivory/60 mt-1 uppercase tracking-widest">
-              {step === 1 ? 'Paso 1: Clave Maestra' : 'Paso 2: Autenticador 2FA (TOTP)'}
+            <p className="text-xs text-gold/90 mt-1 uppercase tracking-widest font-medium">
+              Autenticación 2FA de Acceso Rápido
             </p>
           </div>
 
-          {/* Error & Info Alerts */}
+          {/* Feedback Alerts */}
           {error && (
-            <div className="mb-5 p-3.5 rounded-lg bg-red-950/60 border border-red-500/40 text-red-200 text-xs flex items-start gap-2 animate-fadeIn">
-              <span className="text-red-400 font-bold">⚠️</span>
-              <p className="flex-1">{error}</p>
+            <div className="mb-5 p-3.5 rounded-xl bg-red-950/70 border border-red-500/50 text-red-200 text-xs flex items-start gap-2.5 animate-fadeIn">
+              <span className="text-red-400 font-bold shrink-0">⚠️</span>
+              <p className="flex-1 leading-relaxed">{error}</p>
             </div>
           )}
 
           {infoMessage && (
-            <div className="mb-5 p-3 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-200 text-xs flex items-start gap-2">
-              <span className="text-emerald-400 font-bold">✓</span>
-              <p className="flex-1">{infoMessage}</p>
+            <div className="mb-5 p-3.5 rounded-xl bg-emerald-950/70 border border-emerald-500/50 text-emerald-200 text-xs flex items-start gap-2.5">
+              <span className="text-emerald-400 font-bold shrink-0">✓</span>
+              <p className="flex-1 leading-relaxed">{infoMessage}</p>
             </div>
           )}
 
           {devHint && (
-            <div className="mb-5 p-2.5 rounded bg-gold/10 border border-gold/30 text-gold text-2xs font-mono break-all flex items-center justify-between">
+            <div className="mb-5 p-3 rounded-xl bg-gold/10 border border-gold/30 text-gold text-2xs font-mono break-all flex items-center justify-between">
               <span>{devHint}</span>
               <button
                 type="button"
@@ -249,145 +294,120 @@ function AdminLoginForm() {
                     verifyOtpCode(match[0])
                   }
                 }}
-                className="underline hover:text-white cursor-pointer ml-2"
+                className="underline hover:text-white cursor-pointer ml-2 shrink-0 font-sans text-xs"
               >
                 Autocompletar
               </button>
             </div>
           )}
 
-          {/* STEP 1: Master Password */}
-          {step === 1 && (
-            <form onSubmit={handleStep1Submit} className="space-y-5">
-              <div>
-                <label className="block text-2xs uppercase tracking-widest text-gold mb-2 font-medium">
-                  Contraseña Maestra de Acceso
-                </label>
-                <div className="relative">
+          {/* Single-Step TOTP Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="bg-[#0A1B54]/70 p-4 rounded-xl border border-gold/20 text-center">
+              <div className="flex items-center justify-center gap-2 mb-1.5">
+                <span className="text-base">📱</span>
+                <span className="text-xs text-ivory font-semibold">
+                  Apple Passwords (FaceID / TouchID) o Google Authenticator
+                </span>
+              </div>
+              <p className="text-xs text-ivory/70 leading-relaxed">
+                Ingresa el código dinámico de{' '}
+                <span className="text-gold font-bold">6 dígitos</span> de tu
+                autenticador:
+              </p>
+              <div className="flex items-center justify-center gap-2 mt-2 text-2xs text-gold/80 font-mono">
+                <span>Actualización en:</span>
+                <span className="font-bold text-sm text-gold">
+                  {secondsRemaining}s
+                </span>
+                <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+              </div>
+            </div>
+
+            {/* 6 Digit Input Slots */}
+            <div>
+              <label
+                htmlFor="otp-slot-0"
+                className="block text-center text-2xs uppercase tracking-widest text-gold mb-3 font-medium"
+              >
+                Código de 6 Dígitos
+              </label>
+              <div className="flex items-center justify-between gap-2">
+                {otpDigits.map((digit, idx) => (
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••••••"
-                    autoFocus
-                    required
-                    className="w-full bg-[#0A1B54]/90 border border-gold/30 rounded-xl px-4 py-3.5 text-sm text-ivory placeholder-ivory/30 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all"
+                    key={idx}
+                    id={`otp-slot-${idx}`}
+                    ref={(el) => {
+                      otpInputsRef.current[idx] = el
+                    }}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    autoComplete={idx === 0 ? 'one-time-code' : 'off'}
+                    maxLength={idx === 0 ? 6 : 1}
+                    value={digit}
+                    disabled={isLoading}
+                    onChange={(e) => handleDigitChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(idx, e)}
+                    onPaste={handlePaste}
+                    className="w-12 h-14 bg-[#0A1B54] border border-gold/40 rounded-xl text-center text-xl font-bold font-mono text-gold focus:border-gold-light focus:outline-none focus:ring-2 focus:ring-gold/40 transition-all shadow-inner disabled:opacity-50"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-ivory/40 hover:text-gold text-xs transition-colors p-1"
-                  >
-                    {showPassword ? 'Ocultar' : 'Mostrar'}
-                  </button>
-                </div>
-                <div className="flex items-center justify-between mt-2 text-2xs text-ivory/40">
-                  <span>Protección perimetral AES-256</span>
-                  <span className="text-gold/80 font-mono">OasisMaster2026!</span>
-                </div>
+                ))}
               </div>
+            </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-gold to-gold-light hover:from-gold-light hover:to-gold text-[#0A1B54] font-medium py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-gold/20 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-              >
-                {loading ? (
-                  <>
-                    <span className="w-4 h-4 border-2 border-[#0A1B54] border-t-transparent rounded-full animate-spin" />
-                    Validando clave maestra...
-                  </>
-                ) : (
-                  <>
-                    Continuar a Verificación 2FA
-                    <span>→</span>
-                  </>
-                )}
-              </button>
-            </form>
-          )}
+            {/* Submit Action Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-gold to-gold-light hover:from-gold-light hover:to-gold text-[#0A1B54] font-semibold py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-gold/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {isLoading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-[#0A1B54] border-t-transparent rounded-full animate-spin" />
+                  <span>Validando y Accediendo...</span>
+                </>
+              ) : (
+                <>
+                  <span>Verificar y Acceder</span>
+                  <span aria-hidden="true">→</span>
+                </>
+              )}
+            </button>
+          </form>
 
-          {/* STEP 2: TOTP (Google Authenticator / Apple Passwords) */}
-          {step === 2 && (
-            <div className="space-y-6">
-              <div className="bg-[#0A1B54]/70 p-4 rounded-xl border border-gold/20 text-center">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <span className="text-base">📱</span>
-                  <span className="text-xs text-ivory font-semibold">
-                    Google Authenticator / Apple Passwords
-                  </span>
-                </div>
-                <p className="text-xs text-ivory/70 leading-relaxed">
-                  Digita el código dinámico de <span className="text-gold font-bold">6 dígitos</span> de tu aplicación:
+          {/* Setup / QR Code Accordion */}
+          <div className="border-t border-gold/15 pt-5 mt-6">
+            <button
+              type="button"
+              onClick={toggleQrSetup}
+              className="w-full text-center text-2xs text-gold/80 hover:text-gold flex items-center justify-center gap-1.5 transition-colors cursor-pointer py-1 font-medium"
+            >
+              <span>
+                {showQrSetup
+                  ? '▲ Ocultar vinculación'
+                  : '▼ ¿Aún no tienes configurado el autenticador? Ver código QR'}
+              </span>
+            </button>
+
+            {showQrSetup && (
+              <div className="mt-4 bg-[#0A1B54] p-5 rounded-xl border border-gold/25 space-y-4 text-center animate-fadeIn">
+                <p className="text-2xs text-ivory/80 leading-relaxed">
+                  Escanea este código con la cámara de tu iPhone, Google
+                  Authenticator o agrégalo a Contraseñas de Apple:
                 </p>
-                <div className="flex items-center justify-center gap-2 mt-2 text-2xs text-gold/80 font-mono">
-                  <span>Cambia en:</span>
-                  <span className="font-bold text-sm text-gold">{secondsRemaining}s</span>
-                  {/* Mini animated circular or bar indicator */}
-                  <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-                </div>
-              </div>
 
-              {/* 6 Digit Inputs */}
-              <div>
-                <label className="block text-center text-2xs uppercase tracking-widest text-gold mb-3 font-medium">
-                  Código de 6 Dígitos
-                </label>
-                <div className="flex items-center justify-between gap-2">
-                  {otpDigits.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      ref={(el) => {
-                        otpInputsRef.current[idx] = el
-                      }}
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      maxLength={idx === 0 ? 6 : 1}
-                      value={digit}
-                      onChange={(e) => handleDigitChange(idx, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(idx, e)}
-                      className="w-12 h-14 bg-[#0A1B54] border border-gold/40 rounded-xl text-center text-xl font-bold font-mono text-gold focus:border-gold-light focus:outline-none focus:ring-2 focus:ring-gold/30 transition-all shadow-inner"
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <button
-                type="button"
-                onClick={() => verifyOtpCode(otpDigits.join(''))}
-                disabled={loading || otpDigits.some((d) => !d)}
-                className="w-full bg-gradient-to-r from-gold to-gold-light hover:from-gold-light hover:to-gold text-[#0A1B54] font-medium py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-gold/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              >
-                {loading ? (
-                  <>
-                    <span className="w-4 h-4 border-2 border-[#0A1B54] border-t-transparent rounded-full animate-spin" />
-                    Validando sesión...
-                  </>
+                {loadingSetup ? (
+                  <div className="py-8 flex flex-col items-center justify-center gap-2">
+                    <span className="w-6 h-6 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+                    <span className="text-2xs text-gold/70">
+                      Cargando parámetros 2FA...
+                    </span>
+                  </div>
                 ) : (
-                  'Verificar y Acceder al Dashboard'
-                )}
-              </button>
-
-              {/* Toggle QR Code & Apple Passwords Setup Section */}
-              <div className="border-t border-gold/15 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowQrModal(!showQrModal)}
-                  className="w-full text-center text-2xs text-gold/80 hover:text-gold flex items-center justify-center gap-1.5 transition-colors cursor-pointer py-1"
-                >
-                  <span>{showQrModal ? '▲ Ocultar vinculación' : '▼ ¿Aún no tienes vinculado el autenticador?'}</span>
-                </button>
-
-                {showQrModal && (
-                  <div className="mt-4 bg-[#0A1B54] p-4 rounded-xl border border-gold/25 space-y-4 text-center animate-fadeIn">
-                    <p className="text-2xs text-ivory/80">
-                      Escanea este código QR con la cámara de tu iPhone, Google Authenticator o la app Contraseñas de Apple:
-                    </p>
-
+                  <>
                     {totpQrCode && (
-                      <div className="bg-white p-3 rounded-xl inline-block shadow-lg mx-auto">
+                      <div className="bg-white p-3.5 rounded-xl inline-block shadow-lg mx-auto">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={totpQrCode}
@@ -402,7 +422,7 @@ function AdminLoginForm() {
                       <div>
                         <a
                           href={totpUri}
-                          className="inline-flex items-center gap-2 bg-[#0D2266] hover:bg-[#1A2E6B] text-gold border border-gold/40 px-3.5 py-2 rounded-xl text-2xs font-semibold uppercase tracking-wider transition-all"
+                          className="inline-flex items-center gap-2 bg-[#0D2266] hover:bg-[#1A2E6B] text-gold border border-gold/40 px-4 py-2.5 rounded-xl text-2xs font-semibold uppercase tracking-wider transition-all shadow-sm"
                         >
                           <span>🍏 Configurar en Contraseñas de Apple / Mac</span>
                         </a>
@@ -410,46 +430,38 @@ function AdminLoginForm() {
                     )}
 
                     {/* Manual Secret Key */}
-                    <div className="bg-[#08143F] p-3 rounded-lg border border-gold/15 text-left">
-                      <div className="text-2xs text-gold uppercase tracking-wider mb-1 font-semibold">
-                        Clave de Configuración Manual:
+                    {totpSecret && (
+                      <div className="bg-[#08143F] p-3 rounded-lg border border-gold/15 text-left">
+                        <div className="text-2xs text-gold uppercase tracking-wider mb-1 font-semibold">
+                          Clave de Configuración Manual:
+                        </div>
+                        <div className="font-mono text-xs text-ivory break-all select-all flex items-center justify-between gap-2">
+                          <span>{totpSecret}</span>
+                          <button
+                            type="button"
+                            onClick={copySecretToClipboard}
+                            className="text-2xs text-gold hover:text-white border border-gold/30 px-2.5 py-1 rounded shrink-0 cursor-pointer bg-gold/10"
+                          >
+                            {copiedSecret ? '¡Copiado!' : 'Copiar'}
+                          </button>
+                        </div>
                       </div>
-                      <div className="font-mono text-xs text-ivory break-all select-all flex items-center justify-between gap-2">
-                        <span>{totpSecret}</span>
-                        <button
-                          type="button"
-                          onClick={copySecretToClipboard}
-                          className="text-2xs text-gold hover:text-white border border-gold/30 px-2 py-0.5 rounded shrink-0 cursor-pointer"
-                        >
-                          {copiedSecret ? '¡Copiado!' : 'Copiar'}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                    )}
+                  </>
                 )}
-
-                <div className="flex items-center justify-between text-2xs text-ivory/40 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStep(1)
-                      setPassword('')
-                      setOtpDigits(['', '', '', '', '', ''])
-                    }}
-                    className="hover:text-gold transition-colors flex items-center gap-1 cursor-pointer"
-                  >
-                    ← Volver a contraseña maestra
-                  </button>
-                  <span className="text-gold/50">RFC 6238 TOTP Standard</span>
-                </div>
               </div>
+            )}
+
+            <div className="text-center text-2xs text-gold/40 pt-4 font-mono">
+              RFC 6238 TOTP Standard (30s)
             </div>
-          )}
+          </div>
         </div>
 
         {/* Security Footer Note */}
         <p className="text-center text-2xs text-ivory/40 mt-6 tracking-wider">
-          Compatible con Google Authenticator, Contraseñas de Apple (iOS / macOS), 1Password y Microsoft Authenticator.
+          Compatible con Contraseñas de Apple (iOS / macOS TouchID / FaceID), Google
+          Authenticator y 1Password.
         </p>
       </main>
 
@@ -468,7 +480,9 @@ export default function AdminLoginPage() {
         <div className="min-h-screen bg-[#0A1B54] flex items-center justify-center text-gold">
           <div className="flex items-center gap-3">
             <span className="w-5 h-5 border-2 border-gold border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs uppercase tracking-widest">Cargando Seguridad 2FA...</span>
+            <span className="text-xs uppercase tracking-widest">
+              Cargando Seguridad 2FA...
+            </span>
           </div>
         </div>
       }
