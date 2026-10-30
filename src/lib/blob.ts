@@ -19,8 +19,8 @@ import {
 
 export { BI_CATEGORIES, type BICategory }
 
-const CATALOG_BLOB_PATH = 'db/catalog.json'
-const ORDERS_BLOB_PATH = 'db/orders.json'
+const CATALOG_BLOB_PATH = 'catalog.json'
+const ORDERS_BLOB_PATH = 'orders.json'
 
 function getLocalFilePath(pathname: string): string {
   const sanitized = pathname.replace(/\//g, path.sep)
