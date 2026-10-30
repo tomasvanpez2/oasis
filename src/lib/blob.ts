@@ -50,10 +50,9 @@ function hasValidBlobToken(): boolean {
  * NUNCA usa list() — cero adivinanzas, URL exacta siempre.
  */
 function getDirectUrl(pathname: string): string {
-  const storeId =
-    process.env.BLOB_STORE_ID?.trim() ||
-    process.env.BLOB_READ_WRITE_TOKEN?.split('_')[3]?.trim() ||
-    ''
+  const token = process.env.BLOB_READ_WRITE_TOKEN || ''
+  const withoutPrefix = token.replace('vercel_blob_rw_', '')
+  const storeId = withoutPrefix.substring(0, withoutPrefix.lastIndexOf('_'))
   if (!storeId) return ''
   return `https://${storeId}.public.blob.vercel-storage.com/${pathname}`
 }
