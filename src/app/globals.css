@@ -137,3 +137,57 @@ html.lenis, html.lenis body {
 .cursor-none {
   cursor: none;
 }
+
+/* ─── 2FA Orbit animation ────────────────────────────────────────────────── */
+:root {
+  --ice: #dceaff;
+  --ok:  #2ee6a8;
+  --bad: #ff4d6a;
+}
+
+/* Container: positions the ring and hub on top of each other */
+.orbit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+}
+
+/* SVG ring fills the container */
+.orbit__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Dashed orbit path – idle colour uses the brand ice tint */
+.orbit__path {
+  fill: none;
+  stroke: var(--ice);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 6;
+  transition: stroke 0.35s ease;
+  transform-origin: 50px 50px;       /* SVG viewBox centre */
+}
+
+/* Verdict colours applied by TwoFactorOrbit.setSuccess / setError */
+.orbit__path--success { stroke: var(--ok); }
+.orbit__path--error   { stroke: var(--bad); }
+
+/* Hub: centred icon slot */
+.orbit__hub {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(197, 160, 89, 0.1);  /* gold/10 */
+  border: 1px solid rgba(197, 160, 89, 0.4);
+}

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import TwoFactorOrbit, { type TwoFactorOrbitHandle } from '@/components/admin/TwoFactorOrbit'
 
 function AdminLoginForm() {
   const searchParams = useSearchParams()
@@ -14,6 +15,7 @@ function AdminLoginForm() {
   const [error, setError] = useState<string | null>(null)
 
   const otpInputsRef = useRef<(HTMLInputElement | null)[]>([])
+  const orbitRef     = useRef<TwoFactorOrbitHandle>(null)
 
   // Auto-focus first input on mount
   useEffect(() => {
@@ -100,6 +102,10 @@ function AdminLoginForm() {
 
     setIsLoading(true)
     setError(null)
+    orbitRef.current?.reset()
+
+    // ── Spin the orbit ring while we wait ──────────────────────────────────
+    orbitRef.current?.triggerSpin()
 
     try {
       const res = await fetch('/api/admin/verify-totp', {
@@ -114,9 +120,13 @@ function AdminLoginForm() {
         throw new Error('Mal código')
       }
 
-      // Código correcto: redirigir INMEDIATAMENTE al dashboard sin mostrar carteles
+      // ── Código correcto: green ring → redirect ─────────────────────────
+      orbitRef.current?.setSuccess()
+      await new Promise((r) => setTimeout(r, 400)) // brief green flash
       window.location.replace(safePath)
     } catch {
+      // ── Código incorrecto: red ring + shake ───────────────────────────
+      orbitRef.current?.setError()
       setError('Mal código')
       setOtpDigits(['', '', '', '', '', ''])
       setIsLoading(false)
@@ -157,22 +167,10 @@ function AdminLoginForm() {
       {/* Main Authentication Card */}
       <main className="w-full max-w-md mx-auto px-6 py-8 z-10 flex-1 flex flex-col justify-center">
         <div className="bg-[#0D2266]/85 backdrop-blur-xl border border-gold/25 rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-          {/* Header Icon & Title */}
+          {/* Header Icon & Title — orbit ring replaces the static lock icon */}
           <div className="text-center mb-8">
-            <div className="w-14 h-14 mx-auto rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center text-gold mb-3 shadow-inner">
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                />
-              </svg>
+            <div className="mx-auto w-14 h-14 flex items-center justify-center mb-3">
+              <TwoFactorOrbit ref={orbitRef} />
             </div>
             <h1 className="font-display text-2xl tracking-wide text-ivory">
               Panel Administrativo
