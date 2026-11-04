@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -29,57 +29,130 @@ interface SuccessReceiptProps {
   transactionId?: string
 }
 
+type VerificationStatus =
+  | 'IDLE'
+  | 'LOADING'
+  | 'APPROVED'
+  | 'AUTH_ERROR'
+  | 'DECLINED'
+  | 'PENDING'
+  | 'VOIDED'
+  | 'ERROR'
+  | 'MISSING_TRANSACTION_ID'
+  | 'REFERENCE_MISMATCH'
+  | 'GATEWAY_ERROR'
+
 export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps) {
   const [order, setOrder] = useState<HydratedReceiptOrder | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [status, setStatus] = useState<VerificationStatus>('LOADING')
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
 
-  useEffect(() => {
-    let isMounted = true
+  const verifyPayment = useCallback(async () => {
+    setStatus('LOADING')
+    setErrorMessage(null)
 
-    async function fetchOrderAndNotify() {
-      try {
-        setLoading(true)
-        const response = await fetch('/api/checkout/notify-telegram', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            reference: reference || '',
-            transactionId: transactionId || '',
-          }),
-        })
+    // Fail Closed: If no transactionId was passed, do not attempt to validate or fake approval
+    if (!transactionId) {
+      setStatus('MISSING_TRANSACTION_ID')
+      setErrorMessage(
+        'No se detectó un identificador de transacción oficial emitido por Wompi. Por políticas de seguridad Zero Trust, los recibos oficiales solo se generan tras validación criptográfica directa.'
+      )
+      return
+    }
 
-        const data = await response.json()
+    try {
+      const response = await fetch('/api/checkout/notify-telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reference: reference || '',
+          transactionId: transactionId || '',
+        }),
+      })
 
-        if (!response.ok || !data.order) {
-          throw new Error(data.error || 'No fue posible cargar el detalle del recibo de compra.')
+      const data = await response.json()
+
+      // Handle Fail-Closed error statuses from backend
+      if (!response.ok || !data.success) {
+        const receivedStatus: string = data.status || 'ERROR'
+
+        if (response.status === 401 || receivedStatus === 'AUTH_ERROR') {
+          setStatus('AUTH_ERROR')
+          setErrorMessage(
+            data.error ||
+              'Fallo Auth Wompi: Verifica Entorno Sandbox/Prod. Por seguridad Zero Trust, esta orden no ha sido aprobada.'
+          )
+          return
         }
 
-        if (isMounted) {
-          setOrder(data.order)
-          setLoading(false)
+        if (receivedStatus === 'DECLINED') {
+          setStatus('DECLINED')
+          setErrorMessage(
+            data.error || 'La transacción fue declinada por la entidad financiera o pasarela de pagos.'
+          )
+          return
         }
-      } catch (err) {
-        console.error('[SuccessReceipt:error]', err)
-        if (isMounted) {
-          setError(err instanceof Error ? err.message : 'Error cargando recibo de pago')
-          setLoading(false)
+
+        if (receivedStatus === 'PENDING') {
+          setStatus('PENDING')
+          setErrorMessage(
+            data.error ||
+              'La transacción se encuentra en proceso de validación bancaria. Los fondos aún no han sido confirmados por Wompi.'
+          )
+          return
         }
+
+        if (receivedStatus === 'VOIDED' || receivedStatus === 'ERROR') {
+          setStatus('ERROR')
+          setErrorMessage(
+            data.error || 'La transacción fue anulada o presentó un error en el procesamiento bancario.'
+          )
+          return
+        }
+
+        if (receivedStatus === 'REFERENCE_MISMATCH') {
+          setStatus('REFERENCE_MISMATCH')
+          setErrorMessage(data.error || 'Conflicto de integridad: La referencia no coincide con la transacción de Wompi.')
+          return
+        }
+
+        if (receivedStatus === 'GATEWAY_ERROR' || response.status === 502) {
+          setStatus('GATEWAY_ERROR')
+          setErrorMessage(
+            data.error || 'Error de comunicación con los servidores seguros de Wompi Bancolombia.'
+          )
+          return
+        }
+
+        setStatus('ERROR')
+        setErrorMessage(data.error || 'No fue posible validar la transacción.')
+        return
       }
-    }
 
-    if (reference || transactionId) {
-      fetchOrderAndNotify()
-    } else {
-      setLoading(false)
-      setError('No se proporcionó una referencia válida de compra.')
-    }
-
-    return () => {
-      isMounted = false
+      // ONLY APPROVED TRANSACTIONS WITH HYDRATED ORDER DATA REACH HERE
+      if (data.status === 'APPROVED' && data.order) {
+        setOrder(data.order)
+        setStatus('APPROVED')
+      } else {
+        setStatus('ERROR')
+        setErrorMessage('Respuesta de confirmación incompleta o no autorizada.')
+      }
+    } catch (err) {
+      console.error('[SuccessReceipt:networkError]', err)
+      setStatus('GATEWAY_ERROR')
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : 'Error de red al consultar el estado de la transacción con el servidor.'
+      )
     }
   }, [reference, transactionId])
+
+  useEffect(() => {
+    verifyPayment()
+  }, [verifyPayment, retryCount])
 
   function handleCopyReference() {
     if (order?.reference) {
@@ -95,49 +168,148 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
     }
   }
 
-  if (loading) {
+  function handleRetry() {
+    setRetryCount((prev) => prev + 1)
+  }
+
+  // ── 1. LOADING STATE ────────────────────────────────────────────────────────
+  if (status === 'LOADING') {
     return (
       <div className="flex min-h-[70vh] flex-col items-center justify-center px-6">
-        <div className="h-8 w-8 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="font-body text-xs uppercase tracking-[0.25em] text-[#C5A059]">
-          Generando recibo oficial y notificando a planta...
+        <div className="h-9 w-9 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin mb-5" />
+        <p className="font-body text-xs uppercase tracking-[0.25em] text-[#C5A059] font-medium text-center">
+          Validando transacción con servidores seguros de Wompi...
         </p>
-        <p className="mt-2 font-body text-xs text-white/40">
-          Verificando transacción en servidores seguros de Bancolombia / Wompi
+        <p className="mt-2 font-body text-xs text-white/50 text-center max-w-md">
+          Consultando estado criptográfico bancario en tiempo real. Por seguridad Zero Trust, el recibo se emite únicamente con confirmación directa.
         </p>
       </div>
     )
   }
 
-  if (error || !order) {
+  // ── 2. FAIL-CLOSED NON-APPROVED STATES (Zero Trust) ─────────────────────────
+  if (status !== 'APPROVED' || !order) {
+    let badgeText = '⚠️ Validación Pendiente'
+    let badgeStyle = 'border-amber-500/40 bg-amber-500/10 text-amber-300'
+    let titleText = 'Validación de Pago'
+    let isDeclined = false
+    let isPending = false
+    let isAuthError = false
+
+    if (status === 'AUTH_ERROR') {
+      badgeText = '⚠️ Error de Autenticación de Pasarela (401)'
+      badgeStyle = 'border-rose-500/40 bg-rose-500/10 text-rose-300'
+      titleText = 'Fallo de Autenticación Wompi'
+      isAuthError = true
+    } else if (status === 'DECLINED') {
+      badgeText = '❌ Transacción Declinada por el Banco'
+      badgeStyle = 'border-red-500/40 bg-red-500/10 text-red-300'
+      titleText = 'Pago No Aprobado'
+      isDeclined = true
+    } else if (status === 'PENDING') {
+      badgeText = '⏳ Transacción en Proceso Bancario'
+      badgeStyle = 'border-amber-400/40 bg-amber-400/10 text-amber-200'
+      titleText = 'Pago Pendiente de Confirmación'
+      isPending = true
+    } else if (status === 'MISSING_TRANSACTION_ID') {
+      badgeText = '🔒 Verificación Requerida'
+      badgeStyle = 'border-cyan-500/40 bg-cyan-500/10 text-cyan-300'
+      titleText = 'Comprobante de Pago No Encontrado'
+    } else if (status === 'REFERENCE_MISMATCH') {
+      badgeText = '🛡️ Discrepancia de Referencia'
+      badgeStyle = 'border-rose-500/40 bg-rose-500/10 text-rose-300'
+      titleText = 'Fallo de Integridad en Transacción'
+    }
+
     return (
-      <div className="flex min-h-[70vh] flex-col items-start justify-center px-6 sm:px-12 lg:px-20 max-w-2xl mx-auto">
-        <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-          Verificación de Orden
-        </span>
-        <h1 className="mt-2 font-display text-3xl sm:text-4xl font-normal text-white">
-          Orden #{reference || 'N/A'}
+      <div className="flex min-h-[70vh] flex-col items-start justify-center px-6 sm:px-12 lg:px-20 max-w-3xl mx-auto py-12">
+        <div className={`inline-flex items-center gap-2 border px-3.5 py-1.5 backdrop-blur-sm text-2xs uppercase tracking-widest font-mono ${badgeStyle}`}>
+          <span>{badgeText}</span>
+        </div>
+
+        <h1 className="mt-4 font-display text-3xl sm:text-4xl font-normal text-white">
+          {titleText}
         </h1>
-        <div className="mt-6 border border-white/10 bg-[#07133B] p-6 w-full space-y-3">
-          <p className="font-body text-sm text-white/80 leading-relaxed">
-            Hemos recibido el reporte de pago para tu referencia{' '}
-            <span className="font-mono font-bold text-[#C5A059]">{reference}</span>.
+
+        <div className="mt-6 border border-white/10 bg-[#07133B] p-6 sm:p-8 w-full space-y-4 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-4 gap-2">
+            <div>
+              <span className="text-[10px] uppercase font-mono tracking-wider text-white/40 block">
+                Referencia de Orden
+              </span>
+              <span className="font-mono text-base font-bold text-[#C5A059]">
+                {reference || 'No especificada'}
+              </span>
+            </div>
+            {transactionId && (
+              <div className="sm:text-right">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-white/40 block">
+                  ID Transacción Wompi
+                </span>
+                <span className="font-mono text-xs text-white/70">
+                  {transactionId}
+                </span>
+              </div>
+            )}
+          </div>
+
+          <p className="font-body text-sm text-white/90 leading-relaxed">
+            {errorMessage ||
+              'La transacción no ha recibido el estado de aprobación por parte de la pasarela de pagos Wompi.'}
           </p>
-          <p className="font-body text-xs text-white/50">
-            {error || 'El recibo está siendo consolidado en nuestra base de datos industrial.'}
-          </p>
-          <div className="pt-4 flex gap-4">
-            <Link
-              href="/"
-              className="border border-white/30 px-5 py-2.5 font-body text-xs uppercase tracking-widest text-white hover:bg-white hover:text-[#0A1B54] transition-all"
-            >
-              Volver al Inicio
-            </Link>
+
+          {isAuthError && (
+            <div className="border border-rose-500/30 bg-rose-950/20 p-4 text-xs font-mono text-rose-200/90 space-y-1">
+              <p className="font-bold text-rose-300">
+                [Diagnóstico de Seguridad Bancaria]:
+              </p>
+              <p>
+                Fallo Auth Wompi: Verifica Entorno Sandbox/Prod. Las credenciales utilizadas no corresponden al endpoint consultado o son inválidas. Por arquitectura Fail-Closed, la orden no ha sido aprobada.
+              </p>
+            </div>
+          )}
+
+          {isDeclined && (
+            <p className="font-body text-xs text-white/60">
+              No se ha efectuado ningún cobro en tu cuenta o tarjeta de crédito. Puedes intentar el pago nuevamente utilizando otro método de pago (Tarjeta, Nequi, PSE o Botón Bancolombia).
+            </p>
+          )}
+
+          {isPending && (
+            <p className="font-body text-xs text-white/60">
+              Si realizaste el pago mediante PSE o transferencia bancaria, el banco emisor puede demorar varios minutos en confirmar la transferencia. Puedes consultar nuevamente en unos instantes.
+            </p>
+          )}
+
+          <div className="pt-4 flex flex-wrap gap-3">
+            {transactionId && (
+              <button
+                type="button"
+                onClick={handleRetry}
+                className="border border-[#C5A059] bg-[#C5A059] px-5 py-2.5 font-body text-xs uppercase tracking-widest text-[#0A1B54] font-semibold hover:bg-white hover:border-white transition-all"
+              >
+                Reintentar Verificación
+              </button>
+            )}
+            {isDeclined && (
+              <Link
+                href="/checkout"
+                className="border border-[#C5A059] bg-[#C5A059] px-5 py-2.5 font-body text-xs uppercase tracking-widest text-[#0A1B54] font-semibold hover:bg-white hover:border-white transition-all"
+              >
+                Reintentar Pago
+              </Link>
+            )}
             <Link
               href="/catalogo"
-              className="border border-[#C5A059] bg-[#C5A059] px-5 py-2.5 font-body text-xs uppercase tracking-widest text-[#0A1B54] font-semibold hover:bg-white hover:border-white transition-all"
+              className="border border-white/20 px-5 py-2.5 font-body text-xs uppercase tracking-widest text-white hover:bg-white/10 transition-all"
             >
               Ver Catálogo
+            </Link>
+            <Link
+              href="/"
+              className="border border-white/10 px-5 py-2.5 font-body text-xs uppercase tracking-widest text-white/70 hover:text-white transition-all"
+            >
+              Volver al Inicio
             </Link>
           </div>
         </div>
@@ -145,6 +317,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
     )
   }
 
+  // ── 3. APPROVED STATE: ZERO TRUST QUIET LUXURY RECEIPT ─────────────────────
   const customerName = order.customer?.fullName || 'Estimado Cliente'
   const installmentsFormatted =
     order.installments && order.installments > 1
@@ -180,7 +353,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
           Gracias por tu compra, <span className="text-[#C5A059]">{customerName}</span>.
         </h1>
         <p className="mt-3 font-body text-sm sm:text-base text-white/70 max-w-2xl leading-relaxed">
-          Tu orden ha sido confirmada con éxito y transmitida directamente a nuestro taller industrial de manufactura en{' '}
+          Tu orden ha sido confirmada con éxito mediante validación bancaria directa de Wompi y transmitida a nuestro taller industrial en{' '}
           <strong className="text-white">Normandía, Bogotá</strong>.
         </p>
       </motion.div>
@@ -230,7 +403,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
           </div>
         </div>
 
-        {/* ── METADATA TILES (Payment, Installments, Logistics, Customer) ── */}
+        {/* ── METADATA TILES (Payment, Installments, Logistics, Timestamp) ── */}
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border-b border-white/10 pb-8">
           {/* Tile 1: Payment Method */}
           <div className="space-y-1">
@@ -242,7 +415,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
               {order.paymentMethod}
             </p>
             <p className="font-mono text-[11px] text-white/40">
-              {order.wompiTransactionId ? `Tx ID: ${order.wompiTransactionId.slice(0, 14)}...` : 'Pasarela Wompi'}
+              {order.wompiTransactionId ? `Tx ID: ${order.wompiTransactionId.slice(0, 14)}...` : 'Validado en Wompi'}
             </p>
           </div>
 
@@ -412,4 +585,3 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
     </div>
   )
 }
-

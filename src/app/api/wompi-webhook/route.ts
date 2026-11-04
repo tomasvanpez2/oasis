@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
 
     // ── 5. Automated Factory Dispatch (Telegram) ────────────────────────────────
     // Send Telegram notification detailing the order, amount, and BI category
-    if (['approved', 'declined', 'voided', 'error'].includes(mappedStatus)) {
+    if (mappedStatus === 'approved') {
       try {
         await sendOrderNotification({
           ...updatedOrder,

@@ -12,7 +12,16 @@ export const metadata: Metadata = {
   description: 'Comprobante de transacción y orden de producción directa de fábrica.',
 }
 
-export default function CheckoutSuccessPage() {
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default function CheckoutSuccessPage({ searchParams }: PageProps) {
+  const reference = typeof searchParams.reference === 'string' ? searchParams.reference : ''
+  const transactionId =
+    (typeof searchParams.id === 'string' ? searchParams.id : '') ||
+    (typeof searchParams.transactionId === 'string' ? searchParams.transactionId : '')
+
   return (
     <main className="bg-[#0A1B54] min-h-screen text-white">
       <Header />
@@ -22,16 +31,18 @@ export default function CheckoutSuccessPage() {
             <div className="flex min-h-[60vh] items-center justify-center font-body text-xs uppercase tracking-widest text-white/50">
               <div className="flex flex-col items-center gap-3">
                 <div className="h-6 w-6 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin" />
-                <span>Generando recibo de compra seguro...</span>
+                <span>Verificando transacción bancaria con Wompi...</span>
               </div>
             </div>
           }
         >
-          <SuccessReceiptWrapper />
+          <SuccessReceiptWrapper
+            initialReference={reference}
+            initialTransactionId={transactionId}
+          />
         </Suspense>
       </div>
       <Footer />
     </main>
   )
 }
-

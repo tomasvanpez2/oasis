@@ -4,6 +4,8 @@
  *
  * Strict separation of concerns:
  * - 0% PCI-DSS footprint: Zero credit card numbers (PAN), CVVs, or expirations handled on Oasis servers.
+ * - Dynamic Environment Inference: Infers Sandbox vs Production strictly based on active keys to eliminate URL mismatches and HTTP 401 errors.
+ * - Fail-Closed Zero-Trust Enforcement: Any 401, 404, 500, or non-APPROVED status immediately aborts execution.
  * - Mandatory Integrity Key (WOMPI_INTEGRITY_SECRET) for transaction hashing.
  * - Mandatory Events Key (WOMPI_EVENTS_SECRET) for webhook signature verification.
  * - Timing-safe constant-time hash comparisons (crypto.timingSafeEqual).
@@ -17,41 +19,132 @@ import type {
   WompiWebhookEvent,
 } from '@/types'
 
-const WOMPI_SANDBOX_API = 'https://sandbox.wompi.co/v1'
-const WOMPI_PROD_API = 'https://production.wompi.co/v1'
-const WOMPI_CHECKOUT_BASE_URL = 'https://checkout.wompi.co/p/'
+export const WOMPI_SANDBOX_API = 'https://sandbox.wompi.co/v1/'
+export const WOMPI_PROD_API = 'https://production.wompi.co/v1/'
+export const WOMPI_CHECKOUT_BASE_URL = 'https://checkout.wompi.co/p/'
+
+// ─── Custom Zero-Trust Error Classes ─────────────────────────────────────────
+
+export class WompiAuthError extends Error {
+  readonly statusCode: number = 401
+  readonly details?: unknown
+  constructor(message: string = 'Fallo Auth Wompi: Verifica Entorno Sandbox/Prod', details?: unknown) {
+    super(message)
+    this.name = 'WompiAuthError'
+    this.details = details
+  }
+}
+
+export class WompiApiError extends Error {
+  readonly statusCode: number
+  readonly details?: unknown
+  constructor(message: string, statusCode: number = 500, details?: unknown) {
+    super(message)
+    this.name = 'WompiApiError'
+    this.statusCode = statusCode
+    this.details = details
+  }
+}
+
+export class WompiTransactionNotApprovedError extends Error {
+  readonly statusCode: number = 422
+  readonly transactionStatus: string
+  readonly transaction: WompiTransaction
+  constructor(message: string, status: string, transaction: WompiTransaction) {
+    super(message)
+    this.name = 'WompiTransactionNotApprovedError'
+    this.transactionStatus = status
+    this.transaction = transaction
+  }
+}
+
+// ─── Dynamic Environment & Key Resolution ─────────────────────────────────────
 
 /**
- * Resolves the 4 fundamental Wompi cryptographic keys from environment variables.
- * Prioritizes standard enterprise naming with fallbacks for legacy prefixes.
+ * Dynamically resolves the active Wompi environment based on keys and environment variables.
+ * Test keys ('test') ALWAYS take precedence over NODE_ENV to prevent sending sandbox keys
+ * to the production REST endpoint (which causes HTTP 401 Unauthorized errors).
  */
-export function getWompiKeys(): WompiKeysConfig {
-  const publicKey =
+export function getWompiEnvironment(): 'sandbox' | 'production' {
+  const privateKey = (
+    process.env.WOMPI_PRIVATE_KEY ||
+    process.env.WOMPI_PRV_KEY ||
+    ''
+  ).trim()
+
+  const publicKey = (
     process.env.WOMPI_PUBLIC_KEY ||
     process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY ||
     ''
+  ).trim()
 
-  const privateKey =
-    process.env.WOMPI_PRIVATE_KEY ||
-    ''
-
-  const eventsSecret =
+  const eventsSecret = (
     process.env.WOMPI_EVENTS_SECRET ||
     process.env.WOMPI_EVENTS_KEY ||
     ''
+  ).trim()
 
-  const integritySecret =
+  const integritySecret = (
     process.env.WOMPI_INTEGRITY_SECRET ||
     process.env.WOMPI_INTEGRITY_KEY ||
     ''
+  ).trim()
 
-  const isProduction =
-    process.env.NODE_ENV === 'production' ||
-    publicKey.startsWith('pub_prod_') ||
-    privateKey.startsWith('prv_prod_')
+  const combinedKeys = `${privateKey} ${publicKey} ${eventsSecret} ${integritySecret}`.toLowerCase()
+
+  // 1. Any key containing 'test' strictly enforces Sandbox mode
+  if (combinedKeys.includes('test')) {
+    return 'sandbox'
+  }
+
+  // 2. Explicit environment flag override (if set to test/sandbox)
+  const envVar = (process.env.WOMPI_ENVIRONMENT || process.env.WOMPI_ENV || '').toLowerCase().trim()
+  if (envVar === 'test' || envVar === 'sandbox') {
+    return 'sandbox'
+  }
+
+  // 3. If any key contains 'prod', or environment explicitly requested production
+  if (combinedKeys.includes('prod') || envVar === 'production' || envVar === 'prod') {
+    return 'production'
+  }
+
+  // 4. Default: NODE_ENV fallback
+  return process.env.NODE_ENV === 'production' ? 'production' : 'sandbox'
+}
+
+/**
+ * Resolves the 4 fundamental Wompi cryptographic keys from environment variables.
+ * In production mode, audits and alerts on missing or dummy keys.
+ */
+export function getWompiKeys(): WompiKeysConfig {
+  const publicKey = (
+    process.env.WOMPI_PUBLIC_KEY ||
+    process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY ||
+    ''
+  ).trim()
+
+  const privateKey = (
+    process.env.WOMPI_PRIVATE_KEY ||
+    process.env.WOMPI_PRV_KEY ||
+    ''
+  ).trim()
+
+  const eventsSecret = (
+    process.env.WOMPI_EVENTS_SECRET ||
+    process.env.WOMPI_EVENTS_KEY ||
+    ''
+  ).trim()
+
+  const integritySecret = (
+    process.env.WOMPI_INTEGRITY_SECRET ||
+    process.env.WOMPI_INTEGRITY_KEY ||
+    ''
+  ).trim()
+
+  const isProduction = getWompiEnvironment() === 'production'
 
   // In production, validate that no dummy or empty keys exist
-  if (process.env.NODE_ENV === 'production') {
+  if (isProduction && process.env.NODE_ENV === 'production') {
     const missingKeys: string[] = []
     if (!publicKey || publicKey.includes('placeholder')) missingKeys.push('WOMPI_PUBLIC_KEY')
     if (!privateKey || privateKey.includes('placeholder')) missingKeys.push('WOMPI_PRIVATE_KEY')
@@ -78,13 +171,11 @@ export function getWompiKeys(): WompiKeysConfig {
 
 /**
  * Returns the base API URL depending on the active key type or runtime environment.
+ * Strictly uses https://sandbox.wompi.co/v1/ for test keys and https://production.wompi.co/v1/ for production keys.
  */
 export function getWompiApiBaseUrl(): string {
-  const { isProduction, publicKey } = getWompiKeys()
-  if (isProduction || publicKey.startsWith('pub_prod_')) {
-    return WOMPI_PROD_API
-  }
-  return WOMPI_SANDBOX_API
+  const env = getWompiEnvironment()
+  return env === 'production' ? WOMPI_PROD_API : WOMPI_SANDBOX_API
 }
 
 // ─── 1. Integrity Signature Generation ────────────────────────────────────────
@@ -306,15 +397,13 @@ export function buildWompiCheckoutUrl(params: WompiCheckoutParams): string {
       searchParams.set('customer-data:legal-id-type', params.customer.documentType || 'CC')
     }
 
-    // 2. Datos de Envío (FIX: Wompi exige los 5 parámetros obligatoriamente si envías la dirección)
+    // 2. Datos de Envío (Wompi exige los 5 parámetros obligatoriamente si envías la dirección)
     if (params.customer.address) {
       searchParams.set('shipping-address:address-line-1', params.customer.address.trim())
       searchParams.set('shipping-address:country', 'CO')
       searchParams.set('shipping-address:city', params.customer.city.trim())
-      
-      // Añadimos los dos parámetros que Wompi estaba reclamando
       searchParams.set('shipping-address:phone-number', params.customer.phone.replace(/\D/g, ''))
-      searchParams.set('shipping-address:region', params.customer.city.trim()) // Usamos la ciudad como región por defecto
+      searchParams.set('shipping-address:region', params.customer.city.trim())
     }
   }
 
@@ -328,37 +417,98 @@ export function buildWompiCheckoutUrl(params: WompiCheckoutParams): string {
   return `${WOMPI_CHECKOUT_BASE_URL}?${queryString}`
 }
 
-// ─── 4. Authenticated Server-to-Server REST Client ───────────────────────────
+// ─── 4. Authenticated Server-to-Server REST Client (Zero-Trust Fail-Closed) ───
 
 /**
- * Fetches transaction details directly from Wompi's REST API using the Private Key (WOMPI_PRIVATE_KEY).
- * Used for server-side verification, transaction polling, or reconciliation.
+ * Fetches transaction details directly from Wompi's REST API using the Private Key.
+ * Enforces strict Fail-Closed security:
+ * - Dynamically routes to Sandbox or Production URL to eliminate HTTP 401 mismatches.
+ * - Enforces strict Bearer <privateKey> authorization header.
+ * - Logs critical error and throws WompiAuthError on HTTP 401.
+ * - Aborts immediately on any non-200 HTTP code (404, 500, etc.).
  */
 export async function getWompiTransactionById(transactionId: string): Promise<WompiTransaction> {
-  const { privateKey } = getWompiKeys()
+  if (!transactionId || typeof transactionId !== 'string' || !transactionId.trim()) {
+    throw new WompiApiError('[wompi:api] transactionId es obligatorio para consultar la transacción', 400)
+  }
 
-  if (!privateKey) {
-    throw new Error('[wompi:api] WOMPI_PRIVATE_KEY is required to query transaction details from Wompi API')
+  const { privateKey } = getWompiKeys()
+  const cleanPrivateKey = privateKey.replace(/^Bearer\s+/i, '').trim()
+
+  if (!cleanPrivateKey) {
+    const errorMsg = '[wompi:api:CRITICAL] WOMPI_PRIVATE_KEY no está configurada en las variables de entorno'
+    console.error(errorMsg)
+    throw new WompiAuthError('Fallo Auth Wompi: Verifica Entorno Sandbox/Prod')
   }
 
   const baseUrl = getWompiApiBaseUrl()
-  const response = await fetch(`${baseUrl}/transactions/${encodeURIComponent(transactionId)}`, {
+  const cleanBaseUrl = baseUrl.replace(/\/+$/, '')
+  const endpoint = `${cleanBaseUrl}/transactions/${encodeURIComponent(transactionId.trim())}`
+
+  const response = await fetch(endpoint, {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${privateKey}`,
+      Authorization: `Bearer ${cleanPrivateKey}`,
       'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
     cache: 'no-store',
   })
 
-  const body = await response.json()
+  // Fail-Closed: Strict authentication check
+  if (response.status === 401) {
+    console.error(
+      `[wompi:auth:CRITICAL] Fallo Auth Wompi: Verifica Entorno Sandbox/Prod. Endpoint: ${endpoint}, HTTP 401 Unauthorized`
+    )
+    const errBody = await response.json().catch(() => ({}))
+    throw new WompiAuthError('Fallo Auth Wompi: Verifica Entorno Sandbox/Prod', errBody)
+  }
 
-  if (!response.ok) {
-    const errorDetails = body.error?.messages?.join(', ') || body.message || 'Error consultando transacción Wompi'
-    throw new Error(`[wompi:api] ${errorDetails} (HTTP ${response.status})`)
+  const body = await response.json().catch(() => null)
+
+  // Fail-Closed: Handle any non-200 response (404, 500, 502, etc.)
+  if (!response.ok || !body) {
+    const errorDetails =
+      body?.error?.messages?.join(', ') ||
+      body?.error?.reason ||
+      body?.message ||
+      `HTTP Error ${response.status}`
+    throw new WompiApiError(
+      `[wompi:api] ${errorDetails} (HTTP ${response.status})`,
+      response.status,
+      body
+    )
+  }
+
+  if (!body.data || typeof body.data !== 'object' || !body.data.id) {
+    throw new WompiApiError(
+      '[wompi:api] Respuesta de Wompi incompleta: no incluye el objeto data de la transacción',
+      502,
+      body
+    )
   }
 
   return body.data as WompiTransaction
+}
+
+/**
+ * Verifies that a transaction exists in Wompi and has status strictly 'APPROVED'.
+ * Implements strict Zero-Trust and Fail-Closed semantics:
+ * Aborts immediately and throws WompiTransactionNotApprovedError if status !== 'APPROVED'.
+ */
+export async function verifyWompiTransactionApproved(transactionId: string): Promise<WompiTransaction> {
+  const transaction = await getWompiTransactionById(transactionId)
+  const status = (transaction.status || '').toUpperCase()
+
+  if (status !== 'APPROVED') {
+    throw new WompiTransactionNotApprovedError(
+      `Transacción Wompi no aprobada. Estado recibido: ${status}`,
+      status,
+      transaction
+    )
+  }
+
+  return transaction
 }
 
 /**
@@ -371,7 +521,8 @@ export async function getWompiMerchantInfo(): Promise<Record<string, unknown>> {
   }
 
   const baseUrl = getWompiApiBaseUrl()
-  const response = await fetch(`${baseUrl}/merchants/${encodeURIComponent(publicKey)}`, {
+  const cleanBaseUrl = baseUrl.replace(/\/+$/, '')
+  const response = await fetch(`${cleanBaseUrl}/merchants/${encodeURIComponent(publicKey)}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     cache: 'no-store',
