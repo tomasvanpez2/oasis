@@ -11,7 +11,7 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[105vh] overflow-hidden pt-28 pb-20 lg:pt-36 lg:pb-28"
+      className="relative overflow-hidden pt-28 pb-16 lg:pt-32 lg:pb-20"
     >
       {/* Precision 1px Architectural Column Grid Lines (5 asymmetric guide columns) */}
       <div className="pointer-events-none absolute inset-0 grid grid-cols-5 opacity-10">

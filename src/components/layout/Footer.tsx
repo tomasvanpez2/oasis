@@ -35,10 +35,8 @@ export function Footer() {
           </p>
           {[
             { href: '/', label: 'Inicio' },
-            { href: '/catalogo', label: 'Catálogo de Colchones (13)' },
-            { href: '/filosofia', label: 'Filosofía de Manufactura' },
-            { href: '/contacto', label: 'Contacto & Planta Bogotá' },
-            { href: '/legales', label: 'Garantía & Términos Legales' },
+            { href: '/catalogo', label: 'Catálogo de Colchones' },
+            { href: '/filosofia', label: 'Filosofía' },
             { href: '/checkout', label: 'Pasarela y Pago Seguro' },
           ].map(({ href, label }) => (
             <div key={href}>

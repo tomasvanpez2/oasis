@@ -65,12 +65,14 @@ export function FilosofiaValues() {
               />
             </svg>
           </Link>
-          <Link
-            href="/contacto"
+          <a
+            href="https://wa.me/573108529410?text=Hola%20Oasis%20Colchones,%20deseo%20asesor%C3%ADa%20sobre%20un%20colch%C3%B3n"
+            target="_blank"
+            rel="noopener noreferrer"
             className="border border-white/20 bg-white/5 px-6 py-4 font-body text-xs uppercase tracking-widest text-white/80 transition-all duration-300 hover:border-[#C5A059] hover:text-[#C5A059]"
           >
-            Contactar Ingeniero de Planta
-          </Link>
+            Asesoría Directa de Planta
+          </a>
         </motion.div>
       </div>
     </section>

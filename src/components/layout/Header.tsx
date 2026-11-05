@@ -9,7 +9,6 @@ const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
   { href: '/catalogo', label: 'Catálogo' },
   { href: '/filosofia', label: 'Filosofía' },
-  { href: '/contacto', label: 'Contacto' },
 ]
 
 export function Header() {

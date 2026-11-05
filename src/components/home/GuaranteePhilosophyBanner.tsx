@@ -93,10 +93,10 @@ export function GuaranteePhilosophyBanner() {
                   </svg>
                 </Link>
                 <Link
-                  href="/legales"
+                  href="/filosofia"
                   className="font-body text-xs uppercase tracking-widest text-white/60 hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-[#C5A059]"
                 >
-                  Ver Protocolo de Garantía Legal →
+                  Compromisos y Garantía de Manufactura →
                 </Link>
               </motion.div>
             </div>
