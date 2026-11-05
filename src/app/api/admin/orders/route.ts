@@ -1,24 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getOrders, updateOrderStatus } from '@/lib/blob'
-import { BI_CATEGORIES, type OrderStatus, type BICategory } from '@/types'
+import { BI_CATEGORIES, type OrderStatus, type BICategory, type Order } from '@/types'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url)
+    const statusParam = searchParams.get('status')?.toLowerCase()
+    const viewParam = searchParams.get('view')?.toLowerCase() // 'production' | 'attempts' | 'all'
+
     const db = await getOrders()
-    const orders = (db.orders || []).sort(
+    const allOrders = (db.orders || []).sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
 
-    // Compute BI Metrics
+    // Compute Global BI Metrics across all orders
     let totalRevenue = 0
     let pendingRevenue = 0
     let processedOrdersCount = 0
 
     const statusCounts: Record<string, number> = {
       pending: 0,
+      payment_pending: 0,
       approved: 0,
       production: 0,
       dispatched: 0,
@@ -64,17 +69,17 @@ export async function GET() {
       },
     }
 
-    for (const order of orders) {
+    for (const order of allOrders) {
       const orderTotal = Number(order.total) || 0
       const st = (order.status || 'pending').toLowerCase()
       statusCounts[st] = (statusCounts[st] || 0) + 1
 
-      // Revenue: include all non-cancelled orders
+      // Revenue: include all confirmed/active paid sales
       const isApprovedOrActive = ['approved', 'production', 'dispatched', 'delivered'].includes(st)
       if (isApprovedOrActive) {
         totalRevenue += orderTotal
         processedOrdersCount += 1
-      } else if (st === 'pending') {
+      } else if (st === 'pending' || st === 'payment_pending') {
         pendingRevenue += orderTotal
       }
 
@@ -95,13 +100,36 @@ export async function GET() {
 
     const averageTicket = processedOrdersCount > 0 ? Math.round(totalRevenue / processedOrdersCount) : 0
 
+    // Filter orders deterministically based on query parameters
+    let filteredOrders: Order[] = allOrders
+
+    if (viewParam === 'production') {
+      // Production view strictly filters approved or active paid orders
+      if (statusParam) {
+        filteredOrders = allOrders.filter((o) => o.status === statusParam)
+      } else {
+        // Default production queue: STRICTLY approved
+        filteredOrders = allOrders.filter((o) => o.status === 'approved')
+      }
+    } else if (viewParam === 'attempts') {
+      // Unconfirmed payment attempts, abandoned carts, or gateway failures
+      const attemptStatuses = ['payment_pending', 'pending', 'declined', 'error', 'voided']
+      if (statusParam) {
+        filteredOrders = allOrders.filter((o) => o.status === statusParam)
+      } else {
+        filteredOrders = allOrders.filter((o) => attemptStatuses.includes(o.status))
+      }
+    } else if (statusParam) {
+      filteredOrders = allOrders.filter((o) => o.status === statusParam)
+    }
+
     return NextResponse.json({
-      orders,
+      orders: filteredOrders,
       metrics: {
         totalRevenue,
         pendingRevenue,
         averageTicket,
-        totalOrders: orders.length,
+        totalOrders: allOrders.length,
         processedOrdersCount,
         statusCounts,
         categoryStats,
@@ -127,6 +155,7 @@ export async function PATCH(req: NextRequest) {
 
     const validStatuses: OrderStatus[] = [
       'pending',
+      'payment_pending',
       'approved',
       'production',
       'dispatched',
@@ -156,4 +185,3 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Error al actualizar el estado de la orden' }, { status: 500 })
   }
 }
-

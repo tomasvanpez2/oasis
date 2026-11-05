@@ -1,3 +1,7 @@
+import type { ShippingZone, ShippingResolution } from '@/lib/shipping'
+
+export type { ShippingZone, ShippingResolution }
+
 // ─── Product & Catalog ──────────────────────────────────────────────────────
 
 export type MattressSize = 'Sencillo' | 'Semi-doble' | 'Doble' | 'Queen' | 'King'
@@ -50,6 +54,12 @@ export interface CartItem {
 export interface CartState {
   items: CartItem[]
   isOpen: boolean
+  shipping: number
+  shippingZone: ShippingZone
+  shippingCity: string
+  shippingDepartment?: string
+  shippingResolution: ShippingResolution | null
+  isCalculatingShipping: boolean
   addItem: (item: Omit<CartItem, 'quantity'>) => void
   removeItem: (productId: string, size: MattressSize) => void
   updateQuantity: (productId: string, size: MattressSize, quantity: number) => void
@@ -59,6 +69,10 @@ export interface CartState {
   toggleCart: () => void
   getTotalItems: () => number
   getTotalPrice: () => number
+  updateShippingLocation: (city: string, department?: string) => ShippingResolution
+  setShippingZone: (zone: ShippingZone) => void
+  getShippingFee: () => number
+  getGrandTotal: () => number
 }
 
 // ─── Business Intelligence Categories ────────────────────────────────────────
@@ -77,6 +91,7 @@ export type BICategory = (typeof BI_CATEGORIES)[number]
 
 export type OrderStatus =
   | 'pending'
+  | 'payment_pending'
   | 'approved'
   | 'production'
   | 'dispatched'
@@ -92,6 +107,7 @@ export interface CustomerInfo {
   document: string
   documentType: 'CC' | 'CE' | 'NIT' | 'PP'
   city: string
+  department?: string
   address: string
   notes?: string
   shippingZoneId?: string
@@ -233,8 +249,9 @@ export interface CheckoutFormData {
   phone: string
   documentType: 'CC' | 'CE' | 'NIT' | 'PP'
   document: string
-  shippingZoneId: string
+  shippingZoneId?: string
   city: string
+  department?: string
   address: string
   notes?: string
   acceptTerms: boolean

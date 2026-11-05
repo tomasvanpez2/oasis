@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useState, useEffect } from 'react'
 import type { Product } from '@/types'
 import { FilterBar } from './FilterBar'
@@ -8,22 +9,27 @@ import { motion } from 'framer-motion'
 
 type CategoryFilter = 'todos' | 'espuma' | 'resortes' | 'latex' | 'premium'
 
-export function CatalogClient() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+interface CatalogClientProps {
+  initialProducts?: Product[]
+}
+
+export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
+  const [products, setProducts] = useState<Product[]>(initialProducts)
+  const [loading, setLoading] = useState(initialProducts.length === 0)
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>('todos')
 
   useEffect(() => {
+    // If we already have initialProducts from SSR, we still verify fresh updates silently
     fetch('/api/catalog')
       .then((r) => r.json())
       .then((data) => {
-        if (data && data.products) {
+        if (data && Array.isArray(data.products) && data.products.length > 0) {
           setProducts(data.products)
         }
         setLoading(false)
       })
       .catch((err) => {
-        console.error('[catalog:fetch]', err)
+        console.warn('[catalog:fetch]', err)
         setLoading(false)
       })
   }, [])
@@ -34,7 +40,7 @@ export function CatalogClient() {
       : products.filter((p) => p.category === activeFilter)
 
   return (
-    <div className="relative min-h-screen pt-28 pb-24">
+    <div className="relative min-h-screen pt-28 pb-24 bg-[#0A1B54]">
       {/* Editorial Page Header with Text-Splitting */}
       <div className="border-b border-white/10 px-6 pb-12 lg:px-16">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
@@ -61,7 +67,7 @@ export function CatalogClient() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="font-body text-xs sm:text-sm text-white/60 max-w-md leading-relaxed"
+            className="font-body text-xs sm:text-sm text-white/70 max-w-md leading-relaxed"
           >
             Cada modelo expuesto con su fotografía real, ficha técnica, matriz de 5 medidas y precio de salida de fábrica en Bogotá.
           </motion.p>
@@ -72,12 +78,12 @@ export function CatalogClient() {
       <FilterBar activeFilter={activeFilter} onFilterChange={setActiveFilter} />
 
       {/* Catalog Metric Sub-bar */}
-      <div className="flex items-center justify-between border-b border-white/10 px-6 py-3.5 lg:px-16 bg-[#07133B]/40">
+      <div className="flex items-center justify-between border-b border-white/10 px-6 py-3.5 lg:px-16 bg-[#07133B]/60">
         <span className="font-body text-2xs uppercase tracking-[0.2em] text-white/50">
           Mostrando {filtered.length} de {products.length} referencias
         </span>
         <span className="font-body text-2xs text-[#C5A059]">
-          Garantía directa de 10 a 15 años • Despacho Coordinadora
+          Garantía directa de 10 a 15 años • Despacho Coordinadora Mercantil
         </span>
       </div>
 

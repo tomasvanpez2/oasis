@@ -118,6 +118,7 @@ export function buildFactoryOrderMessage(order: Order): string {
     delivered: '📦 ENTREGADO',
     declined: '❌ PAGO DECLINADO',
     pending: '⏳ TRANSACCIÓN PENDIENTE',
+    payment_pending: '⏳ PAGO PENDIENTE (SIN CONFIRMAR)',
     voided: '🚫 PAGO ANULADO',
     error: '⚠️ ERROR EN TRANSACCIÓN',
   }

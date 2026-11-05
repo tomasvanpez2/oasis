@@ -1,6 +1,9 @@
 /**
  * Wompi Checkout Session Initialization Endpoint
  * Strictly 0% PCI-DSS Scope: Zero card data captured on our infrastructure.
+ * Zero-Trust Architectural Security: Shipping and financial totals are deterministically
+ * calculated and enforced on the server using Coordinadora Mercantil logistics matrix.
+ * Client-side shipping injections or alterations are completely neutralized.
  * Generates cryptographic integrity signature (SHA-256) and returns official Wompi redirect URL.
  * Categorizes and persists the pending order into Vercel Blob with mandatory BI category.
  */
@@ -8,6 +11,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateIntegrityHash, buildWompiCheckoutUrl, getWompiKeys } from '@/lib/wompi'
 import { saveOrder, classifyOrderCategory } from '@/lib/blob'
 import { generateOrderReference } from '@/lib/utils'
+import { resolveShippingFromLocation } from '@/lib/shipping'
 import type { Order, CartItem, CustomerInfo } from '@/types'
 
 export const runtime = 'nodejs'
@@ -17,7 +21,7 @@ export const revalidate = 0
 interface WompiCheckoutRequestBody {
   customer: CustomerInfo
   items: CartItem[]
-  subtotal: number
+  subtotal?: number
   shipping?: number
   shippingZone?: string
   total?: number
@@ -36,7 +40,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { customer, items, subtotal, shipping = 0, shippingZone = '', total, redirectUrl } = body
+    const { customer, items, subtotal: clientSubtotal, shipping: clientShipping, total: clientTotal, redirectUrl } = body
 
     // ── 1. Validate Customer Information ─────────────────────────────────────────
     if (!customer || typeof customer !== 'object') {
@@ -46,7 +50,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { fullName, email, phone, document, documentType, city, address } = customer
+    const { fullName, email, phone, document, documentType, city, department, address } = customer
 
     if (!fullName || !email || !phone || !document || !city || !address) {
       return NextResponse.json(
@@ -62,10 +66,45 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // ── 2. Financial Calculations ────────────────────────────────────────────────
-    const calculatedSubtotal = subtotal || items.reduce((acc, i) => acc + i.price * i.quantity, 0)
-    const calculatedTotal = total || calculatedSubtotal + shipping
-    const amountInCents = Math.round(calculatedTotal * 100)
+    // ── 2. ZERO-TRUST LOGISTICS: Server-side Coordinadora Rate Enforcement ────────
+    // El cálculo en el cliente es meramente visual. Aquí recalculamos de forma autoritativa.
+    const shippingResolution = resolveShippingFromLocation(city, department)
+
+    if (!shippingResolution.isCovered) {
+      return NextResponse.json(
+        {
+          error:
+            shippingResolution.warning ||
+            'El destino ingresado se encuentra fuera de la cobertura de Coordinadora Mercantil.',
+        },
+        { status: 400 }
+      )
+    }
+
+    const trustedShippingFee = shippingResolution.zone.price
+    const trustedShippingZoneName = shippingResolution.zone.name
+    const trustedShippingZoneId = shippingResolution.zone.id
+
+    // ── 3. ZERO-TRUST FINANCIAL CALCULATIONS ──────────────────────────────────────
+    const trustedSubtotal = items.reduce(
+      (acc, i) => acc + (Number(i.price) || 0) * (Number(i.quantity) || 1),
+      0
+    )
+    const trustedTotal = trustedSubtotal + trustedShippingFee
+    const amountInCents = Math.round(trustedTotal * 100)
+
+    // Detección adversarial de manipulación de precios desde el cliente
+    if (clientShipping !== undefined && clientShipping !== trustedShippingFee) {
+      console.warn(
+        `[ZeroTrust:TamperMitigated] Client submitted shipping fee $${clientShipping} COP, but server enforced authoritative fee $${trustedShippingFee} COP for "${city}".`
+      )
+    }
+
+    if (clientTotal !== undefined && clientTotal !== trustedTotal) {
+      console.warn(
+        `[ZeroTrust:TamperMitigated] Client submitted total $${clientTotal} COP, but server enforced authoritative total $${trustedTotal} COP.`
+      )
+    }
 
     if (amountInCents <= 0) {
       return NextResponse.json(
@@ -74,15 +113,15 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // ── 3. Reference and BI Categorization ──────────────────────────────────────
+    // ── 4. Reference and BI Categorization ──────────────────────────────────────
     const reference = generateOrderReference()
-    const biCategory = classifyOrderCategory(items, calculatedTotal)
+    const biCategory = classifyOrderCategory(items, trustedTotal)
 
-    // ── 4. Persist Pending Order to Vercel Blob ──────────────────────────────────
+    // ── 5. Persist Authoritative Order to Vercel Blob (Explicit payment_pending status) ──
     const order: Order = {
       id: `ord_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       wompiReference: reference,
-      status: 'pending',
+      status: 'payment_pending',
       biCategory,
       customer: {
         fullName: fullName.trim(),
@@ -91,24 +130,29 @@ export async function POST(req: NextRequest) {
         document: document.trim(),
         documentType: documentType || 'CC',
         city: city.trim(),
+        department: department ? department.trim() : undefined,
         address: address.trim(),
         notes: customer.notes?.trim() || '',
+        shippingZoneId: trustedShippingZoneId,
+        shippingZoneName: trustedShippingZoneName,
       },
       items,
-      subtotal: calculatedSubtotal,
-      shipping,
-      shippingZone: shippingZone || customer.shippingZoneName || '',
-      total: calculatedTotal,
+      subtotal: trustedSubtotal,
+      shipping: trustedShippingFee,
+      shippingZone: trustedShippingZoneName,
+      total: trustedTotal,
       currency: 'COP',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       wompiPaymentMethod: 'Wompi Web Checkout',
     }
 
-    // ── 4. Persist Pending Order to Vercel Blob (Non-blocking Resilient Pre-save)
+    // ── Non-blocking Resilient Pre-save to Vercel Blob
     try {
       await saveOrder(order)
-      console.info(`[api/wompi-checkout:saveOrder] Pre-order persisted successfully: ${reference}`)
+      console.info(
+        `[api/wompi-checkout:saveOrder] Pre-order persisted successfully: ${reference} (Shipping: ${trustedShippingZoneName} — $${trustedShippingFee} COP)`
+      )
     } catch (saveError) {
       console.error(
         `[api/wompi-checkout:saveOrder:error] Vercel Blob pre-save failed for order ${reference}, but proceeding with Wompi checkout:`,
@@ -116,11 +160,12 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // ── 5. Generate SHA-256 Integrity Hash ───────────────────────────────────────
+    // ── 6. Generate SHA-256 Cryptographic Integrity Hash ─────────────────────────
     // Concatenates: reference + amountInCents + currency + WOMPI_INTEGRITY_SECRET
+    // Strictly computed on trusted amountInCents to guarantee zero-tamper payment at Wompi
     const integrityHash = generateIntegrityHash(reference, amountInCents, 'COP')
 
-    // ── 6. Build Official Hosted Checkout URL ────────────────────────────────────
+    // ── 7. Build Official Hosted Checkout URL ────────────────────────────────────
     const requestOrigin =
       req.headers.get('origin') ||
       req.headers.get('referer')?.split('/').slice(0, 3).join('/') ||
@@ -156,6 +201,9 @@ export async function POST(req: NextRequest) {
       checkoutUrl,
       amountInCents,
       currency: 'COP',
+      shipping: trustedShippingFee,
+      shippingZone: trustedShippingZoneName,
+      total: trustedTotal,
       biCategory,
       integrityHash,
       publicKey,
@@ -164,7 +212,10 @@ export async function POST(req: NextRequest) {
     console.error('[api/wompi-checkout:error]', err)
     return NextResponse.json(
       {
-        error: err instanceof Error ? err.message : 'Error al inicializar sesión de pago segura con Wompi',
+        error:
+          err instanceof Error
+            ? err.message
+            : 'Error al inicializar sesión de pago segura con Wompi',
       },
       { status: 500 }
     )

@@ -54,10 +54,10 @@ export function Manifesto() {
           className="mt-10"
         >
           <Link
-            href="/fabrica"
+            href="/filosofia"
             className="group inline-flex items-center gap-3 border-b border-[#C5A059] pb-2 font-body text-xs uppercase tracking-widest text-white transition-colors hover:text-[#C5A059]"
           >
-            Visitar Nuestra Fábrica
+            Leer Nuestra Filosofía de Fabricación
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
               <path d="M1 8h14M9 2l6 6-6 6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

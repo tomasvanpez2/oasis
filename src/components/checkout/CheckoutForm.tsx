@@ -1,19 +1,13 @@
 'use client'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
-import {
-  SHIPPING_ZONES,
-  getShippingZoneById,
-  getDefaultShippingZone,
-  COORDINADORA_ORIGIN,
-  type ShippingZone,
-} from '@/lib/shipping'
 import { formatCOP } from '@/lib/utils'
 import { SecurityBadges } from './SecurityBadges'
+import type { ShippingZone } from '@/lib/shipping'
 
 const customerSchema = z.object({
   fullName: z.string().min(3, 'Nombre completo requerido (mínimo 3 caracteres)'),
@@ -25,10 +19,11 @@ const customerSchema = z.object({
     .regex(/^[0-9+ ]+$/, 'Solo números y espacios'),
   documentType: z.enum(['CC', 'CE', 'NIT', 'PP']),
   document: z.string().min(6, 'Número de documento válido (mínimo 6 dígitos)'),
-  shippingZoneId: z.string().min(1, 'Selecciona la zona de entrega para liquidar el envío con Coordinadora'),
-  city: z.string().min(3, 'Indica la ciudad o municipio de destino en Colombia'),
+  city: z.string().min(2, 'Indica la ciudad o municipio de destino en Colombia'),
+  department: z.string().optional(),
   address: z.string().min(8, 'Dirección de entrega completa y nomenclatura'),
   notes: z.string().optional(),
+  shippingZoneId: z.string().optional(),
   acceptTerms: z.literal(true, {
     errorMap: () => ({ message: 'Debes aceptar los términos y la política de despacho asegurado' }),
   }),
@@ -51,13 +46,19 @@ const SELECT_CLASS =
 const LABEL_CLASS = 'block font-body text-2xs uppercase tracking-[0.18em] text-white/50 mb-2'
 const ERROR_CLASS = 'mt-1.5 font-body text-xs text-red-400 font-light'
 
-export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occidente', onZoneChange }: CheckoutFormProps) {
-  const { items, getTotalPrice, clearCart } = useCartStore()
+export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
+  const {
+    items,
+    getTotalPrice,
+    clearCart,
+    shipping,
+    shippingZone,
+    shippingResolution,
+    updateShippingLocation,
+  } = useCartStore()
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-
-  const defaultZone = getDefaultShippingZone()
-  const [currentZoneId, setCurrentZoneId] = useState<string>(selectedZoneId || defaultZone.id)
 
   const {
     register,
@@ -73,37 +74,31 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
       phone: '',
       documentType: 'CC',
       document: '',
-      shippingZoneId: selectedZoneId || defaultZone.id,
       city: '',
+      department: '',
       address: '',
       notes: '',
+      shippingZoneId: shippingZone?.id || 'bogota-centro-occidente',
       acceptTerms: true,
     },
   })
 
-  const watchedZoneId = watch('shippingZoneId')
+  // Escuchar en tiempo real los cambios en ciudad y departamento
+  const watchedCity = watch('city')
+  const watchedDepartment = watch('department')
 
   useEffect(() => {
-    if (watchedZoneId && watchedZoneId !== currentZoneId) {
-      setCurrentZoneId(watchedZoneId)
-      onZoneChange?.(watchedZoneId)
-    }
-  }, [watchedZoneId, currentZoneId, onZoneChange])
+    // Cruce automático con la matriz de Coordinadora cada vez que el usuario escribe
+    const res = updateShippingLocation(watchedCity || '', watchedDepartment || '')
+    setValue('shippingZoneId', res.zone.id)
+    onZoneChange?.(res.zone.id)
+  }, [watchedCity, watchedDepartment, updateShippingLocation, setValue, onZoneChange])
 
-  const activeZone: ShippingZone =
-    getShippingZoneById(currentZoneId) || defaultZone
-
+  const isCovered = shippingResolution ? shippingResolution.isCovered : true
+  const activeZone: ShippingZone = shippingZone
   const subtotal = getTotalPrice()
-  const shippingFee = activeZone.price
+  const shippingFee = isCovered ? shipping : 0
   const grandTotal = subtotal + shippingFee
-
-  // Group zones for clean luxury combobox presentation
-  const groupedZones = {
-    'Bogotá D.C. (Salida Normandía)': SHIPPING_ZONES.filter((z) => z.group === 'Bogotá Urbana'),
-    'Cundinamarca & Sabana': SHIPPING_ZONES.filter((z) => z.group === 'Cundinamarca & Cercanías'),
-    'Regiones Principales': SHIPPING_ZONES.filter((z) => z.group === 'Regiones Principales'),
-    'Cobertura Nacional & Periferia': SHIPPING_ZONES.filter((z) => z.group === 'Cobertura Nacional & Periferia'),
-  }
 
   async function onSubmit(data: CustomerFormData) {
     if (items.length === 0) {
@@ -111,16 +106,19 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
       return
     }
 
+    if (!isCovered) {
+      setSubmitError(
+        'El destino ingresado se encuentra fuera de cobertura. Coordinadora Mercantil despacha únicamente dentro de Colombia.'
+      )
+      return
+    }
+
     setIsSubmitting(true)
     setSubmitError(null)
 
     try {
-      const selectedShipping = getShippingZoneById(data.shippingZoneId) || defaultZone
-      const calculatedShippingFee = selectedShipping.price
-      const totalToCharge = getTotalPrice() + calculatedShippingFee
-
-      // Dispatch order initialization to our backend
-      // Backend signs amountInCents (Math.round(totalToCharge * 100)) with WOMPI_INTEGRITY_SECRET
+      // Arquitectura Zero-Trust: Enviamos los datos del cliente y los ítems.
+      // El backend recalcula y valida el flete de forma obligatoria en el servidor.
       const response = await fetch('/api/wompi-checkout', {
         method: 'POST',
         headers: {
@@ -134,16 +132,17 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
             documentType: data.documentType,
             document: data.document,
             city: data.city,
+            department: data.department || '',
             address: data.address,
             notes: data.notes,
-            shippingZoneId: selectedShipping.id,
-            shippingZoneName: selectedShipping.name,
+            shippingZoneId: activeZone.id,
+            shippingZoneName: activeZone.name,
           },
           items,
-          shippingZone: selectedShipping.name,
-          subtotal: getTotalPrice(),
-          shipping: calculatedShippingFee,
-          total: totalToCharge,
+          shippingZone: activeZone.name,
+          subtotal,
+          shipping: shippingFee,
+          total: grandTotal,
         }),
       })
 
@@ -153,10 +152,10 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
         throw new Error(result.error || 'No fue posible iniciar la sesión de pago con Wompi.')
       }
 
-      // Clear local shopping bag before redirect
+      // Limpiar el carrito local antes de la redirección
       clearCart()
 
-      // Redirect user directly to the official Wompi Hosted Checkout (0% PCI Scope)
+      // Redirigir directamente al Web Checkout oficial alojado por Wompi (0% PCI Scope)
       window.location.href = result.checkoutUrl
     } catch (err) {
       console.error('[checkout:error]', err)
@@ -185,7 +184,7 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
             Datos de entrega y facturación
           </h2>
           <p className="mt-2 font-body text-xs text-white/50">
-            Flete de transporte liquidado en tiempo real con Coordinadora Mercantil (Origen: Bodega Normandía, Bogotá D.C.).
+            Flete de transporte liquidado automáticamente con Coordinadora Mercantil (Origen Oficial: Bodega Normandía, Bogotá D.C.).
           </p>
         </div>
 
@@ -266,85 +265,122 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
             </div>
           </div>
 
-          {/* ── LOGÍSTICA DE ENVÍO: SELECTOR OBLIGATORIO DE 15 ZONAS ─────── */}
-          <div className="border border-[#C5A059]/40 bg-[#07133B]/70 p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="block font-body text-xs uppercase tracking-[0.18em] text-[#C5A059] font-medium">
-                  Zona de Despacho Coordinadora (15 Zonas) *
-                </label>
-                <p className="mt-0.5 font-body text-2xs text-white/50">
-                  Calculado para colchón desde bodega central en Normandía, Bogotá D.C.
-                </p>
-              </div>
-              <span className="font-mono text-2xs border border-[#C5A059] bg-[#C5A059]/10 px-2.5 py-1 text-[#C5A059]">
-                Tarifa Oficial
-              </span>
-            </div>
-
+          {/* ── CIUDAD Y DEPARTAMENTO CON CRUCE AUTOMÁTICO EN TIEMPO REAL ── */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1.5fr_1fr]">
             <div>
-              <select
-                {...register('shippingZoneId')}
-                className={SELECT_CLASS + ' border-[#C5A059]/50 text-white font-medium'}
+              <label className={LABEL_CLASS}>Ciudad o Municipio de Entrega *</label>
+              <input
+                {...register('city')}
+                className={INPUT_CLASS}
+                placeholder="Ej. Bogotá, Medellín, Cali, Cartagena, Chía, Tunja..."
+                autoComplete="address-level2"
                 disabled={isSubmitting}
-                onChange={(e) => {
-                  setValue('shippingZoneId', e.target.value, { shouldValidate: true })
-                  setCurrentZoneId(e.target.value)
-                  onZoneChange?.(e.target.value)
-                }}
-              >
-                {Object.entries(groupedZones).map(([groupName, zones]) => (
-                  <optgroup key={groupName} label={groupName} className="bg-[#0A1B54] text-white/80 font-semibold py-1">
-                    {zones.map((zone) => (
-                      <option key={zone.id} value={zone.id} className="bg-[#07133B] text-white py-1">
-                        {zone.name} — {formatCOP(zone.price)} ({zone.estimatedDays})
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
-              {errors.shippingZoneId && (
-                <p className={ERROR_CLASS}>{errors.shippingZoneId.message}</p>
-              )}
+              />
+              {errors.city && <p className={ERROR_CLASS}>{errors.city.message}</p>}
             </div>
-
-            {/* Active Zone Detail HUD */}
-            <div className="border-t border-white/10 pt-3.5 grid grid-cols-1 sm:grid-cols-3 gap-3 text-2xs">
-              <div>
-                <span className="text-white/40 block uppercase tracking-wider">Costo de Transporte:</span>
-                <span className="font-display text-sm text-[#C5A059] font-medium">
-                  {formatCOP(activeZone.price)} COP
-                </span>
-              </div>
-              <div>
-                <span className="text-white/40 block uppercase tracking-wider">Tiempo de Entrega:</span>
-                <span className="text-white font-medium">{activeZone.estimatedDays}</span>
-              </div>
-              <div>
-                <span className="text-white/40 block uppercase tracking-wider">Cobertura Principal:</span>
-                <span className="text-white/70 block truncate" title={activeZone.coverage}>
-                  {activeZone.coverage}
-                </span>
-              </div>
+            <div>
+              <label className={LABEL_CLASS}>Departamento (Opcional)</label>
+              <input
+                {...register('department')}
+                className={INPUT_CLASS}
+                placeholder="Ej. Cundinamarca, Antioquia, Valle..."
+                autoComplete="address-level1"
+                disabled={isSubmitting}
+              />
             </div>
           </div>
 
-          {/* City / Municipality */}
-          <div>
-            <label className={LABEL_CLASS}>Ciudad o municipio específico</label>
-            <input
-              {...register('city')}
-              className={INPUT_CLASS}
-              placeholder="Ej. Bogotá D.C., Chía, Medellín, Cali, Tunja, Bucaramanga..."
-              autoComplete="address-level2"
-              disabled={isSubmitting}
-            />
-            {errors.city && <p className={ERROR_CLASS}>{errors.city.message}</p>}
+          {/* ── HUD COORDINADORA: RENDERIZACIÓN ELEGANTE DE SOLO LECTURA (QUIET LUXURY) ── */}
+          <div className="border border-[#C5A059]/40 bg-[#07133B]/80 p-5 space-y-4 rounded transition-all duration-300">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#C5A059] animate-pulse" />
+                <label className="block font-body text-xs uppercase tracking-[0.18em] text-[#C5A059] font-medium">
+                  Cálculo Oficial Coordinadora Mercantil
+                </label>
+              </div>
+              <span className="font-mono text-[10px] border border-[#C5A059]/60 bg-[#C5A059]/10 px-2 py-0.5 text-[#C5A059] uppercase tracking-wider">
+                Automático
+              </span>
+            </div>
+
+            {/* Display de solo lectura animado con Framer Motion */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${activeZone.id}-${shippingFee}-${isCovered}-${watchedCity}`}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-3"
+              >
+                {isCovered ? (
+                  <>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-white/10 pb-3">
+                      <div>
+                        <span className="font-body text-2xs uppercase tracking-wider text-white/40 block">
+                          Zona de despacho asignada:
+                        </span>
+                        <p className="font-display text-base text-white font-medium">
+                          Flete Coordinadora ({activeZone.name}) — {formatCOP(activeZone.price)} COP
+                        </p>
+                      </div>
+                      <div className="text-left sm:text-right">
+                        <span className="font-body text-2xs uppercase tracking-wider text-white/40 block">
+                          Tarifa liquidada:
+                        </span>
+                        <span className="font-display text-lg text-[#C5A059] font-medium">
+                          {formatCOP(activeZone.price)} COP
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-2xs">
+                      <div>
+                        <span className="text-white/40 block uppercase tracking-wider">Tiempo Estimado:</span>
+                        <span className="text-white font-medium">{activeZone.estimatedDays}</span>
+                      </div>
+                      <div>
+                        <span className="text-white/40 block uppercase tracking-wider">Origen de Bodega:</span>
+                        <span className="text-white/70 block">Normandía, Bogotá D.C.</span>
+                      </div>
+                      <div>
+                        <span className="text-white/40 block uppercase tracking-wider">Estado del Cruce:</span>
+                        {shippingResolution?.matchedBy === 'specific_city' && (
+                          <span className="text-[#C5A059] font-medium">
+                            ✓ Coincidencia exacta ({shippingResolution.matchedTerm || watchedCity})
+                          </span>
+                        )}
+                        {shippingResolution?.matchedBy === 'national_fallback' && (
+                          <span className="text-white/80 font-medium">
+                            ✓ Tarifa Nacional Coordinadora
+                          </span>
+                        )}
+                        {(!shippingResolution || shippingResolution.matchedBy === 'default_origin') && (
+                          <span className="text-white/50">
+                            • Estimado inicial — Escribe tu ciudad
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="border border-red-500/30 bg-red-950/20 p-3 rounded">
+                    <p className="font-body text-xs text-red-300 font-medium">
+                      ⚠️ Destino fuera de cobertura nacional
+                    </p>
+                    <p className="mt-1 font-body text-2xs text-red-200/70">
+                      Coordinadora Mercantil realiza despachos exclusivamente en municipios dentro de Colombia. Por favor ingresa una ciudad o municipio colombiano válido.
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Address */}
           <div>
-            <label className={LABEL_CLASS}>Dirección exacta y especificaciones de nomenclatura</label>
+            <label className={LABEL_CLASS}>Dirección exacta y nomenclatura de entrega</label>
             <input
               {...register('address')}
               className={INPUT_CLASS}
@@ -371,7 +407,7 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
           <div className="border border-white/15 bg-white/5 p-4 flex items-start gap-3">
             <span className="text-[#C5A059] text-base">🚛</span>
             <p className="font-body text-xs text-white/70 leading-relaxed">
-              <strong>Despacho Oficial con Coordinadora Mercantil:</strong> El costo de transporte seleccionado ({formatCOP(activeZone.price)}) se suma de forma directa al total a pagar en Wompi. Tu colchón viaja con guía oficial asegurada desde nuestra planta en Normandía, Bogotá D.C.
+              <strong>Despacho Oficial con Coordinadora Mercantil:</strong> El costo de transporte oficial ({formatCOP(activeZone.price)}) se liquida de forma automática y se transfiere de manera transparente al total a pagar en Wompi. Tu colchón viaja con guía oficial asegurada desde nuestra planta en Normandía, Bogotá D.C.
             </p>
           </div>
 
@@ -385,7 +421,7 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
                 disabled={isSubmitting}
               />
               <span className="font-body text-xs text-white/60 leading-relaxed select-none">
-                Acepto los términos de compra directa de fábrica y confirmo que la dirección y zona de entrega seleccionada para el despacho con Coordinadora Mercantil son correctas.
+                Acepto los términos de compra directa de fábrica y confirmo que la dirección de entrega ingresada para el despacho con Coordinadora Mercantil es correcta.
               </span>
             </label>
             {errors.acceptTerms && (
@@ -396,14 +432,16 @@ export function CheckoutForm({ onError, selectedZoneId = 'bogota-centro-occident
           {/* Submit button */}
           <button
             type="submit"
-            disabled={isSubmitting || items.length === 0}
-            className="w-full border border-[#C5A059] bg-[#C5A059] py-4 font-body text-xs uppercase tracking-widest text-[#0A1B54] font-semibold transition-all duration-300 hover:bg-white hover:border-white hover:text-[#0A1B54] disabled:opacity-50"
+            disabled={isSubmitting || items.length === 0 || !isCovered}
+            className="w-full border border-[#C5A059] bg-[#C5A059] py-4 font-body text-xs uppercase tracking-widest text-[#0A1B54] font-semibold transition-all duration-300 hover:bg-white hover:border-white hover:text-[#0A1B54] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="h-4 w-4 border-2 border-[#0A1B54] border-t-transparent rounded-full animate-spin" />
                 Redirigiendo a pasarela segura Wompi...
               </span>
+            ) : !isCovered ? (
+              'Destino sin cobertura nacional'
             ) : (
               `Pagar Orden Segura con Wompi • ${formatCOP(grandTotal)}`
             )}

@@ -8,7 +8,8 @@ import { useCartStore } from '@/store/cartStore'
 const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
   { href: '/catalogo', label: 'Catálogo' },
-  { href: '/fabrica', label: 'Nuestra Fábrica' },
+  { href: '/filosofia', label: 'Filosofía' },
+  { href: '/contacto', label: 'Contacto' },
 ]
 
 export function Header() {

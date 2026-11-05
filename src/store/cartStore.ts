@@ -1,10 +1,12 @@
 /**
  * Oasis Colchones — Global Cart Store
- * Zustand with resilient SSR-safe localStorage persistence
+ * Zustand with resilient SSR-safe localStorage persistence.
+ * Manejo integral y automatizado del flete logístico con Coordinadora Mercantil.
  */
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type { CartItem, CartState, MattressSize } from '@/types'
+import type { CartItem, CartState, MattressSize, ShippingZone, ShippingResolution } from '@/types'
+import { getDefaultShippingZone, resolveShippingFromLocation } from '@/lib/shipping'
 
 // SSR-safe storage fallback
 const safeStorage = createJSONStorage(() => {
@@ -18,11 +20,21 @@ const safeStorage = createJSONStorage(() => {
   }
 })
 
+const initialZone = getDefaultShippingZone()
+
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
       isOpen: false,
+
+      // ── Coordinadora Automated Shipping State ──────────────────────────────
+      shipping: initialZone.price,
+      shippingZone: initialZone,
+      shippingCity: '',
+      shippingDepartment: '',
+      shippingResolution: null,
+      isCalculatingShipping: false,
 
       addItem: (newItem: Omit<CartItem, 'quantity'>) => {
         set((state) => {
@@ -70,7 +82,15 @@ export const useCartStore = create<CartState>()(
         }))
       },
 
-      clearCart: () => set({ items: [] }),
+      clearCart: () =>
+        set({
+          items: [],
+          shippingCity: '',
+          shippingDepartment: '',
+          shippingResolution: null,
+          shipping: initialZone.price,
+          shippingZone: initialZone,
+        }),
 
       openCart: () => set({ isOpen: true }),
       closeCart: () => set({ isOpen: false }),
@@ -86,11 +106,49 @@ export const useCartStore = create<CartState>()(
           0
         )
       },
+
+      // ── Coordinadora Freight Automation Methods ────────────────────────────
+
+      /**
+       * Cruza automáticamente la ciudad ingresada contra la matriz de Coordinadora
+       * y actualiza el estado global de envío de forma reactiva.
+       */
+      updateShippingLocation: (city: string, department?: string): ShippingResolution => {
+        set({ isCalculatingShipping: true })
+
+        const resolution = resolveShippingFromLocation(city, department)
+
+        set({
+          shippingCity: city,
+          shippingDepartment: department || '',
+          shipping: resolution.zone.price,
+          shippingZone: resolution.zone,
+          shippingResolution: resolution,
+          isCalculatingShipping: false,
+        })
+
+        return resolution
+      },
+
+      setShippingZone: (zone: ShippingZone) => {
+        set({
+          shippingZone: zone,
+          shipping: zone.price,
+        })
+      },
+
+      getShippingFee: () => {
+        return get().shipping
+      },
+
+      getGrandTotal: () => {
+        return get().getTotalPrice() + get().shipping
+      },
     }),
     {
       name: 'oasis-colchones-cart',
       storage: safeStorage,
-      // Only persist items array, not ephemeral UI state (isOpen)
+      // Only persist items array, not ephemeral UI or in-flight form calculation state
       partialize: (state) => ({ items: state.items }),
     }
   )

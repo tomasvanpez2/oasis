@@ -106,10 +106,10 @@ export function HeroSection() {
                 </svg>
               </Link>
               <Link
-                href="/fabrica"
+                href="/filosofia"
                 className="border border-white/20 bg-white/5 px-6 py-4 font-body text-xs uppercase tracking-widest text-white/80 transition-all duration-300 hover:border-[#C5A059] hover:text-[#C5A059]"
               >
-                Conoce la Fábrica
+                Nuestra Filosofía
               </Link>
             </motion.div>
 

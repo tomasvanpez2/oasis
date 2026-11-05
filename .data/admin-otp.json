@@ -1,0 +1,36 @@
+{
+  "records": {
+    "chl_1793316521608_d2034c2df32ae4e692a230bf4adda5db": {
+      "otp": "573050",
+      "challengeId": "chl_1793316521608_d2034c2df32ae4e692a230bf4adda5db",
+      "createdAt": 1793316521609,
+      "expiresAt": 1793316821609,
+      "attempts": 1,
+      "consumed": true
+    },
+    "chl_1793316551080_dbe84031bcf2c769194fa2daa2169a3b": {
+      "otp": "733159",
+      "challengeId": "chl_1793316551080_dbe84031bcf2c769194fa2daa2169a3b",
+      "createdAt": 1793316551084,
+      "expiresAt": 1793316851084,
+      "attempts": 1,
+      "consumed": true
+    },
+    "chl_1793316557606_93c830b0abb957ba5d091d5e9880c0f2": {
+      "otp": "664905",
+      "challengeId": "chl_1793316557606_93c830b0abb957ba5d091d5e9880c0f2",
+      "createdAt": 1793316557606,
+      "expiresAt": 1793316857606,
+      "attempts": 0,
+      "consumed": true
+    },
+    "chl_1793316734499_72daa5c5b01fcecdeaed5a98f452c8f2": {
+      "otp": "336264",
+      "challengeId": "chl_1793316734499_72daa5c5b01fcecdeaed5a98f452c8f2",
+      "createdAt": 1793316734499,
+      "expiresAt": 1793317034499,
+      "attempts": 0,
+      "consumed": false
+    }
+  }
+}

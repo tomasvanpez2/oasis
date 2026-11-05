@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -6,34 +7,142 @@ import { motion } from 'framer-motion'
 import type { Product } from '@/types'
 import { formatCOP } from '@/lib/utils'
 
+// Immediate server-grade initial products to guarantee ZERO CLS and eliminate empty states
+const INITIAL_FEATURED_PRODUCTS: Product[] = [
+  {
+    id: 'prod-002',
+    slug: 'oasis-noche',
+    name: 'Oasis Noche',
+    tagline: 'Arquitectura de resortes para soporte preciso.',
+    description: 'Sistema de resortes ensacados independientes con 800 espirales por unidad Queen.',
+    longDescription:
+      'El Oasis Noche redefine el soporte con 800 resortes ensacados independientes en tamaño Queen. Cada espiral trabaja de forma autónoma, eliminando la transferencia de movimiento y adaptando el soporte a cada zona del cuerpo.',
+    category: 'resortes',
+    technology: ['800 Resortes Ensacados', 'Independencia de Movimiento', 'HR-35 Acolchado'],
+    materials: ['Acero Templado', 'Espuma HR-35', 'Algodón Natural', 'Forro Bambú'],
+    imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
+    imageGallery: [
+      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80',
+      'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80',
+    ],
+    variants: [
+      { size: 'Sencillo', dimensions: '90 × 190 cm', price: 1280000, stock: 10 },
+      { size: 'Semi-doble', dimensions: '120 × 190 cm', price: 1480000, stock: 8 },
+      { size: 'Doble', dimensions: '140 × 190 cm', price: 1680000, stock: 7 },
+      { size: 'Queen', dimensions: '160 × 190 cm', price: 1950000, stock: 6 },
+      { size: 'King', dimensions: '200 × 200 cm', price: 2350000, stock: 4 },
+    ],
+    featured: true,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'prod-003',
+    slug: 'oasis-aurora',
+    name: 'Oasis Aurora',
+    tagline: 'Látex natural Dunlop. Elasticidad biológica sin memoria sintética.',
+    description: 'Látex natural Dunlop de 10 cm sobre base de resortes ensacados.',
+    longDescription:
+      'El látex natural Dunlop del Oasis Aurora proviene de plantaciones certificadas de Hevea brasiliensis. Su estructura celular abierta garantiza una ventilación 3× superior a la espuma convencional.',
+    category: 'latex',
+    technology: ['Látex Dunlop Natural', 'Certificado Oeko-Tex', 'Ventilación Activa'],
+    materials: ['Látex Natural 65 kg/m³', 'Resortes Ensacados', 'Forro Algodón Orgánico'],
+    imageUrl: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&q=80',
+    imageGallery: [
+      'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80',
+      'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=1200&q=80',
+    ],
+    variants: [
+      { size: 'Sencillo', dimensions: '90 × 190 cm', price: 1890000, stock: 6 },
+      { size: 'Semi-doble', dimensions: '120 × 190 cm', price: 2180000, stock: 5 },
+      { size: 'Doble', dimensions: '140 × 190 cm', price: 2490000, stock: 4 },
+      { size: 'Queen', dimensions: '160 × 190 cm', price: 2850000, stock: 3 },
+      { size: 'King', dimensions: '200 × 200 cm', price: 3380000, stock: 2 },
+    ],
+    featured: true,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'prod-005',
+    slug: 'oasis-luna',
+    name: 'Oasis Luna',
+    tagline: 'Memory foam infusionado con partículas de gel refrescante.',
+    description: 'Memory foam de 5 cm de confort con regulación térmica activa.',
+    longDescription:
+      'El Oasis Luna integra partículas de gel de enfriamiento en cada célula del memory foam para mitigar la acumulación térmica en climas templados o cálidos.',
+    category: 'premium',
+    technology: ['Gel Cooling Technology', 'Memory Foam Premium', 'Regulación Térmica Activa'],
+    materials: ['Memory Foam + Gel 5cm', 'Espuma Base HR-40', 'Forro 3D Air Mesh'],
+    imageUrl: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80',
+    imageGallery: ['https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80'],
+    variants: [
+      { size: 'Sencillo', dimensions: '90 × 190 cm', price: 1480000, stock: 9 },
+      { size: 'Semi-doble', dimensions: '120 × 190 cm', price: 1720000, stock: 7 },
+      { size: 'Doble', dimensions: '140 × 190 cm', price: 1950000, stock: 6 },
+      { size: 'Queen', dimensions: '160 × 190 cm', price: 2180000, stock: 5 },
+      { size: 'King', dimensions: '200 × 200 cm', price: 2680000, stock: 3 },
+    ],
+    featured: true,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'prod-007',
+    slug: 'oasis-cumbre',
+    name: 'Oasis Cumbre',
+    tagline: '1000 resortes ensacados independientes y pillow top removible.',
+    description: 'Máxima densidad de resortes ensacados con acolchado superior lavable.',
+    longDescription:
+      'El Oasis Cumbre alcanza la máxima densidad biomecánica con 1000 espirales ensacadas de acero al carbono en medida Queen y pillow top de memory foam de alta resiliencia.',
+    category: 'premium',
+    technology: ['1000 Resortes Ensacados', 'Pillow Top Removible', 'Memory Foam Premium'],
+    materials: ['Acero Templado', 'Memory Foam 5cm', 'Microfibra Premium', 'Forro Tencel'],
+    imageUrl: 'https://images.unsplash.com/photo-1588046130717-0eb0c9a3ba15?w=800&q=80',
+    imageGallery: ['https://images.unsplash.com/photo-1588046130717-0eb0c9a3ba15?w=1200&q=80'],
+    variants: [
+      { size: 'Sencillo', dimensions: '90 × 190 cm', price: 2180000, stock: 6 },
+      { size: 'Semi-doble', dimensions: '120 × 190 cm', price: 2580000, stock: 5 },
+      { size: 'Doble', dimensions: '140 × 190 cm', price: 2950000, stock: 4 },
+      { size: 'Queen', dimensions: '160 × 190 cm', price: 3380000, stock: 3 },
+      { size: 'King', dimensions: '200 × 200 cm', price: 4050000, stock: 2 },
+    ],
+    featured: true,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+  },
+]
+
 export function FeaturedProducts() {
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>(INITIAL_FEATURED_PRODUCTS)
 
   useEffect(() => {
     fetch('/api/catalog')
       .then((r) => r.json())
       .then((data) => {
-        if (data && data.products) {
+        if (data && Array.isArray(data.products) && data.products.length > 0) {
           const featured = data.products.filter((p: Product) => p.featured).slice(0, 4)
           setProducts(featured.length ? featured : data.products.slice(0, 4))
         }
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.warn('[FeaturedProducts:fetchFallback]', err)
+      })
   }, [])
 
   return (
-    <section className="px-6 lg:px-16 py-24 lg:py-32 border-t border-white/10">
+    <section className="px-6 lg:px-16 py-24 lg:py-32 border-t border-white/10 bg-[#0A1B54]">
       {/* Header */}
       <div className="mb-14 flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-8 gap-4">
         <div>
           <span className="font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059]">
-            Selección Destacada
+            Selección de Alta Ingeniería
           </span>
           <h2 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-normal text-white">
-            Modelos de Alta Ingeniería.
+            Modelos Biomecánicos Destacados.
           </h2>
           <p className="mt-2 font-body text-xs sm:text-sm text-white/60 max-w-lg">
-            Referencias con aprobación biomecánica y ensamblado de precisión en fábrica.
+            Referencias confeccionadas en nuestra planta de Bogotá con certificación de fatiga y garantía directa de 10 a 15 años.
           </p>
         </div>
         <Link
@@ -55,17 +164,11 @@ export function FeaturedProducts() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="group border border-white/10 bg-[#0D2266]/20 p-6 lg:p-8 transition-colors duration-300 hover:border-[#C5A059]/60 hover:bg-[#0D2266]/40 flex flex-col justify-between"
+              className="group border border-white/10 bg-[#07133B]/40 p-6 lg:p-8 transition-colors duration-300 hover:border-[#C5A059]/60 hover:bg-[#07133B]/70 flex flex-col justify-between"
             >
               <div>
                 {/* Product Image Showcase with Clip-Path Reveal */}
-                <motion.div
-                  initial={{ clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)' }}
-                  whileInView={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative mb-6 h-60 sm:h-72 w-full overflow-hidden border border-white/10 bg-[#07133B]"
-                >
+                <div className="relative mb-6 h-60 sm:h-72 w-full overflow-hidden border border-white/10 bg-[#07133B]">
                   <Image
                     src={product.imageUrl}
                     alt={product.name}
@@ -84,7 +187,7 @@ export function FeaturedProducts() {
                       5 Medidas
                     </span>
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Details */}
                 <div className="space-y-2">
