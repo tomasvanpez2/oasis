@@ -37,35 +37,37 @@ const STORY_STEPS: StoryStep[] = [
   },
 ]
 
-// Step Ranges strictly calibrated so:
-// - Step 1 is immediately visible at scroll progress 0.00 (NO initial blank pause)
-// - Steps 2 & 3 cross-fade smoothly without gaps
-// - Step 4 locks at full opacity from 0.85 to 1.00 and NEVER disappears (NO dead empty space at end)
-const STEP_RANGES = [
+interface StepRangeConfig {
+  inputRange: number[]
+  opacityRange: number[]
+  yRange: number[]
+}
+
+// Strict monotonic scroll ranges:
+// - Step 01: Fully visible at scroll 0.00, holds solid until 0.18, cross-fades out by 0.26
+// - Step 02: Cross-fades in from 0.19, solid from 0.27 to 0.43, cross-fades out by 0.51
+// - Step 03: Cross-fades in from 0.44, solid from 0.52 to 0.68, cross-fades out by 0.76
+// - Step 04: Cross-fades in from 0.69, solid from 0.77 to 1.00. Locks at full opacity (no empty gap).
+const STEP_RANGES: StepRangeConfig[] = [
   {
-    opacityIn: [0.0, 0.0, 0.2, 0.26],
-    opacityOut: [1, 1, 1, 0],
-    yIn: [0.0, 0.0, 0.2, 0.26],
-    yOut: [0, 0, 0, -30],
+    inputRange: [0.0, 0.18, 0.26],
+    opacityRange: [1, 1, 0],
+    yRange: [0, 0, -24],
   },
   {
-    opacityIn: [0.22, 0.28, 0.48, 0.54],
-    opacityOut: [0, 1, 1, 0],
-    yIn: [0.22, 0.28, 0.48, 0.54],
-    yOut: [30, 0, 0, -30],
+    inputRange: [0.19, 0.27, 0.43, 0.51],
+    opacityRange: [0, 1, 1, 0],
+    yRange: [24, 0, 0, -24],
   },
   {
-    opacityIn: [0.5, 0.56, 0.76, 0.82],
-    opacityOut: [0, 1, 1, 0],
-    yIn: [0.5, 0.56, 0.76, 0.82],
-    yOut: [30, 0, 0, -30],
+    inputRange: [0.44, 0.52, 0.68, 0.76],
+    opacityRange: [0, 1, 1, 0],
+    yRange: [24, 0, 0, -24],
   },
   {
-    // Final Step 04: Remains 100% visible from 0.85 to 1.00. Never fades out to zero.
-    opacityIn: [0.78, 0.85, 1.0, 1.0],
-    opacityOut: [0, 1, 1, 1],
-    yIn: [0.78, 0.85, 1.0, 1.0],
-    yOut: [30, 0, 0, 0],
+    inputRange: [0.69, 0.77, 1.0],
+    opacityRange: [0, 1, 1],
+    yRange: [24, 0, 0],
   },
 ]
 
@@ -78,34 +80,37 @@ function StoryStepItem({
   index: number
   scrollYProgress: MotionValue<number>
 }) {
-  const config = STEP_RANGES[index] || STEP_RANGES[0]
-  const opacity = useTransform(scrollYProgress, config.opacityIn, config.opacityOut)
-  const y = useTransform(scrollYProgress, config.yIn, config.yOut)
+  const config = STEP_RANGES[index]
+  const opacity = useTransform(scrollYProgress, config.inputRange, config.opacityRange)
+  const y = useTransform(scrollYProgress, config.inputRange, config.yRange)
+  const pointerEvents = useTransform(opacity, (val) => (val > 0.1 ? 'auto' : 'none'))
 
   return (
     <motion.div
-      style={{ opacity, y }}
-      className="absolute inset-0 flex flex-col justify-center px-4 sm:px-8 lg:px-12 pointer-events-none"
+      style={{ opacity, y, pointerEvents }}
+      className="absolute inset-0 flex flex-col justify-center px-2 sm:px-6 lg:px-8"
     >
-      <p className="font-display text-[70px] sm:text-[110px] lg:text-[140px] font-light leading-none text-white/5 select-none">
-        {step.step}
-      </p>
-      <div className="-mt-6 sm:-mt-10 space-y-2 sm:space-y-4 border-l border-[#C5A059]/40 pl-5 sm:pl-8 pointer-events-auto">
-        <div className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#C5A059]" />
-          <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059]">
-            Etapa {step.step} de 04
+      <div className="relative">
+        <p className="font-display text-[72px] sm:text-[100px] lg:text-[130px] font-light leading-none text-white/5 select-none absolute -top-8 sm:-top-14 lg:-top-18 left-0 pointer-events-none">
+          {step.step}
+        </p>
+        <div className="relative z-10 space-y-2 sm:space-y-3.5 border-l-2 border-[#C5A059]/40 pl-5 sm:pl-8">
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#C5A059]" />
+            <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059]">
+              Etapa {step.step} de 04
+            </p>
+          </div>
+          <h3 className="font-display text-xl sm:text-2xl lg:text-4xl font-normal text-white max-w-lg leading-snug">
+            {step.title}
+          </h3>
+          <p className="font-body text-xs sm:text-sm text-white/70 max-w-md leading-relaxed">
+            {step.body}
+          </p>
+          <p className="font-body text-xs italic text-[#C5A059]/90 pt-0.5">
+            — {step.highlight}
           </p>
         </div>
-        <h3 className="font-display text-xl sm:text-3xl lg:text-4xl font-normal text-white max-w-lg leading-snug">
-          {step.title}
-        </h3>
-        <p className="font-body text-xs sm:text-sm text-white/70 max-w-md leading-relaxed">
-          {step.body}
-        </p>
-        <p className="font-body text-xs italic text-[#C5A059]/90 pt-1">
-          — {step.highlight}
-        </p>
       </div>
     </motion.div>
   )
@@ -122,53 +127,59 @@ export function ScrollStory() {
     <section
       ref={containerRef}
       className="relative w-full bg-[#0A1B54]"
-      style={{ height: '300vh' }}
+      style={{ height: '400vh' }}
     >
-      {/* Sticky Full-Viewport Story Stage */}
-      <div className="sticky top-0 flex h-screen max-h-screen w-full flex-col lg:flex-row overflow-hidden justify-center bg-[#0A1B54]">
-        
-        {/* Left Column: Fixed Master Narrative */}
-        <div className="flex w-full lg:w-5/12 flex-col justify-center px-6 lg:px-16 pt-16 sm:pt-20 lg:pt-0 z-10">
-          <div>
-            <span className="inline-block font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059]">
-              Arquitectura de Manufactura
-            </span>
-          </div>
-          <div className="mt-3">
-            <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-normal leading-tight text-white">
-              Del acero y látex<br />a tu dormitorio.
-            </h2>
-          </div>
-          <p className="mt-3 sm:mt-4 font-body text-xs sm:text-sm text-white/60 max-w-sm leading-relaxed">
-            Nuestro proceso de 4 etapas donde la ingeniería industrial se une a la confección textil de precisión.
-          </p>
+      {/* Centrado Sticky: estrictamente sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden */}
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-[#0A1B54]">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+          
+          {/* Columna Izquierda: Narrativa Maestra Fija y Barra de Progreso */}
+          <div className="w-full lg:col-span-5 flex flex-col justify-center z-10">
+            <div>
+              <span className="inline-block font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059]">
+                Arquitectura de Manufactura
+              </span>
+            </div>
+            <div className="mt-3">
+              <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-normal leading-tight text-white">
+                Del acero y látex<br />a tu dormitorio.
+              </h2>
+            </div>
+            <p className="mt-3 sm:mt-4 font-body text-xs sm:text-sm text-white/60 max-w-sm leading-relaxed">
+              Nuestro proceso de 4 etapas donde la ingeniería industrial se une a la confección textil de precisión.
+            </p>
 
-          {/* Synchronized Progress Indicator Bar */}
-          <div className="mt-6 sm:mt-10 lg:mt-12 h-0.5 w-full max-w-xs bg-white/10 overflow-hidden">
-            <motion.div
-              className="h-full bg-[#C5A059]"
-              style={{ scaleX: scrollYProgress, transformOrigin: 'left' }}
-            />
+            {/* Indicador de Progreso Sincronizado */}
+            <div className="mt-6 sm:mt-10 lg:mt-12 w-full max-w-xs">
+              <div className="h-0.5 w-full bg-white/10 overflow-hidden rounded-full">
+                <motion.div
+                  className="h-full bg-[#C5A059] rounded-full"
+                  style={{ scaleX: scrollYProgress, transformOrigin: 'left' }}
+                />
+              </div>
+
+              <div className="mt-3 flex items-center justify-between text-[10px] font-mono text-white/40 uppercase tracking-wider">
+                <span>01 Inspección</span>
+                <span>02 Ensamble</span>
+                <span>03 Prueba</span>
+                <span>04 Entrega</span>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-3 flex items-center justify-between max-w-xs text-[10px] font-mono text-white/40 uppercase tracking-wider">
-            <span>01 Inspección</span>
-            <span>04 Entrega</span>
+          {/* Columna Derecha: Pasos Animados Secuencialmente */}
+          <div className="relative w-full lg:col-span-7 h-[320px] sm:h-[360px] lg:h-[420px] flex items-center justify-center">
+            {STORY_STEPS.map((step, i) => (
+              <StoryStepItem
+                key={step.step}
+                step={step}
+                index={i}
+                scrollYProgress={scrollYProgress}
+              />
+            ))}
           </div>
+
         </div>
-
-        {/* Right Column: Layered Animated Steps */}
-        <div className="relative w-full lg:w-7/12 flex-1 overflow-hidden px-4 sm:px-6 lg:px-16 flex items-center justify-center">
-          {STORY_STEPS.map((step, i) => (
-            <StoryStepItem
-              key={step.step}
-              step={step}
-              index={i}
-              scrollYProgress={scrollYProgress}
-            />
-          ))}
-        </div>
-
       </div>
     </section>
   )
