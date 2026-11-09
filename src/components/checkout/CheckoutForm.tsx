@@ -24,8 +24,8 @@ const customerSchema = z.object({
   address: z.string().min(8, 'Dirección de entrega completa y nomenclatura'),
   notes: z.string().optional(),
   shippingZoneId: z.string().optional(),
-  acceptTerms: z.literal(true, {
-    errorMap: () => ({ message: 'Debes aceptar los términos y la política de despacho asegurado' }),
+  acceptTerms: z.boolean().refine((val) => val === true, {
+    message: 'Debes aceptar los términos y la política de tratamiento de datos conforme a la ley colombiana para continuar con el pago',
   }),
 })
 
@@ -79,7 +79,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
       address: '',
       notes: '',
       shippingZoneId: shippingZone?.id || 'bogota-centro-occidente',
-      acceptTerms: true,
+      acceptTerms: false,
     },
   })
 
@@ -411,21 +411,48 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             </p>
           </div>
 
-          {/* Terms checkbox */}
-          <div className="pt-1">
+          {/* Terms and Colombian Legal Consent checkbox */}
+          <div className="pt-2 border-t border-white/10">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 {...register('acceptTerms')}
-                className="mt-1 h-4 w-4 rounded-none border border-white/30 bg-transparent text-[#C5A059] focus:ring-0 focus:ring-offset-0"
+                className="mt-1 h-4 w-4 rounded-none border border-white/30 bg-transparent text-[#2A21EA] focus:ring-0 focus:ring-offset-0 cursor-pointer"
                 disabled={isSubmitting}
               />
-              <span className="font-body text-xs text-white/60 leading-relaxed select-none">
-                Acepto los términos de compra directa de fábrica y confirmo que la dirección de entrega ingresada para el despacho con Coordinadora Mercantil es correcta.
+              <span className="font-body text-xs text-white/70 leading-relaxed select-none">
+                He leído y acepto los{' '}
+                <a
+                  href="/legales?tab=terminos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#C5A059] underline hover:text-white transition-colors"
+                >
+                  Términos y Condiciones Generales
+                </a>
+                , la{' '}
+                <a
+                  href="/legales?tab=datos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#C5A059] underline hover:text-white transition-colors"
+                >
+                  Política de Tratamiento de Datos Personales (Ley 1581 de 2012 / Habeas Data)
+                </a>{' '}
+                y la{' '}
+                <a
+                  href="/legales?tab=fraude"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#C5A059] underline hover:text-white transition-colors"
+                >
+                  Política de Prevención de Fraude y Devolución
+                </a>{' '}
+                de Oasis Colchones y Muebles. Autorizo el tratamiento de mis datos personales para la emisión de factura electrónica y coordinación del despacho asegurado con transportadora.
               </span>
             </label>
             {errors.acceptTerms && (
-              <p className={ERROR_CLASS}>{errors.acceptTerms.message}</p>
+              <p className={ERROR_CLASS + ' mt-1.5'}>{errors.acceptTerms.message}</p>
             )}
           </div>
 

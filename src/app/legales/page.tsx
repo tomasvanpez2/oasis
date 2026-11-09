@@ -1,34 +1,76 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { motion } from 'framer-motion'
 import { TextSplitReveal } from '@/components/ui/TextSplitReveal'
 
-type LegalTab = 'terminos' | 'garantia' | 'envios' | 'retracto' | 'privacidad'
+type LegalTab = 'terminos' | 'datos' | 'privacidad' | 'fraude' | 'garantia'
 
-export default function LegalesPage() {
-  const [activeTab, setActiveTab] = useState<LegalTab>('garantia')
+function LegalesContent() {
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get('tab') as LegalTab | null
 
-  const TABS: { id: LegalTab; label: string; number: string }[] = [
-    { id: 'garantia', label: 'Garantía Industrial (10-15 Años)', number: '01' },
-    { id: 'envios', label: 'Política de Envíos y Fletes', number: '02' },
-    { id: 'terminos', label: 'Términos y Condiciones Generales', number: '03' },
-    { id: 'retracto', label: 'Derecho de Retracto (Ley 1480)', number: '04' },
-    { id: 'privacidad', label: 'Tratamiento de Datos (Ley 1581)', number: '05' },
+  const [activeTab, setActiveTab] = useState<LegalTab>('terminos')
+
+  useEffect(() => {
+    if (tabParam && ['terminos', 'datos', 'privacidad', 'fraude', 'garantia'].includes(tabParam)) {
+      setActiveTab(tabParam)
+    }
+  }, [tabParam])
+
+  const TABS: { id: LegalTab; label: string; number: string; pdfUrl: string; pdfName: string }[] = [
+    {
+      id: 'terminos',
+      label: 'Términos y Condiciones Generales',
+      number: '01',
+      pdfUrl: '/docs/terminos-y-condiciones.pdf',
+      pdfName: 'Términos y Condiciones.pdf',
+    },
+    {
+      id: 'datos',
+      label: 'Tratamiento de Datos Personales (Ley 1581)',
+      number: '02',
+      pdfUrl: '/docs/politica-tratamiento-datos-personales.pdf',
+      pdfName: 'Política de Tratamiento de Datos.pdf',
+    },
+    {
+      id: 'privacidad',
+      label: 'Política de Privacidad & Cookies',
+      number: '03',
+      pdfUrl: '/docs/politica-privacidad.pdf',
+      pdfName: 'Política de Privacidad.pdf',
+    },
+    {
+      id: 'fraude',
+      label: 'Prevención de Fraude & Devolución',
+      number: '04',
+      pdfUrl: '/docs/politica-prevencion-fraude-devolucion.pdf',
+      pdfName: 'Política de Fraude y Devolución.pdf',
+    },
+    {
+      id: 'garantia',
+      label: 'Garantía Industrial & Ficha Técnica',
+      number: '05',
+      pdfUrl: '/docs/colchones-oasis-ficha-tecnica.pdf',
+      pdfName: 'Ficha Técnica Oficial.pdf',
+    },
   ]
 
+  const currentTabMeta = TABS.find((t) => t.id === activeTab) || TABS[0]
+
   return (
-    <main className="bg-[#0A1B54] min-h-screen">
+    <main className="bg-[#070D38] min-h-screen text-white">
       <Header />
 
-      <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-36 px-6 lg:px-16 overflow-hidden">
-        {/* Architectural 1px grid guides */}
-        <div className="pointer-events-none absolute inset-0 grid grid-cols-4 opacity-10">
-          <div className="border-r border-white/20" />
-          <div className="border-r border-white/20" />
-          <div className="border-r border-white/20" />
+      <section className="relative pt-36 pb-24 lg:pt-44 lg:pb-36 px-6 lg:px-16 overflow-hidden">
+        {/* Subtle architectural grid lines */}
+        <div className="pointer-events-none absolute inset-0 grid grid-cols-4 opacity-5">
+          <div className="border-r border-white" />
+          <div className="border-r border-white" />
+          <div className="border-r border-white" />
           <div className="border-r border-transparent" />
         </div>
 
@@ -45,7 +87,7 @@ export default function LegalesPage() {
             </motion.p>
             <div className="mt-3">
               <TextSplitReveal
-                text="Políticas & Términos Legales."
+                text="Documentación Legal Oficial."
                 as="h1"
                 className="font-display text-4xl sm:text-6xl lg:text-7xl font-normal text-white leading-tight"
                 delay={0.1}
@@ -58,50 +100,75 @@ export default function LegalesPage() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="mt-6 font-body text-sm sm:text-base text-white/70 max-w-2xl leading-relaxed"
             >
-              Cero letra pequeña ambigua. Documentamos con transparencia el marco regulatorio bajo el Estatuto del Consumidor en Colombia (Ley 1480 de 2011) y la Ley de Habeas Data (Ley 1581 de 2012).
+              Documentación legal completa de Oasis Colchones y Muebles conforme al Estatuto del Consumidor en Colombia (Ley 1480 de 2011), la Ley de Habeas Data (Ley 1581 de 2012) y los lineamientos de la Superintendencia de Industria y Comercio.
             </motion.p>
           </div>
 
-          {/* Identification Banner */}
+          {/* Legal Identification Banner */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-12 border border-white/10 bg-[#07133B]/60 p-6 flex flex-wrap items-center justify-between gap-4"
+            className="mt-10 border border-white/10 bg-[#0E1754]/40 p-6 sm:p-8 backdrop-blur-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             <div>
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
-                Razón Social del Fabricante:
+                Razón Comercial & Titular:
               </p>
-              <p className="font-body text-sm text-white font-medium">
-                Oasis Colchones S.A.S. — NIT: 901.482.391-4
+              <p className="mt-1 font-body text-sm text-white font-medium">
+                Oasis Colchones y Muebles
               </p>
-            </div>
-            <div className="border-l border-white/10 pl-4">
-              <p className="font-mono text-2xs uppercase tracking-wider text-white/40">
-                Sede Fabril Principal:
-              </p>
-              <p className="font-body text-sm text-white/80">
-                Bogotá D.C. — Parque Industrial Fontibón / Montevideo
+              <p className="font-body text-xs text-white/60">
+                Titular: Luna Valentina Ramírez Vallejo
               </p>
             </div>
-            <div className="border-l border-white/10 pl-4">
-              <p className="font-mono text-2xs uppercase tracking-wider text-white/40">
-                Autoridad de Supervisión:
+            <div className="sm:border-l sm:border-white/10 sm:pl-6">
+              <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
+                NIT de Operación:
               </p>
-              <p className="font-body text-sm text-white/80">
-                Superintendencia de Industria y Comercio (SIC)
+              <p className="mt-1 font-mono text-sm text-white font-medium">
+                1011091483-4
+              </p>
+              <p className="font-body text-xs text-white/60">
+                Persona Natural Responsable
+              </p>
+            </div>
+            <div className="lg:border-l lg:border-white/10 lg:pl-6">
+              <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
+                Domicilio y Sede Física:
+              </p>
+              <p className="mt-1 font-body text-sm text-white">
+                Carrera 5 #2-01, Local 11
+              </p>
+              <p className="font-body text-xs text-white/60">
+                Cota, Cundinamarca, Colombia
+              </p>
+            </div>
+            <div className="lg:border-l lg:border-white/10 lg:pl-6">
+              <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
+                Canal Oficial de Atención:
+              </p>
+              <a
+                href="http://wa.link/cfrej0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 font-mono text-sm text-[#2A21EA] hover:underline block font-semibold text-white"
+              >
+                WhatsApp: 350 403 5144
+              </a>
+              <p className="font-body text-xs text-white/60">
+                Lunes a Viernes: 10am – 6pm
               </p>
             </div>
           </motion.div>
 
-          {/* Master Grid with Navigation Sidebar & Content */}
+          {/* Master Grid with Navigation Sidebar & Document Reader */}
           <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             
             {/* Sidebar Navigation */}
             <div className="lg:col-span-4 sticky top-28 space-y-2">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-white/40 block mb-4 px-2">
-                Índice de Cláusulas y Protocolos
+              <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059] block mb-3 px-2">
+                Índice de Documentos Legales
               </span>
               {TABS.map((tab) => {
                 const isActive = activeTab === tab.id
@@ -112,12 +179,12 @@ export default function LegalesPage() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full text-left p-4 border transition-all duration-200 flex items-center justify-between ${
                       isActive
-                        ? 'border-[#C5A059] bg-[#C5A059]/10 text-white shadow-sm'
-                        : 'border-white/10 bg-[#07133B]/40 text-white/60 hover:border-white/30 hover:text-white'
+                        ? 'border-[#2A21EA] bg-[#2A21EA]/15 text-white shadow-[0_0_20px_rgba(42,33,234,0.2)]'
+                        : 'border-white/10 bg-[#0E1754]/20 text-white/70 hover:border-white/30 hover:text-white'
                     }`}
                   >
                     <div>
-                      <span className="font-mono text-[10px] text-[#C5A059] block">
+                      <span className="font-mono text-2xs text-[#C5A059] block">
                         {tab.number}
                       </span>
                       <span className="font-body text-xs font-medium">
@@ -125,282 +192,427 @@ export default function LegalesPage() {
                       </span>
                     </div>
                     {isActive && (
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#C5A059]" />
+                      <span className="h-2 w-2 rounded-full bg-[#2A21EA] shadow-[0_0_8px_#2A21EA]" />
                     )}
                   </button>
                 )
               })}
 
-              <div className="pt-6 border-t border-white/10 text-2xs font-body text-white/40 px-2 leading-relaxed">
-                ¿Requieres asistencia técnica o radicar un peritaje? Escribe directamente a <a href="mailto:atencion@oasiscolchones.co" className="text-[#C5A059] underline">atencion@oasiscolchones.co</a>.
+              {/* Direct PDF Download Box */}
+              <div className="pt-6 border-t border-white/10 px-2">
+                <a
+                  href={currentTabMeta.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="w-full flex items-center justify-center gap-2.5 border border-[#C5A059] bg-[#C5A059]/10 px-4 py-3 font-body text-xs uppercase tracking-wider text-[#C5A059] hover:bg-[#C5A059] hover:text-[#070D38] transition-all duration-200 font-semibold text-center"
+                >
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Descargar PDF Oficial
+                </a>
+                <p className="mt-2 text-2xs font-body text-white/40 text-center">
+                  Copia fiel original con validez legal probatoria.
+                </p>
               </div>
             </div>
 
             {/* Document Body Content */}
-            <div className="lg:col-span-8 border border-white/10 bg-[#07133B]/80 p-8 sm:p-12 space-y-8">
+            <div className="lg:col-span-8 border border-white/10 bg-[#0E1754]/30 p-8 sm:p-12 space-y-8 backdrop-blur-md">
               
-              {/* TAB 1: GARANTÍA INDUSTRIAL */}
-              {activeTab === 'garantia' && (
-                <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6">
-                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                      Protocolo de Fábrica 01
-                    </span>
-                    <h2 className="mt-2 font-display text-2xl sm:text-3xl font-normal text-white">
-                      Certificado de Garantía Industrial (10 a 15 Años)
-                    </h2>
-                    <p className="mt-2 font-body text-xs sm:text-sm text-white/60">
-                      Vigencia aplicable a todas las referencias comercializadas directamente por Oasis Colchones S.A.S.
-                    </p>
-                  </div>
-
-                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
-                    <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        1.1. Alcance Técnico de la Cobertura
-                      </h3>
-                      <p>
-                        Oasis Colchones S.A.S. garantiza la integridad estructural de cada colchón contra defectos de fabricación en su núcleo biomecánico durante el período especificado en la ficha del producto (10 años en referencias de espuma HR de alta densidad; 15 años en modelos híbridos con resortes pocket ensacados y látex Dunlop).
-                      </p>
-                      <ul className="mt-3 list-disc pl-5 space-y-1.5 text-white/70">
-                        <li><strong>Deformación permanente no recuperable:</strong> Depresiones o hendiduras visibles en la superficie superiores a 2.5 cm (1 pulgada) sin peso aplicado sobre el colchón.</li>
-                        <li><strong>Falla en la estructura de resortes:</strong> Rotura, fractura o pérdida de tensión elástica en las espirales de acero al carbono ensacadas.</li>
-                        <li><strong>Fallas de confección estructural:</strong> Desprendimiento involuntario de ribetes perimetrales o separación de capas ensambladas por termofusión dentro de los primeros 3 años de uso ordinario.</li>
-                      </ul>
-                    </section>
-
-                    <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        1.2. Exclusiones Explícitas (Cero Promesas Irreales)
-                      </h3>
-                      <p>
-                        La garantía no cubre variaciones inherentes al desgaste natural o usos que contravengan las normas básicas de conservación:
-                      </p>
-                      <ul className="mt-3 list-disc pl-5 space-y-1.5 text-white/70">
-                        <li>Ablandamiento natural de las espumas por adaptación al peso corporal inferior a 2.5 cm de deformación permanente.</li>
-                        <li>Quemaduras, derrames de líquidos corporales, manchas de moho o humedad derivada de ventilación inadecuada del dormitorio.</li>
-                        <li>Uso del colchón sobre bases de cama deformadas, somieres con tablones separados por más de 7 cm, o soportes que no cuenten con pata central de apoyo.</li>
-                        <li>Preferencia subjetiva sobre grado de firmeza manifestada transcurridos los plazos de retracto legal.</li>
-                      </ul>
-                    </section>
-
-                    <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        1.3. Procedimiento Oficial de Reclamación
-                      </h3>
-                      <p>
-                        Para activar la garantía, el titular de la compra debe enviar a <span className="text-[#C5A059] font-mono">atencion@oasiscolchones.co</span> el número de cédula del comprador, fotografía de la etiqueta industrial cosida al colchón y registro fotográfico con una regla rígida apoyada horizontalmente sobre la depresión. Un ingeniero de planta revisará el caso y emitirá dictamen dentro de los 15 días hábiles conforme al Estatuto del Consumidor.
-                      </p>
-                    </section>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: ENVÍOS Y FLETES */}
-              {activeTab === 'envios' && (
-                <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6">
-                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                      Protocolo de Fábrica 02
-                    </span>
-                    <h2 className="mt-2 font-display text-2xl sm:text-3xl font-normal text-white">
-                      Política de Envíos, Despachos y Fletes
-                    </h2>
-                    <p className="mt-2 font-body text-xs sm:text-sm text-white/60">
-                      Operación logística coordinada con flota directa y Coordinadora Mercantil.
-                    </p>
-                  </div>
-
-                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
-                    <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        2.1. Tiempos Reales de Entrega (Sin Promesas Ficticias)
-                      </h3>
-                      <p>
-                        Cada colchón se confecciona o alista en nuestra planta de Bogotá tras la confirmación bancaria del pago. Los tiempos reales de despacho y tránsito terrestre son:
-                      </p>
-                      <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="border border-white/10 bg-[#0A1B54]/40 p-4">
-                          <span className="font-mono text-xs text-[#C5A059] block">Zona 1: Bogotá & Sabana</span>
-                          <p className="mt-1 font-display text-xl text-white">2 a 4 días hábiles</p>
-                          <p className="mt-1 font-body text-2xs text-white/50">Flota propia directa de fábrica.</p>
-                        </div>
-                        <div className="border border-white/10 bg-[#0A1B54]/40 p-4">
-                          <span className="font-mono text-xs text-[#C5A059] block">Zona 2: Ciudades Principales</span>
-                          <p className="mt-1 font-display text-xl text-white">4 a 7 días hábiles</p>
-                          <p className="mt-1 font-body text-2xs text-white/50">Medellín, Cali, Barranquilla, Bucaramanga.</p>
-                        </div>
-                        <div className="border border-white/10 bg-[#0A1B54]/40 p-4">
-                          <span className="font-mono text-xs text-[#C5A059] block">Zona 3: Reexpedición Nacional</span>
-                          <p className="mt-1 font-display text-xl text-white">8 a 12 días hábiles</p>
-                          <p className="mt-1 font-body text-2xs text-white/50">Municipios intermedios y trayectos especiales.</p>
-                        </div>
-                      </div>
-                    </section>
-
-                    <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        2.2. Liquidación del Flete Asegurado
-                      </h3>
-                      <p>
-                        El valor del flete se calcula en tiempo real durante el checkout de acuerdo con la matriz de peso volumétrico de Coordinadora Mercantil. El flete incluye seguro de carga contra siniestros, pérdidas o daños durante el transporte hasta la dirección indicada por el comprador.
-                      </p>
-                    </section>
-
-                    <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        2.3. Protocolo de Recepción Física
-                      </h3>
-                      <p>
-                        El cliente debe inspeccionar visualmente el embalaje termoplástico termosellado antes de firmar la guía de entrega. Si el empaque presenta perforaciones graves, agua o roturas que afecten la tela del colchón, debe anotarse en la guía física o digital del transportador y notificarse a Oasis dentro de las 24 horas siguientes.
-                      </p>
-                    </section>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 3: TÉRMINOS Y CONDICIONES */}
+              {/* TAB 1: TÉRMINOS Y CONDICIONES */}
               {activeTab === 'terminos' && (
                 <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6">
-                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                      Protocolo de Fábrica 03
-                    </span>
-                    <h2 className="mt-2 font-display text-2xl sm:text-3xl font-normal text-white">
-                      Términos y Condiciones Generales de Venta Directa
-                    </h2>
-                    <p className="mt-2 font-body text-xs sm:text-sm text-white/60">
-                      Reglas contractuales que rigen la transacción electrónica entre el comprador y el fabricante.
-                    </p>
+                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                        Marco Regulatorio 01
+                      </span>
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                        Términos y Condiciones Generales de Compra y Uso
+                      </h2>
+                      <p className="mt-1 font-body text-xs text-white/60">
+                        Vigentes desde el 4 de noviembre de 2026 • www.oasiscolchonesymuebles.com
+                      </p>
+                    </div>
+                    <a
+                      href="/docs/terminos-y-condiciones.pdf"
+                      target="_blank"
+                      download
+                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                    >
+                      Descargar PDF
+                    </a>
                   </div>
 
                   <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        3.1. Identificación y Perfeccionamiento del Contrato
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        1. Quiénes somos
                       </h3>
                       <p>
-                        Las ventas celebradas a través de este portal son gestionadas exclusivamente por <strong>OASIS COLCHONES S.A.S.</strong>, sociedad comercial legalmente constituida bajo las leyes de la República de Colombia, identificada con NIT 901.482.391-4, con domicilio principal en Bogotá D.C. El contrato de compraventa se perfecciona en el momento en que la pasarela de pagos Wompi (Bancolombia) emite la confirmación de transacción aprobada.
+                        El sitio <strong>www.oasiscolchonesymuebles.com</strong> (el “Sitio”) es operado por <strong>Oasis Colchones y Muebles</strong>, persona natural con NIT <strong>1011091483-4</strong>, con domicilio en Carrera 5 #2-01, Local 11, Cota, Cundinamarca, Colombia. Titular: <strong>Luna Valentina Ramírez Vallejo</strong>. Canal de atención al cliente: WhatsApp <strong>350 403 5144</strong>, de lunes a viernes, de 10:00 a. m. a 6:00 p. m.
                       </p>
                     </section>
 
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        3.2. Precios, Facturación Electrónica DIAN e Impuestos
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        2. Aceptación y Capacidad Legal
                       </h3>
                       <p>
-                        Todos los precios exhibidos en el catálogo incluyen el Impuesto sobre las Ventas (IVA) a la tarifa general vigente en Colombia. Tras la aprobación de la transacción, se emite automáticamente la Factura Electrónica de Venta con validación previa de la DIAN y se remite al correo electrónico suministrado por el comprador.
+                        Al navegar en el Sitio, consultar el catálogo, registrar datos o realizar compras, usted acepta expresamente estos Términos y condiciones. Si no está de acuerdo, le solicitamos abstenerse de utilizar el Sitio. Las compras están destinadas a personas mayores de edad con capacidad legal para contratar bajo el Código de Comercio colombiano.
                       </p>
                     </section>
 
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        3.3. Seguridad en Pagos
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        3. Productos, Medidas y Precios
                       </h3>
                       <p>
-                        Oasis Colchones S.A.S. no almacena, captura ni procesa información de tarjetas de crédito o credenciales bancarias. Toda la recaudación se realiza a través de la infraestructura cifrada PCI-DSS de Wompi (Bancolombia) mediante tarjetas débito/crédito, PSE, Nequi y transferencias Bancolombia.
+                        Comercializamos colchones, bases cama, almohadas y lencería para el descanso. Las medidas se expresan en centímetros (ej. 90x190, 100x190, 120x190, 140x190, 160x190, 200x200 cm) con tolerancia industrial estándar de ±2 cm de confección. Los precios se informan en pesos colombianos (COP), son válidos al momento de confirmar el pedido y pueden ajustarse sin previo aviso para pedidos futuros.
+                      </p>
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        4. Medios de Pago Autorizados
+                      </h3>
+                      <p>
+                        Los pagos se procesan de manera segura a través de la pasarela <strong>Wompi</strong> (Bancolombia, tarjetas débito, crédito, PSE y Nequi), financiamiento con <strong>Addi</strong> y <strong>Sistecrédito</strong>, transferencias a cuentas oficiales de la empresa, o modalidad contraentrega en zonas con cobertura. Oasis nunca solicitará contraseñas bancarias ni números completos de tarjeta por chat o llamada.
+                      </p>
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        5. Entregas, Cobertura y Despacho
+                      </h3>
+                      <p>
+                        Entregamos en Bogotá D.C., Cota, Chía, Cajicá y municipios de la Sabana, así como a nivel nacional a través de empresas transportadoras legalmente constituidas (Coordinadora Mercantil y aliadas). La entrega se efectúa en la dirección indicada hasta la puerta del inmueble o portería. El cliente debe verificar que las dimensiones de puertas, pasillos y escaleras permitan el ingreso seguro del producto.
+                      </p>
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        6. Derecho de Retracto (Ley 1480 de 2011, Art. 47)
+                      </h3>
+                      <p>
+                        Para compras no presenciales en el Sitio, usted tiene derecho a retractarse dentro de los <strong>cinco (5) días hábiles</strong> siguientes a la entrega del producto. El producto debe devolverse nuevo, sin uso, en su empaque original plástico sellado, sin manchas ni olores y con todos sus accesorios. El costo del flete de devolución corre por cuenta del comprador según la ley.
+                      </p>
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        7. Garantía Legal
+                      </h3>
+                      <p>
+                        Nuestros colchones y bases cuentan con garantía industrial contra defectos de fabricación en resortes, estructuras de madera y núcleos de espuma de 10 a 15 años según la referencia. La garantía no cubre desgaste natural por uso, manchas por derrames o manipulación indebida.
                       </p>
                     </section>
                   </div>
                 </div>
               )}
 
-              {/* TAB 4: RETRACTO Y DEVOLUCIONES */}
-              {activeTab === 'retracto' && (
+              {/* TAB 2: TRATAMIENTO DE DATOS PERSONALES (HABEAS DATA) */}
+              {activeTab === 'datos' && (
                 <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6">
-                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                      Protocolo de Fábrica 04
-                    </span>
-                    <h2 className="mt-2 font-display text-2xl sm:text-3xl font-normal text-white">
-                      Derecho de Retracto (Artículo 47, Ley 1480 de 2011)
-                    </h2>
-                    <p className="mt-2 font-body text-xs sm:text-sm text-white/60">
-                      Garantía legal para compras a distancia y comercio electrónico en Colombia.
-                    </p>
+                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                        Marco Regulatorio 02
+                      </span>
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                        Política de Tratamiento de Datos Personales (Ley 1581 de 2012)
+                      </h2>
+                      <p className="mt-1 font-body text-xs text-white/60">
+                        Habeas Data • Vigente desde el 4 de noviembre de 2026
+                      </p>
+                    </div>
+                    <a
+                      href="/docs/politica-tratamiento-datos-personales.pdf"
+                      target="_blank"
+                      download
+                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                    >
+                      Descargar PDF
+                    </a>
                   </div>
 
                   <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        4.1. Término Legal de Ejercicio
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        1. Responsable del Tratamiento
                       </h3>
                       <p>
-                        El consumidor tiene derecho a ejercer el retracto de la compra dentro de los <strong>cinco (5) días hábiles</strong> siguientes a la fecha de entrega física del colchón en su domicilio.
+                        <strong>Oasis Colchones y Muebles</strong>, NIT <strong>1011091483-4</strong>, titular <strong>Luna Valentina Ramírez Vallejo</strong>. Domicilio: Carrera 5 #2-01, Local 11, Cota, Cundinamarca, Colombia. Teléfono y WhatsApp oficial: <strong>350 403 5144</strong>. Sitio web: www.oasiscolchonesymuebles.com.
                       </p>
                     </section>
 
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        4.2. Condición Sanitaria del Producto (Exigencia Legal de Ropa de Cama)
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        2. Marco Legal
                       </h3>
                       <p>
-                        De conformidad con las normas sanitarias y el numeral 4 del artículo 47 de la Ley 1480 de 2011, por tratarse de bienes de uso personal e íntimo (artículos de descanso y ropa de cama), <strong>el colchón debe devolverse sin haber sido usado, en su embalaje plástico termoplástico sellado de fábrica original, con todas sus etiquetas y accesorios intactos</strong>. No se aceptarán devoluciones por retracto de colchones desempacados o usados por estrictas razones de bioseguridad y salud pública.
+                        Artículo 15 de la Constitución Política de Colombia, <strong>Ley Estatutaria 1581 de 2012</strong>, Decreto Único Reglamentario 1074 de 2015 y normas concordantes de la Superintendencia de Industria y Comercio (SIC).
                       </p>
                     </section>
 
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        4.3. Costos de Transporte y Reembolso
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        3. Finalidades del Tratamiento
+                      </h3>
+                      <ul className="list-disc pl-5 space-y-1.5 text-white/70">
+                        <li>Procesar, confirmar, facturar y despachar sus pedidos de colchones y muebles.</li>
+                        <li>Coordinar las entregas domiciliarias y contactarle vía telefónica o WhatsApp para notificar el estado del envío.</li>
+                        <li>Gestionar garantías, solicitudes de servicio posventa y peticiones, quejas y reclamos (PQR).</li>
+                        <li>Cumplir con las obligaciones fiscales, contables y de facturación electrónica ante la DIAN.</li>
+                        <li>Con su autorización previa y expresa, enviar información comercial sobre promociones y novedades.</li>
+                      </ul>
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        4. Derechos del Titular de los Datos
                       </h3>
                       <p>
-                        Los costos de flete terrestre asociados al retorno del producto a nuestra planta de Bogotá correrán por cuenta del consumidor, tal como estipula la ley colombiana. Una vez recibido el colchón en planta y verificado el precinto original, Oasis Colchones devolverá la totalidad del dinero pagado en un plazo no superior a treinta (30) días calendario.
+                        Conforme al artículo 8 de la Ley 1581 de 2012, usted tiene derecho a:
+                      </p>
+                      <ul className="list-disc pl-5 space-y-1.5 text-white/70 mt-2">
+                        <li><strong>Conocer, actualizar y rectificar</strong> sus datos personales frente a Oasis Colchones y Muebles.</li>
+                        <li><strong>Solicitar prueba</strong> de la autorización otorgada para el tratamiento.</li>
+                        <li><strong>Revocar la autorización</strong> y/o solicitar la supresión de sus datos cuando no medie un deber legal o contractual de conservarlos.</li>
+                        <li><strong>Acceder en forma gratuita</strong> a sus datos personales que hayan sido objeto de tratamiento.</li>
+                      </ul>
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        5. Canales para Ejercer sus Derechos
+                      </h3>
+                      <p>
+                        Puede radicar sus consultas o reclamos de Habeas Data enviando una comunicación al WhatsApp oficial <strong>350 403 5144</strong> o a la Carrera 5 #2-01, Local 11, Cota, Cundinamarca, indicando su nombre completo, número de documento y la descripción clara de su solicitud. Su solicitud será resuelta dentro de los 10 o 15 días hábiles conforme a la ley.
                       </p>
                     </section>
                   </div>
                 </div>
               )}
 
-              {/* TAB 5: PRIVACIDAD Y DATOS */}
+              {/* TAB 3: POLÍTICA DE PRIVACIDAD & COOKIES */}
               {activeTab === 'privacidad' && (
                 <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6">
-                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                      Protocolo de Fábrica 05
-                    </span>
-                    <h2 className="mt-2 font-display text-2xl sm:text-3xl font-normal text-white">
-                      Política de Protección de Datos Personales (Ley 1581 de 2012)
-                    </h2>
-                    <p className="mt-2 font-body text-xs sm:text-sm text-white/60">
-                      Régimen de Habeas Data y tratamiento de información personal en Colombia.
-                    </p>
+                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                        Marco Regulatorio 03
+                      </span>
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                        Política de Privacidad y Manejo de Cookies
+                      </h2>
+                      <p className="mt-1 font-body text-xs text-white/60">
+                        Transparencia digital • Vigente desde el 4 de noviembre de 2026
+                      </p>
+                    </div>
+                    <a
+                      href="/docs/politica-privacidad.pdf"
+                      target="_blank"
+                      download
+                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                    >
+                      Descargar PDF
+                    </a>
                   </div>
 
                   <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        5.1. Responsable del Tratamiento
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        1. Información Recopilada
                       </h3>
                       <p>
-                        OASIS COLCHONES S.A.S., con domicilio en Bogotá D.C., es el Responsable del tratamiento de los datos personales recolectados a través de esta plataforma digital.
+                        Recopilamos únicamente la información necesaria para brindarle una experiencia fluida y concretar sus compras: nombre, cédula o NIT para factura electrónica, número de celular, dirección y ciudad de entrega, y correo electrónico para envío de la confirmación.
                       </p>
                     </section>
 
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        5.2. Finalidades Estrictas de Recolección
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        2. Terceros Aliados de Confianza
                       </h3>
                       <p>
-                        Los datos recopilados (nombre, documento de identidad, dirección física, teléfono y correo electrónico) son utilizados exclusivamente para:
+                        Solo compartimos los datos estrictamente necesarios con aliados operativos indispensables:
                       </p>
-                      <ul className="mt-3 list-disc pl-5 space-y-1 text-white/70">
-                        <li>Procesamiento contable y emisión de factura electrónica DIAN.</li>
-                        <li>Coordinación de despacho y entrega con los operadores logísticos autorizados.</li>
-                        <li>Registro y seguimiento de la garantía industrial durante su período de vigencia (10 a 15 años).</li>
-                        <li>Comunicaciones operativas relacionadas con el estado del pedido.</li>
+                      <ul className="list-disc pl-5 space-y-1.5 text-white/70 mt-2">
+                        <li><strong>Pasarelas de Pago:</strong> Wompi (Bancolombia), Addi y Sistecrédito. Sus datos financieros viajan encriptados y Oasis nunca tiene acceso ni custodia de números de tarjeta de crédito.</li>
+                        <li><strong>Empresas de Transporte:</strong> Para coordinar el envío de su pedido hasta la puerta de su domicilio.</li>
+                        <li><strong>Autoridades Tributarias:</strong> DIAN para cumplimiento de obligaciones de facturación electrónica.</li>
                       </ul>
-                      <p className="mt-3">
-                        <strong>Cero comercialización de datos:</strong> Oasis Colchones S.A.S. no vende, alquila ni cede bases de datos personales a terceras empresas con fines comerciales o de telemercadeo.
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        3. Uso de Cookies
+                      </h3>
+                      <p>
+                        Utilizamos cookies técnicas necesarias para el funcionamiento del carrito de compras y la seguridad de la sesión. Opcionalmente, cookies analíticas de Google Analytics para conocer patrones agregados de visita que nos permitan optimizar el rendimiento del sitio.
+                      </p>
+                    </section>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: PREVENCIÓN DE FRAUDE Y DEVOLUCIÓN */}
+              {activeTab === 'fraude' && (
+                <div className="space-y-6">
+                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                        Marco Regulatorio 04
+                      </span>
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                        Política de Prevención de Fraude y Devolución de Dinero
+                      </h2>
+                      <p className="mt-1 font-body text-xs text-white/60">
+                        Seguridad en transacciones • Vigente desde el 4 de noviembre de 2026
+                      </p>
+                    </div>
+                    <a
+                      href="/docs/politica-prevencion-fraude-devolucion.pdf"
+                      target="_blank"
+                      download
+                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                    >
+                      Descargar PDF
+                    </a>
+                  </div>
+
+                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        1. Pagos Seguros y Verificación
+                      </h3>
+                      <p>
+                        Todos los pagos con tarjeta o PSE en el Sitio se procesan a través de la infraestructura segura de <strong>Wompi</strong> con cifrado TLS/SSL de 256 bits y protocolos 3D Secure. Oasis solo recibe pagos por los canales oficiales autorizados. Cualquier solicitud de pago a cuentas no oficiales carece de validez.
                       </p>
                     </section>
 
                     <section>
-                      <h3 className="font-display text-lg text-white mb-2">
-                        5.3. Derechos ARCO y Canales de Atención
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        2. Cuándo Procede la Devolución de Dinero
+                      </h3>
+                      <ul className="list-disc pl-5 space-y-1.5 text-white/70">
+                        <li><strong>Falta de Disponibilidad:</strong> Cuando el producto adquirido no esté disponible y el cliente no acepte un cambio de referencia.</li>
+                        <li><strong>Cancelación por Oasis:</strong> Por imposibilidad logística de entrega en la zona de destino.</li>
+                        <li><strong>Ejercicio Oportuno del Derecho de Retracto:</strong> Notificado formalmente dentro de los 5 días hábiles siguientes a la entrega, con el producto en perfecto estado y empaque sellado.</li>
+                        <li><strong>Reversión del Pago (Decreto 587 de 2016):</strong> En casos de fraude comprobado, operación no solicitada o producto recibido defectuoso.</li>
+                      </ul>
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        3. Plazos y Modalidades de Reembolso
                       </h3>
                       <p>
-                        El titular de los datos puede ejercer en cualquier momento sus derechos de Acceso, Rectificación, Cancelación y Oposición remitiendo una solicitud escrita a <span className="text-[#C5A059] font-mono">atencion@oasiscolchones.co</span>. Las consultas serán resueltas en un término máximo de diez (10) días hábiles.
+                        Las devoluciones aprobadas se tramitan en un plazo máximo de <strong>quince (15) a treinta (30) días calendario</strong> a través del mismo medio de pago empleado por el cliente (reversión a tarjeta de crédito o débito vía Wompi) o mediante transferencia bancaria a la cuenta certificada a nombre del titular de la compra.
                       </p>
+                    </section>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 5: GARANTÍA INDUSTRIAL & FICHA TÉCNICA */}
+              {activeTab === 'garantia' && (
+                <div className="space-y-6">
+                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                        Protocolo Técnico 05
+                      </span>
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                        Garantía Industrial de Fábrica & Ficha Técnica Oficial
+                      </h2>
+                      <p className="mt-1 font-body text-xs text-white/60">
+                        Resortes Bonell, Pocket y Núcleos de Espuma D120/D26 • 10 a 15 Años
+                      </p>
+                    </div>
+                    <a
+                      href="/docs/colchones-oasis-ficha-tecnica.pdf"
+                      target="_blank"
+                      download
+                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                    >
+                      Descargar Ficha Técnica PDF
+                    </a>
+                  </div>
+
+                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        1. Cobertura Estructural de Manufactura
+                      </h3>
+                      <p>
+                        Oasis Colchones y Muebles garantiza la resistencia y durabilidad de los resortes en acero de alto carbono (Bonell de 5 vueltas y Pocket ensacados independientes) y la densidad de sus espumas ortopédicas certificadas (Cazata D120, Espuma Rosada D26 y Espuma Penta D26).
+                      </p>
+                    </section>
+
+                    <section>
+                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                        2. Tabla de Referencias y Especificaciones
+                      </h3>
+                      <div className="mt-3 overflow-x-auto border border-white/10">
+                        <table className="w-full text-left font-body text-xs">
+                          <thead className="bg-[#070D38] border-b border-white/10 text-white/60 uppercase font-mono text-[10px]">
+                            <tr>
+                              <th className="p-3">Línea / Modelo</th>
+                              <th className="p-3">Núcleo</th>
+                              <th className="p-3">Altura</th>
+                              <th className="p-3">Firmeza</th>
+                              <th className="p-3">Garantía</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-white/5 text-white/80">
+                            <tr>
+                              <td className="p-3 font-medium text-white">Colchón Pillow Top Pocket</td>
+                              <td className="p-3">Resortes Pocket + Cazata D120 + Penta D26</td>
+                              <td className="p-3">42 cm</td>
+                              <td className="p-3 text-[#C5A059]">Media-Suave</td>
+                              <td className="p-3 font-mono">15 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-white">Colchón Pillow Top Original</td>
+                              <td className="p-3">Panel Bonell 5v + Politubos + Cazata D120</td>
+                              <td className="p-3">35 cm</td>
+                              <td className="p-3 text-[#C5A059]">Media</td>
+                              <td className="p-3 font-mono">15 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-white">Colchón Pillow Top Encapsulado</td>
+                              <td className="p-3">Bonell Encapsulado + Tacos Perimetrales</td>
+                              <td className="p-3">35 cm</td>
+                              <td className="p-3 text-[#C5A059]">Media-Firme</td>
+                              <td className="p-3 font-mono">15 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-white">Colchón Ortopédico Clínico</td>
+                              <td className="p-3">Cazata D120 (10cm) + Doble Rosada D26 (5cm)</td>
+                              <td className="p-3">22 cm</td>
+                              <td className="p-3 text-[#C5A059]">Alta (Firme)</td>
+                              <td className="p-3 font-mono">10 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-white">Colchón Ortopédico Resortado</td>
+                              <td className="p-3">Panel Bonell + Cazata D120 + Rosada D26</td>
+                              <td className="p-3">28 cm</td>
+                              <td className="p-3 text-[#C5A059]">Media-Alta</td>
+                              <td className="p-3 font-mono">10 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-white">Colchón Semi-Ortopédico Resortado</td>
+                              <td className="p-3">Panel Bonell 5v + Algodón Laminado + Rosada D26</td>
+                              <td className="p-3">26 cm</td>
+                              <td className="p-3 text-[#C5A059]">Media</td>
+                              <td className="p-3 font-mono">10 Años</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </section>
                   </div>
                 </div>
@@ -413,5 +625,17 @@ export default function LegalesPage() {
 
       <Footer />
     </main>
+  )
+}
+
+export default function LegalesPage() {
+  return (
+    <Suspense fallback={
+      <div className="bg-[#070D38] min-h-screen flex items-center justify-center">
+        <div className="h-8 w-8 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <LegalesContent />
+    </Suspense>
   )
 }

@@ -9,7 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        night: '#0A1B54',
+        brand: '#2A21EA',
+        'brand-light': '#4942F5',
+        'brand-dark': '#1C15BF',
+        night: '#070D38',
         'night-light': '#0D2266',
         'night-muted': '#1A2E6B',
         gold: '#C5A059',

@@ -54,7 +54,7 @@ export function FabricaHero() {
             className="mt-6 font-body text-sm sm:text-base text-white/70 max-w-xl leading-relaxed"
           >
             Aquí no escondemos nada. Esta es la infraestructura industrial real donde se manufactura
-            cada uno de nuestros 13 colchones. Sin marketing ficticio ni intermediarios. Solo acero, látex y confección directa.
+            cada uno de nuestros colchones. Sin marketing ficticio ni intermediarios. Solo acero, látex y confección directa.
           </motion.p>
         </div>
 

@@ -4,7 +4,7 @@ export type { ShippingZone, ShippingResolution }
 
 // ─── Product & Catalog ──────────────────────────────────────────────────────
 
-export type MattressSize = 'Sencillo' | 'Semi-doble' | 'Doble' | 'Queen' | 'King'
+export type MattressSize = string
 
 export interface ProductVariant {
   size: MattressSize
@@ -20,7 +20,7 @@ export interface Product {
   tagline: string
   description: string
   longDescription: string
-  category: 'espuma' | 'resortes' | 'latex' | 'premium'
+  category: 'colchones' | 'colchonetas' | 'bases' | 'almohadas' | 'protectores' | 'sabanas' | string
   technology: string[]
   materials: string[]
   imageUrl: string

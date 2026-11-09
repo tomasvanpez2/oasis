@@ -4,7 +4,9 @@
 
 /* ─── Custom Properties ──────────────────────────────────────────────────── */
 :root {
-  --color-night: #0A1B54;
+  --color-brand: #2A21EA;
+  --color-brand-dark: #1C15BF;
+  --color-night: #070D38;
   --color-gold: #C5A059;
   --color-ivory: #F5F0E8;
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);

@@ -96,7 +96,7 @@ export function CartDrawer() {
                     onClick={closeCart}
                     className="mt-4 font-body text-xs uppercase tracking-widest text-[#C5A059] underline underline-offset-4 hover:text-white transition-colors"
                   >
-                    Explorar catálogo de 13 referencias →
+                    Ve nuestro catálogo →
                   </button>
                 </div>
               ) : (

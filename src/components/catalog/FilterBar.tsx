@@ -2,7 +2,7 @@
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
 
-type CategoryFilter = 'todos' | 'espuma' | 'resortes' | 'latex' | 'premium'
+type CategoryFilter = 'todos' | 'colchones' | 'colchonetas' | 'bases' | 'almohadas' | 'protectores' | 'sabanas'
 
 interface FilterBarProps {
   activeFilter: CategoryFilter
@@ -10,11 +10,13 @@ interface FilterBarProps {
 }
 
 const FILTERS: { value: CategoryFilter; label: string }[] = [
-  { value: 'todos', label: 'Todos' },
-  { value: 'espuma', label: 'Espuma' },
-  { value: 'resortes', label: 'Resortes' },
-  { value: 'latex', label: 'Látex' },
-  { value: 'premium', label: 'Premium' },
+  { value: 'todos', label: 'Todos los Productos' },
+  { value: 'colchones', label: 'Colchones' },
+  { value: 'colchonetas', label: 'Colchonetas' },
+  { value: 'bases', label: 'Bases & Espaldares' },
+  { value: 'almohadas', label: 'Almohadas' },
+  { value: 'protectores', label: 'Protectores' },
+  { value: 'sabanas', label: 'Sábanas' },
 ]
 
 export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {

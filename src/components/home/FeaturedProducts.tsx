@@ -7,110 +7,167 @@ import { motion } from 'framer-motion'
 import type { Product } from '@/types'
 import { formatCOP } from '@/lib/utils'
 
-// Immediate server-grade initial products to guarantee ZERO CLS and eliminate empty states
+// Immediate server-grade initial products matching PRECIOS PAGINA WEB.xlsx to guarantee ZERO CLS and 100% price parity
 const INITIAL_FEATURED_PRODUCTS: Product[] = [
   {
-    id: 'prod-002',
-    slug: 'oasis-noche',
-    name: 'Oasis Noche',
-    tagline: 'Arquitectura de resortes para soporte preciso.',
-    description: 'Sistema de resortes ensacados independientes con 800 espirales por unidad Queen.',
-    longDescription:
-      'El Oasis Noche redefine el soporte con 800 resortes ensacados independientes en tamaño Queen. Cada espiral trabaja de forma autónoma, eliminando la transferencia de movimiento y adaptando el soporte a cada zona del cuerpo.',
-    category: 'resortes',
-    technology: ['800 Resortes Ensacados', 'Independencia de Movimiento', 'HR-35 Acolchado'],
-    materials: ['Acero Templado', 'Espuma HR-35', 'Algodón Natural', 'Forro Bambú'],
-    imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
+    id: 'oasis-colchon-ortopedico-resortado',
+    slug: 'colchon-ortopedico-resortado',
+    name: 'Colchón Ortopédico Resortado',
+    tagline: 'Mayor rigidez biomecánica y amortiguación reforzada para la columna',
+    description: 'Panel Bonell 5 vueltas reforzado con láminas de Cazata prensada D120 de alta firmeza y Espuma Rosada D26. Altura: 28 cm. Firmeza media-alta.',
+    longDescription: 'Panel Bonell 5 vueltas reforzado con láminas de Cazata prensada D120 de alta firmeza y Espuma Rosada D26. Altura: 28 cm. Firmeza media-alta.',
+    category: 'colchones',
+    technology: [
+      'Soporte Ortopédico Reforzado',
+      'Cazata D120 Biomecánica',
+      'Doble Cara Útil'
+    ],
+    materials: [
+      'Panel Bonell Acero 5 vueltas',
+      'Láminas Cazata D120 (firmeza ortopédica)',
+      'Espuma Rosada D26',
+      'Jacquard Acolchado'
+    ],
+    imageUrl: '/images/products/colchon-ortopedico-resortado/foto-1.webp',
     imageGallery: [
-      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80',
-      'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80',
+      '/images/products/colchon-ortopedico-resortado/foto-1.webp',
+      '/images/products/colchon-ortopedico-resortado/foto-2.webp',
+      '/images/products/colchon-ortopedico-resortado/foto-3.webp',
+      '/images/products/colchon-ortopedico-resortado/foto-4.webp'
     ],
     variants: [
-      { size: 'Sencillo', dimensions: '90 × 190 cm', price: 1280000, stock: 10 },
-      { size: 'Semi-doble', dimensions: '120 × 190 cm', price: 1480000, stock: 8 },
-      { size: 'Doble', dimensions: '140 × 190 cm', price: 1680000, stock: 7 },
-      { size: 'Queen', dimensions: '160 × 190 cm', price: 1950000, stock: 6 },
-      { size: 'King', dimensions: '200 × 200 cm', price: 2350000, stock: 4 },
+      { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 770000, stock: 30 },
+      { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 770000, stock: 30 },
+      { size: 'Semidoble (120×190)', dimensions: '120 × 190 cm', price: 830000, stock: 30 },
+      { size: 'Doble (140×190)', dimensions: '140 × 190 cm', price: 930000, stock: 30 },
+      { size: 'Queen (160×190)', dimensions: '160 × 190 cm', price: 1135000, stock: 20 },
+      { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 1340000, stock: 15 },
+      { size: 'Tipo Libro Doble (140×190)', dimensions: '140 × 190 cm (Plegable)', price: 1335000, stock: 10 },
+      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 1540000, stock: 10 }
     ],
     featured: true,
-    createdAt: '2026-01-01T00:00:00.000Z',
-    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdAt: '2026-11-08T00:00:00.000Z',
+    updatedAt: '2026-11-08T18:00:00.000Z'
   },
   {
-    id: 'prod-003',
-    slug: 'oasis-aurora',
-    name: 'Oasis Aurora',
-    tagline: 'Látex natural Dunlop. Elasticidad biológica sin memoria sintética.',
-    description: 'Látex natural Dunlop de 10 cm sobre base de resortes ensacados.',
-    longDescription:
-      'El látex natural Dunlop del Oasis Aurora proviene de plantaciones certificadas de Hevea brasiliensis. Su estructura celular abierta garantiza una ventilación 3× superior a la espuma convencional.',
-    category: 'latex',
-    technology: ['Látex Dunlop Natural', 'Certificado Oeko-Tex', 'Ventilación Activa'],
-    materials: ['Látex Natural 65 kg/m³', 'Resortes Ensacados', 'Forro Algodón Orgánico'],
-    imageUrl: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&q=80',
+    id: 'oasis-colchon-ortopedico-clinico',
+    slug: 'colchon-ortopedico-clinico',
+    name: 'Colchón Ortopédico Clínico',
+    tagline: 'Máxima firmeza recomendada por especialistas para cuidado postural',
+    description: 'Núcleo macizo de Cazata prensada D120 de 10 cm con doble cara en Espuma Rosada D26 de 5 cm. Firmeza alta sin resortes para alivio de espalda.',
+    longDescription: 'Núcleo macizo de Cazata prensada D120 de 10 cm con doble cara en Espuma Rosada D26 de 5 cm. Firmeza alta sin resortes para alivio de espalda.',
+    category: 'colchones',
+    technology: [
+      'Núcleo Clínico D120',
+      'Alineación Vertebral Óptima',
+      'Tratamiento Hipoalergénico'
+    ],
+    materials: [
+      'Cazata Prensada D120 (10 cm)',
+      'Doble lámina Espuma Rosada D26 (5 cm c/u)',
+      'Jacquard doble acolchado con algodón'
+    ],
+    imageUrl: '/images/products/colchon-ortopedico-clinico/foto-1.webp',
     imageGallery: [
-      'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80',
-      'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=1200&q=80',
+      '/images/products/colchon-ortopedico-clinico/foto-1.webp',
+      '/images/products/colchon-ortopedico-clinico/foto-2.webp',
+      '/images/products/colchon-ortopedico-clinico/foto-3.webp',
+      '/images/products/colchon-ortopedico-clinico/foto-4.webp'
     ],
     variants: [
-      { size: 'Sencillo', dimensions: '90 × 190 cm', price: 1890000, stock: 6 },
-      { size: 'Semi-doble', dimensions: '120 × 190 cm', price: 2180000, stock: 5 },
-      { size: 'Doble', dimensions: '140 × 190 cm', price: 2490000, stock: 4 },
-      { size: 'Queen', dimensions: '160 × 190 cm', price: 2850000, stock: 3 },
-      { size: 'King', dimensions: '200 × 200 cm', price: 3380000, stock: 2 },
+      { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 940000, stock: 25 },
+      { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 940000, stock: 25 },
+      { size: 'Semidoble (120×190)', dimensions: '120 × 190 cm', price: 990000, stock: 25 },
+      { size: 'Doble (140×190)', dimensions: '140 × 190 cm', price: 1100000, stock: 25 },
+      { size: 'Queen (160×190)', dimensions: '160 × 190 cm', price: 1300000, stock: 20 },
+      { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 1560000, stock: 15 },
+      { size: 'Tipo Libro Doble (140×190)', dimensions: '140 × 190 cm (Plegable)', price: 1500000, stock: 8 },
+      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 1760000, stock: 8 }
     ],
     featured: true,
-    createdAt: '2026-01-01T00:00:00.000Z',
-    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdAt: '2026-11-08T00:00:00.000Z',
+    updatedAt: '2026-11-08T18:00:00.000Z'
   },
   {
-    id: 'prod-005',
-    slug: 'oasis-luna',
-    name: 'Oasis Luna',
-    tagline: 'Memory foam infusionado con partículas de gel refrescante.',
-    description: 'Memory foam de 5 cm de confort con regulación térmica activa.',
-    longDescription:
-      'El Oasis Luna integra partículas de gel de enfriamiento en cada célula del memory foam para mitigar la acumulación térmica en climas templados o cálidos.',
-    category: 'premium',
-    technology: ['Gel Cooling Technology', 'Memory Foam Premium', 'Regulación Térmica Activa'],
-    materials: ['Memory Foam + Gel 5cm', 'Espuma Base HR-40', 'Forro 3D Air Mesh'],
-    imageUrl: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80',
-    imageGallery: ['https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80'],
+    id: 'oasis-colchon-pillow-top-original',
+    slug: 'colchon-pillow-top-original',
+    name: 'Colchón Pillow Top Original',
+    tagline: 'Confort de lujo hotelero con doble Pillow Top en espuma Penta ultra-suave',
+    description: 'Estructura resortada de 6 vueltas tipo Calibre 13 con láminas de soporte ortopédico Cazata D120 y doble capa Pillow Top en Espuma Penta de alta resiliencia. Altura: 36 cm.',
+    longDescription: 'Estructura resortada de 6 vueltas tipo Calibre 13 con láminas de soporte ortopédico Cazata D120 y doble capa Pillow Top en Espuma Penta de alta resiliencia. Altura: 36 cm.',
+    category: 'colchones',
+    technology: [
+      'Doble Pillow Top Integrado',
+      'Resorte Calibre 13 Reforzado',
+      'Termorregulación Activa'
+    ],
+    materials: [
+      'Resorte 6 vueltas Calibre 13 Fumbolón',
+      'Láminas Cazata D120',
+      'Espuma Penta D26',
+      'Jacquard Doble Acolchado'
+    ],
+    imageUrl: '/images/products/colchon-pillow-top-original/foto-1.webp',
+    imageGallery: [
+      '/images/products/colchon-pillow-top-original/foto-1.webp',
+      '/images/products/colchon-pillow-top-original/foto-2.webp',
+      '/images/products/colchon-pillow-top-original/foto-3.webp',
+      '/images/products/colchon-pillow-top-original/foto-4.webp'
+    ],
     variants: [
-      { size: 'Sencillo', dimensions: '90 × 190 cm', price: 1480000, stock: 9 },
-      { size: 'Semi-doble', dimensions: '120 × 190 cm', price: 1720000, stock: 7 },
-      { size: 'Doble', dimensions: '140 × 190 cm', price: 1950000, stock: 6 },
-      { size: 'Queen', dimensions: '160 × 190 cm', price: 2180000, stock: 5 },
-      { size: 'King', dimensions: '200 × 200 cm', price: 2680000, stock: 3 },
+      { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 1350000, stock: 15 },
+      { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 1350000, stock: 15 },
+      { size: 'Semidoble (120×190)', dimensions: '120 × 190 cm', price: 1460000, stock: 15 },
+      { size: 'Doble (140×190)', dimensions: '140 × 190 cm', price: 1560000, stock: 15 },
+      { size: 'Queen (160×190)', dimensions: '160 × 190 cm', price: 1770000, stock: 12 },
+      { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 2185000, stock: 10 },
+      { size: 'Tipo Libro Doble (140×190)', dimensions: '140 × 190 cm (Plegable)', price: 2020000, stock: 6 },
+      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 2435000, stock: 6 }
     ],
     featured: true,
-    createdAt: '2026-01-01T00:00:00.000Z',
-    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdAt: '2026-11-08T00:00:00.000Z',
+    updatedAt: '2026-11-08T18:00:00.000Z'
   },
   {
-    id: 'prod-007',
-    slug: 'oasis-cumbre',
-    name: 'Oasis Cumbre',
-    tagline: '1000 resortes ensacados independientes y pillow top removible.',
-    description: 'Máxima densidad de resortes ensacados con acolchado superior lavable.',
-    longDescription:
-      'El Oasis Cumbre alcanza la máxima densidad biomecánica con 1000 espirales ensacadas de acero al carbono en medida Queen y pillow top de memory foam de alta resiliencia.',
-    category: 'premium',
-    technology: ['1000 Resortes Ensacados', 'Pillow Top Removible', 'Memory Foam Premium'],
-    materials: ['Acero Templado', 'Memory Foam 5cm', 'Microfibra Premium', 'Forro Tencel'],
-    imageUrl: 'https://images.unsplash.com/photo-1588046130717-0eb0c9a3ba15?w=800&q=80',
-    imageGallery: ['https://images.unsplash.com/photo-1588046130717-0eb0c9a3ba15?w=1200&q=80'],
+    id: 'oasis-colchon-pillow-top-pocket-resortes-independientes',
+    slug: 'colchon-pillow-top-pocket-resortes-independientes',
+    name: 'Colchón Pillow Top Pocket Resortes Independientes',
+    tagline: 'Cero transferencia de movimiento con resortes ensacados individuales y 42 cm de altura',
+    description: 'El buque insignia de Oasis. Panel de resortes Pocket individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.',
+    longDescription: 'El buque insignia de Oasis. Panel de resortes Pocket individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.',
+    category: 'colchones',
+    technology: [
+      'Zero Transfer Pocket Springs',
+      'Aislamiento Acústico Total',
+      'Doble Pillow Top 42cm'
+    ],
+    materials: [
+      'Resortes Pocket Ensacados Independientes',
+      'Marco de Acero Perimetral',
+      'Láminas Cazata D120 + Penta D26',
+      'Jacquard de lujo 400g'
+    ],
+    imageUrl: '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-1.webp',
+    imageGallery: [
+      '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-1.webp',
+      '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-2.webp',
+      '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-3.webp',
+      '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-4.webp'
+    ],
     variants: [
-      { size: 'Sencillo', dimensions: '90 × 190 cm', price: 2180000, stock: 6 },
-      { size: 'Semi-doble', dimensions: '120 × 190 cm', price: 2580000, stock: 5 },
-      { size: 'Doble', dimensions: '140 × 190 cm', price: 2950000, stock: 4 },
-      { size: 'Queen', dimensions: '160 × 190 cm', price: 3380000, stock: 3 },
-      { size: 'King', dimensions: '200 × 200 cm', price: 4050000, stock: 2 },
+      { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 1560000, stock: 15 },
+      { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 1560000, stock: 15 },
+      { size: 'Semidoble (120×190)', dimensions: '120 × 190 cm', price: 1720000, stock: 15 },
+      { size: 'Doble (140×190)', dimensions: '140 × 190 cm', price: 1870000, stock: 15 },
+      { size: 'Queen (160×190)', dimensions: '160 × 190 cm', price: 2185000, stock: 12 },
+      { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 2705000, stock: 8 },
+      { size: 'Tipo Libro Doble (140×190)', dimensions: '140 × 190 cm (Plegable)', price: 2385000, stock: 5 },
+      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 3005000, stock: 5 }
     ],
     featured: true,
-    createdAt: '2026-01-01T00:00:00.000Z',
-    updatedAt: '2026-01-01T00:00:00.000Z',
-  },
+    createdAt: '2026-11-08T00:00:00.000Z',
+    updatedAt: '2026-11-08T18:00:00.000Z'
+  }
 ]
 
 export function FeaturedProducts() {
@@ -142,14 +199,14 @@ export function FeaturedProducts() {
             Modelos Biomecánicos Destacados.
           </h2>
           <p className="mt-2 font-body text-xs sm:text-sm text-white/60 max-w-lg">
-            Referencias confeccionadas en nuestra planta de Bogotá con certificación de fatiga y garantía directa de 10 a 15 años.
+            Modelos confeccionados en nuestra planta de Bogotá con certificación de fatiga y garantía directa de 10 a 15 años.
           </p>
         </div>
         <Link
           href="/catalogo"
           className="inline-flex items-center gap-2 border border-white/30 px-5 py-3 font-body text-xs uppercase tracking-widest text-white transition-all hover:border-[#C5A059] hover:text-[#C5A059]"
         >
-          Ver las 13 referencias →
+          Ve nuestro catálogo →
         </Link>
       </div>
 

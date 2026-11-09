@@ -7,7 +7,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Catálogo de Colchones',
   description:
-    '13 referencias técnicas de colchones. Fabricación directa en Bogotá, Colombia. Sin intermediarios comerciales ni sobrecostos de retail.',
+    'Catálogo de colchones y descanso. Fabricación directa en Bogotá, Colombia. Sin intermediarios comerciales ni sobrecostos de retail.',
 }
 
 export const dynamic = 'force-dynamic'

@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
@@ -9,6 +10,7 @@ const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
   { href: '/catalogo', label: 'Catálogo' },
   { href: '/filosofia', label: 'Filosofía' },
+  { href: '/legales', label: 'Legales' },
 ]
 
 export function Header() {
@@ -40,18 +42,33 @@ export function Header() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className={`fixed left-0 right-0 top-0 z-40 flex items-center justify-between px-6 lg:px-16 transition-all duration-500 ${
           scrolled || mobileMenuOpen
-            ? 'border-b border-white/10 bg-[#0A1B54]/95 py-4 backdrop-blur-md'
-            : 'py-7 bg-gradient-to-b from-[#0A1B54] via-[#0A1B54]/80 to-transparent'
+            ? 'border-b border-[#2A21EA]/30 bg-[#070D38]/95 py-4 lg:py-5 backdrop-blur-md shadow-[0_4px_24px_rgba(42,33,234,0.12)]'
+            : 'py-6 lg:py-7 bg-gradient-to-b from-[#070D38] via-[#070D38]/85 to-transparent'
         }`}
       >
-        {/* Brand / Logo */}
-        <Link href="/" className="group flex flex-col focus:outline-none">
-          <span className="font-display text-2xl font-normal leading-none text-white tracking-tight">
-            Oasis
-          </span>
-          <span className="font-body text-[10px] uppercase tracking-[0.25em] text-[#C5A059] transition-colors group-hover:text-white">
-            Colchones
-          </span>
+        {/* Brand / Logo with ample breathing room */}
+        <Link href="/" className="group flex items-center gap-3.5 sm:gap-4 focus:outline-none">
+          <div className="relative h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+            <Image
+              src="/logo-white.svg"
+              alt="Oasis Colchones & Muebles"
+              width={56}
+              height={56}
+              className="h-full w-full object-contain filter drop-shadow-[0_2px_8px_rgba(42,33,234,0.5)]"
+              priority
+            />
+          </div>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5">
+              <span className="font-display text-2xl sm:text-3xl font-medium leading-none text-white tracking-tight">
+                OASIS
+              </span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#2A21EA] shadow-[0_0_8px_#2A21EA]" />
+            </div>
+            <span className="font-body text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-[#C5A059] transition-colors group-hover:text-white mt-1">
+              Colchones & Muebles
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -161,9 +178,13 @@ export function Header() {
                 <span className="font-body text-2xs uppercase tracking-widest text-white/40">
                   Fábrica directa Bogotá
                 </span>
-                <span className="font-body text-2xs text-[#C5A059]">
-                  13 referencias técnicas
-                </span>
+                <Link
+                  href="/catalogo"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="font-body text-2xs text-[#C5A059] hover:underline"
+                >
+                  Ve nuestro catálogo →
+                </Link>
               </div>
             </nav>
           </motion.div>

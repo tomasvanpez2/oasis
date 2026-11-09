@@ -10,7 +10,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Ingeniería de Descanso',
   description:
-    'Oasis Colchones. Fábrica directa en Colombia. 13 referencias de ingeniería biomecánica aplicada al descanso sin intermediación comercial.',
+    'Oasis Colchones. Fábrica directa en Colombia. Ingeniería biomecánica aplicada al descanso sin intermediación comercial.',
 }
 
 export default function HomePage() {

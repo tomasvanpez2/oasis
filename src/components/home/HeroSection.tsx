@@ -72,7 +72,7 @@ export function HeroSection() {
               transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="mt-6 font-body text-sm sm:text-[15px] text-white/70 max-w-lg leading-relaxed"
             >
-              Construimos 13 referencias técnicas capa a capa en nuestra nave industrial en Normandía, Bogotá.
+              Construimos cada modelo capa a capa en nuestra nave industrial en Normandía, Bogotá.
               Fusionamos matrices de resortes pocket de acero templado, látex natural
               y espumas viscoelásticas certificadas de alta densidad para máxima durabilidad biomecánica.
             </motion.p>
@@ -88,7 +88,7 @@ export function HeroSection() {
                 href="/catalogo"
                 className="group flex items-center gap-3 border border-white bg-white px-7 py-4 font-body text-xs uppercase tracking-widest text-[#0A1B54] font-semibold transition-all duration-300 hover:bg-transparent hover:text-white"
               >
-                Ver Catálogo (13 Modelos)
+                Ve nuestro catálogo
                 <svg
                   width="14"
                   height="14"
@@ -127,9 +127,9 @@ export function HeroSection() {
                 </p>
               </div>
               <div className="border-l border-white/10 pl-4">
-                <p className="font-display text-2xl sm:text-3xl font-normal text-[#C5A059]">13</p>
+                <p className="font-display text-2xl sm:text-3xl font-normal text-[#C5A059]">100%</p>
                 <p className="mt-1 font-body text-2xs uppercase tracking-wider text-white/50">
-                  Referencias técnicas
+                  Fábrica directa
                 </p>
               </div>
               <div className="border-l border-white/10 pl-4">

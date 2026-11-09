@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     default: 'Oasis Colchones — Ingeniería de Descanso',
   },
   description:
-    'Fábrica directa de colchones en Colombia. 13 referencias de ingeniería de descanso. Sin intermediarios.',
+    'Fábrica directa de colchones en Colombia. Ingeniería de descanso sin intermediarios.',
   keywords: ['colchones', 'fábrica', 'Colombia', 'descanso', 'Oasis'],
   openGraph: {
     title: 'Oasis Colchones — Ingeniería de Descanso',

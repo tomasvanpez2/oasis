@@ -7,7 +7,7 @@ import { ProductRow } from './ProductRow'
 import { TextSplitReveal } from '@/components/ui/TextSplitReveal'
 import { motion } from 'framer-motion'
 
-type CategoryFilter = 'todos' | 'espuma' | 'resortes' | 'latex' | 'premium'
+type CategoryFilter = 'todos' | 'colchones' | 'colchonetas' | 'bases' | 'almohadas' | 'protectores' | 'sabanas'
 
 interface CatalogClientProps {
   initialProducts?: Product[]
@@ -51,11 +51,11 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
               transition={{ duration: 0.6 }}
               className="font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059]"
             >
-              Catálogo de Fábrica Directa
+              Catálogo Oficial de Fábrica
             </motion.p>
             <div className="mt-2">
               <TextSplitReveal
-                text="13 Referencias Técnicas."
+                text="Catálogo Completo de Descanso."
                 as="h1"
                 className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal text-white"
                 delay={0.1}
@@ -69,7 +69,7 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="font-body text-xs sm:text-sm text-white/70 max-w-md leading-relaxed"
           >
-            Cada modelo expuesto con su fotografía real, ficha técnica, matriz de 5 medidas y precio de salida de fábrica en Bogotá.
+            Línea completa de colchones ortopédicos, colchonetas, bases cama, almohadas y lencería. Fotografías reales de fábrica, especificaciones técnicas y despacho asegurado.
           </motion.p>
         </div>
       </div>
@@ -80,7 +80,7 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
       {/* Catalog Metric Sub-bar */}
       <div className="flex items-center justify-between border-b border-white/10 px-6 py-3.5 lg:px-16 bg-[#07133B]/60">
         <span className="font-body text-2xs uppercase tracking-[0.2em] text-white/50">
-          Mostrando {filtered.length} de {products.length} referencias
+          Mostrando {filtered.length} de {products.length} productos
         </span>
         <span className="font-body text-2xs text-[#C5A059]">
           Garantía directa de 10 a 15 años • Despacho Coordinadora Mercantil

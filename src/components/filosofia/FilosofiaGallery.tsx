@@ -54,7 +54,7 @@ export function FilosofiaGallery() {
             </h2>
           </div>
           <p className="font-body text-2xs uppercase tracking-wider text-white/50 max-w-sm">
-            Fotografías directas de procesos de corte, termofusión y ensamblado de nuestras 13 referencias técnicas.
+            Fotografías directas de procesos de corte, termofusión y ensamblado de nuestro catálogo en planta.
           </p>
         </div>
 

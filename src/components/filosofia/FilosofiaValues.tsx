@@ -48,7 +48,7 @@ export function FilosofiaValues() {
             href="/catalogo"
             className="group inline-flex items-center gap-3 border border-white bg-white px-8 py-4 font-body text-xs uppercase tracking-widest text-[#0A1B54] font-semibold transition-all duration-300 hover:bg-transparent hover:text-white"
           >
-            Explorar las 13 Referencias
+            Ve nuestro catálogo
             <svg
               width="14"
               height="14"
