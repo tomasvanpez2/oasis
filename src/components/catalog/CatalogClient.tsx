@@ -19,8 +19,14 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>('todos')
 
   useEffect(() => {
-    // If we already have initialProducts from SSR, we still verify fresh updates silently
-    fetch('/api/catalog')
+    // Zero-Trust client fetch with cache evasion and timestamp cache-buster
+    fetch(`/api/catalog?t=${Date.now()}`, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        Pragma: 'no-cache',
+      },
+    })
       .then((r) => r.json())
       .then((data) => {
         if (data && Array.isArray(data.products) && data.products.length > 0) {

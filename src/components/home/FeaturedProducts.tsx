@@ -174,7 +174,13 @@ export function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>(INITIAL_FEATURED_PRODUCTS)
 
   useEffect(() => {
-    fetch('/api/catalog')
+    fetch(`/api/catalog?t=${Date.now()}`, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        Pragma: 'no-cache',
+      },
+    })
       .then((r) => r.json())
       .then((data) => {
         if (data && Array.isArray(data.products) && data.products.length > 0) {

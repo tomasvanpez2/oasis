@@ -1,0 +1,1714 @@
+{
+  "version": "2.0.0",
+  "updatedAt": "2026-11-08T18:00:00.000Z",
+  "products": [
+    {
+      "id": "oasis-colchoneta-de-espuma-rosada-d26",
+      "slug": "colchoneta-de-espuma-rosada-d26",
+      "name": "Colchoneta de Espuma Rosada D26",
+      "tagline": "Práctica, fresca y de alta durabilidad en espuma certificada D26",
+      "description": "Colchoneta anatómica fabricada en Espuma Rosada de alta densidad D26 (10 cm). Ideal para espacios auxiliares, sofás cama y descanso flexible.",
+      "longDescription": "Colchoneta anatómica fabricada en Espuma Rosada de alta densidad D26 (10 cm). Ideal para espacios auxiliares, sofás cama y descanso flexible.",
+      "category": "colchonetas",
+      "technology": [
+        "Espuma de Alta Densidad D26",
+        "Acolchado Satín",
+        "Fácil Transporte"
+      ],
+      "materials": [
+        "Espuma Rosada Densidad D26 (10 cm)",
+        "Revestimiento Satín Sencillo acolchado",
+        "Tela poliéster transpirable"
+      ],
+      "imageUrl": "/images/products/colchoneta-de-espuma-rosada-d26/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchoneta-de-espuma-rosada-d26/foto-1.webp",
+        "/images/products/colchoneta-de-espuma-rosada-d26/foto-2.webp",
+        "/images/products/colchoneta-de-espuma-rosada-d26/foto-3.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 295000,
+          "stock": 20
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 295000,
+          "stock": 20
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 325000,
+          "stock": 20
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 375000,
+          "stock": 20
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 460000,
+          "stock": 15
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 570000,
+          "stock": 10
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-semi-anatomico-de-espuma-rosada-d26",
+      "slug": "colchon-semi-anatomico-de-espuma-rosada-d26",
+      "name": "Colchón Semi-Anatómico de Espuma Rosada D26",
+      "tagline": "Soporte ergonómico continuo sin resortes con acolchado Jacquard",
+      "description": "Núcleo continuo de Espuma Rosada D26 de 18 cm de espesor. Diseñado para un descanso ergonómico firme y silencioso con tapizado en tela Jacquard.",
+      "longDescription": "Núcleo continuo de Espuma Rosada D26 de 18 cm de espesor. Diseñado para un descanso ergonómico firme y silencioso con tapizado en tela Jacquard.",
+      "category": "colchones",
+      "technology": [
+        "Espuma HR Biomecánica",
+        "Jacquard Acolchado",
+        "Silencioso Zero-Motion"
+      ],
+      "materials": [
+        "Lámina de Espuma Rosada D26 (18 cm)",
+        "Jacquard doble acolchado",
+        "Lámina D15 1 cm + guata 200g"
+      ],
+      "imageUrl": "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-1.webp",
+        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-2.webp",
+        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-3.webp",
+        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 460000,
+          "stock": 25
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 460000,
+          "stock": 25
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 510000,
+          "stock": 25
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 570000,
+          "stock": 25
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 710000,
+          "stock": 20
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 870000,
+          "stock": 15
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-semi-ortopedico-resortado",
+      "slug": "colchon-semi-ortopedico-resortado",
+      "name": "Colchón Semi-Ortopédico Resortado",
+      "tagline": "Estructura resortada Bonell clásica con soporte ortopédico equilibrado",
+      "description": "Panel de resortes tipo Bonell de 5 vueltas con marco perimetral y láminas aislantes en algodón laminado y espuma rosada D26. Altura: 26 cm.",
+      "longDescription": "Panel de resortes tipo Bonell de 5 vueltas con marco perimetral y láminas aislantes en algodón laminado y espuma rosada D26. Altura: 26 cm.",
+      "category": "colchones",
+      "technology": [
+        "Resortes Bonell",
+        "Aislante Térmico Laminado",
+        "Refuerzo Perimetral"
+      ],
+      "materials": [
+        "Panel Bonell 5 vueltas (acero alto carbono)",
+        "Láminas de Algodón Laminado 5mm",
+        "Espuma Rosada D26",
+        "Jacquard Acolchado"
+      ],
+      "imageUrl": "/images/products/colchon-semi-ortopedico-resortado/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-semi-ortopedico-resortado/foto-1.webp",
+        "/images/products/colchon-semi-ortopedico-resortado/foto-2.webp",
+        "/images/products/colchon-semi-ortopedico-resortado/foto-3.webp",
+        "/images/products/colchon-semi-ortopedico-resortado/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 710000,
+          "stock": 30
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 710000,
+          "stock": 30
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 770000,
+          "stock": 30
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 865000,
+          "stock": 30
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1070000,
+          "stock": 20
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1280000,
+          "stock": 15
+        },
+        {
+          "size": "Tipo Libro Doble (140×190)",
+          "dimensions": "140 × 190 cm (Plegable)",
+          "price": 1270000,
+          "stock": 10
+        },
+        {
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
+          "price": 1480000,
+          "stock": 10
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-ortopedico-resortado",
+      "slug": "colchon-ortopedico-resortado",
+      "name": "Colchón Ortopédico Resortado",
+      "tagline": "Mayor rigidez biomecánica y amortiguación reforzada para la columna",
+      "description": "Panel Bonell 5 vueltas reforzado con láminas de Cazata prensada D120 de alta firmeza y Espuma Rosada D26. Altura: 28 cm. Firmeza media-alta.",
+      "longDescription": "Panel Bonell 5 vueltas reforzado con láminas de Cazata prensada D120 de alta firmeza y Espuma Rosada D26. Altura: 28 cm. Firmeza media-alta.",
+      "category": "colchones",
+      "technology": [
+        "Soporte Ortopédico Reforzado",
+        "Cazata D120 Biomecánica",
+        "Doble Cara Útil"
+      ],
+      "materials": [
+        "Panel Bonell Acero 5 vueltas",
+        "Láminas Cazata D120 (firmeza ortopédica)",
+        "Espuma Rosada D26",
+        "Jacquard Acolchado"
+      ],
+      "imageUrl": "/images/products/colchon-ortopedico-resortado/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-ortopedico-resortado/foto-1.webp",
+        "/images/products/colchon-ortopedico-resortado/foto-2.webp",
+        "/images/products/colchon-ortopedico-resortado/foto-3.webp",
+        "/images/products/colchon-ortopedico-resortado/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 770000,
+          "stock": 30
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 770000,
+          "stock": 30
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 830000,
+          "stock": 30
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 930000,
+          "stock": 30
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1135000,
+          "stock": 20
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1340000,
+          "stock": 15
+        },
+        {
+          "size": "Tipo Libro Doble (140×190)",
+          "dimensions": "140 × 190 cm (Plegable)",
+          "price": 1335000,
+          "stock": 10
+        },
+        {
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
+          "price": 1540000,
+          "stock": 10
+        }
+      ],
+      "featured": true,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-ortopedico-clinico",
+      "slug": "colchon-ortopedico-clinico",
+      "name": "Colchón Ortopédico Clínico",
+      "tagline": "Máxima firmeza recomendada por especialistas para cuidado postural",
+      "description": "Núcleo macizo de Cazata prensada D120 de 10 cm con doble cara en Espuma Rosada D26 de 5 cm. Firmeza alta sin resortes para alivio de espalda.",
+      "longDescription": "Núcleo macizo de Cazata prensada D120 de 10 cm con doble cara en Espuma Rosada D26 de 5 cm. Firmeza alta sin resortes para alivio de espalda.",
+      "category": "colchones",
+      "technology": [
+        "Núcleo Clínico D120",
+        "Alineación Vertebral Óptima",
+        "Tratamiento Hipoalergénico"
+      ],
+      "materials": [
+        "Cazata Prensada D120 (10 cm)",
+        "Doble lámina Espuma Rosada D26 (5 cm c/u)",
+        "Jacquard doble acolchado con algodón"
+      ],
+      "imageUrl": "/images/products/colchon-ortopedico-clinico/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-ortopedico-clinico/foto-1.webp",
+        "/images/products/colchon-ortopedico-clinico/foto-2.webp",
+        "/images/products/colchon-ortopedico-clinico/foto-3.webp",
+        "/images/products/colchon-ortopedico-clinico/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 940000,
+          "stock": 25
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 940000,
+          "stock": 25
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 990000,
+          "stock": 25
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1100000,
+          "stock": 25
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1300000,
+          "stock": 20
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1560000,
+          "stock": 15
+        },
+        {
+          "size": "Tipo Libro Doble (140×190)",
+          "dimensions": "140 × 190 cm (Plegable)",
+          "price": 1500000,
+          "stock": 10
+        },
+        {
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
+          "price": 1760000,
+          "stock": 10
+        }
+      ],
+      "featured": true,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-imitacion-pillow-penta",
+      "slug": "colchon-imitacion-pillow-penta",
+      "name": "Colchón Imitación Pillow Penta",
+      "tagline": "Acolchado de confort envolvente en Espuma Penta con núcleo Bonell",
+      "description": "Estructura resortada Bonell de 5 vueltas con capas de amortiguación en Cazata D120 y terminación superior en Espuma Penta D26 de 3 cm. Altura: 32 cm.",
+      "longDescription": "Estructura resortada Bonell de 5 vueltas con capas de amortiguación en Cazata D120 y terminación superior en Espuma Penta D26 de 3 cm. Altura: 32 cm.",
+      "category": "colchones",
+      "technology": [
+        "Espuma Penta Ultra-Confort",
+        "Resortes Bonell Reforzados",
+        "Acolchado Ergonómico"
+      ],
+      "materials": [
+        "Panel Bonell 5 vueltas",
+        "Láminas Cazata D120 (2.8 cm)",
+        "Espuma Penta D26 (3 cm)",
+        "Jacquard acolchado"
+      ],
+      "imageUrl": "/images/products/colchon-imitacion-pillow-penta/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-imitacion-pillow-penta/foto-1.webp",
+        "/images/products/colchon-imitacion-pillow-penta/foto-2.webp",
+        "/images/products/colchon-imitacion-pillow-penta/foto-3.webp",
+        "/images/products/colchon-imitacion-pillow-penta/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 1040000,
+          "stock": 20
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 1040000,
+          "stock": 20
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 1145000,
+          "stock": 20
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1250000,
+          "stock": 20
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1510000,
+          "stock": 15
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1870000,
+          "stock": 10
+        },
+        {
+          "size": "Tipo Libro Doble (140×190)",
+          "dimensions": "140 × 190 cm (Plegable)",
+          "price": 1760000,
+          "stock": 8
+        },
+        {
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
+          "price": 2120000,
+          "stock": 8
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-imitacion-pillow-antiescaras",
+      "slug": "colchon-imitacion-pillow-antiescaras",
+      "name": "Colchón Imitación Pillow Antiescaras",
+      "tagline": "Superficie troquelada que distribuye la presión y favorece la microcirculación",
+      "description": "Diseñado para descanso prolongado con láminas de Espuma Rosada Troquelada D26 de 3 cm sobre panel Bonell y Cazata D120. Previene puntos de presión.",
+      "longDescription": "Diseñado para descanso prolongado con láminas de Espuma Rosada Troquelada D26 de 3 cm sobre panel Bonell y Cazata D120. Previene puntos de presión.",
+      "category": "colchones",
+      "technology": [
+        "Espuma Troquelada Activa",
+        "Microventilación Continua",
+        "Alivio de Presión"
+      ],
+      "materials": [
+        "Espuma Troquelada Antiescaras D26",
+        "Cazata D120 (2.8 cm)",
+        "Panel Bonell 5 vueltas",
+        "Jacquard Hipoalergénico"
+      ],
+      "imageUrl": "/images/products/colchon-imitacion-pillow-antiescaras/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-imitacion-pillow-antiescaras/foto-1.webp",
+        "/images/products/colchon-imitacion-pillow-antiescaras/foto-2.webp",
+        "/images/products/colchon-imitacion-pillow-antiescaras/foto-3.webp",
+        "/images/products/colchon-imitacion-pillow-antiescaras/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 1040000,
+          "stock": 20
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 1040000,
+          "stock": 20
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 1145000,
+          "stock": 20
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1250000,
+          "stock": 20
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1510000,
+          "stock": 15
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1870000,
+          "stock": 10
+        },
+        {
+          "size": "Tipo Libro Doble (140×190)",
+          "dimensions": "140 × 190 cm (Plegable)",
+          "price": 1760000,
+          "stock": 8
+        },
+        {
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
+          "price": 2120000,
+          "stock": 8
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-pillow-top-original",
+      "slug": "colchon-pillow-top-original",
+      "name": "Colchón Pillow Top Original",
+      "tagline": "Colchoneta superior Pillow Top auténtica para un descanso de alta gama",
+      "description": "Colchón con colchoneta Pillow Top integrada en ambas caras. Panel Bonell de 5 vueltas con politubos y láminas combinadas de Cazata D120 y Espuma Penta D26. Altura: 35 cm.",
+      "longDescription": "Colchón con colchoneta Pillow Top integrada en ambas caras. Panel Bonell de 5 vueltas con politubos y láminas combinadas de Cazata D120 y Espuma Penta D26. Altura: 35 cm.",
+      "category": "colchones",
+      "technology": [
+        "Pillow Top Superior e Inferior",
+        "Aislante Polietileno",
+        "Doble Sensación Confort"
+      ],
+      "materials": [
+        "Panel Bonell con Politubos de Yumbolón",
+        "Láminas Cazata D120",
+        "Espuma Penta D26",
+        "Jacquard Doble Acolchado"
+      ],
+      "imageUrl": "/images/products/colchon-pillow-top-original/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-pillow-top-original/foto-1.webp",
+        "/images/products/colchon-pillow-top-original/foto-2.webp",
+        "/images/products/colchon-pillow-top-original/foto-3.webp",
+        "/images/products/colchon-pillow-top-original/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 1350000,
+          "stock": 15
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 1350000,
+          "stock": 15
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 1460000,
+          "stock": 15
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1560000,
+          "stock": 15
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1770000,
+          "stock": 12
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 2185000,
+          "stock": 10
+        },
+        {
+          "size": "Tipo Libro Doble (140×190)",
+          "dimensions": "140 × 190 cm (Plegable)",
+          "price": 2020000,
+          "stock": 6
+        },
+        {
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
+          "price": 2435000,
+          "stock": 6
+        }
+      ],
+      "featured": true,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-pillow-top-encapsulado",
+      "slug": "colchon-pillow-top-encapsulado",
+      "name": "Colchón Pillow Top Encapsulado",
+      "tagline": "Marco perimetral encapsulado con máxima estabilidad y cero deformaciones",
+      "description": "Estructura resortada Bonell encapsulada con tacos perimetrales de alta densidad que garantizan estabilidad en los bordes. Altura: 35 cm.",
+      "longDescription": "Estructura resortada Bonell encapsulada con tacos perimetrales de alta densidad que garantizan estabilidad en los bordes. Altura: 35 cm.",
+      "category": "colchones",
+      "technology": [
+        "Borde Encapsulado High-Edge",
+        "Pillow Top Flotante",
+        "Máxima Resistencia Perimetral"
+      ],
+      "materials": [
+        "Estructura Encapsulada con Tacos D30",
+        "Panel Bonell 5 vueltas",
+        "Cazata D120 + Espuma Rosada D26",
+        "Jacquard de lujo"
+      ],
+      "imageUrl": "/images/products/colchon-pillow-top-encapsulado/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-pillow-top-encapsulado/foto-1.webp",
+        "/images/products/colchon-pillow-top-encapsulado/foto-2.webp",
+        "/images/products/colchon-pillow-top-encapsulado/foto-3.webp",
+        "/images/products/colchon-pillow-top-encapsulado/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 1510000,
+          "stock": 15
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 1510000,
+          "stock": 15
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 1665000,
+          "stock": 15
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1820000,
+          "stock": 15
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 2080000,
+          "stock": 12
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 2500000,
+          "stock": 8
+        },
+        {
+          "size": "Tipo Libro Doble (140×190)",
+          "dimensions": "140 × 190 cm (Plegable)",
+          "price": 2330000,
+          "stock": 5
+        },
+        {
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
+          "price": 2750000,
+          "stock": 5
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-colchon-pillow-top-pocket-resortes-independientes",
+      "slug": "colchon-pillow-top-pocket-resortes-independientes",
+      "name": "Colchón Pillow Top Pocket Resortes Independientes",
+      "tagline": "Cero transferencia de movimiento con resortes ensacados individuales y 42 cm de altura",
+      "description": "El buque insignia de Oasis. Panel de resortes Pocket individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.",
+      "longDescription": "El buque insignia de Oasis. Panel de resortes Pocket individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.",
+      "category": "colchones",
+      "technology": [
+        "Zero Transfer Pocket Springs",
+        "Aislamiento Acústico Total",
+        "Doble Pillow Top 42cm"
+      ],
+      "materials": [
+        "Resortes Pocket Ensacados Independientes",
+        "Marco de Acero Perimetral",
+        "Láminas Cazata D120 + Penta D26",
+        "Jacquard de lujo 400g"
+      ],
+      "imageUrl": "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-1.webp",
+      "imageGallery": [
+        "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-1.webp",
+        "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-2.webp",
+        "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-3.webp",
+        "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 1560000,
+          "stock": 15
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 1560000,
+          "stock": 15
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 1720000,
+          "stock": 15
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1870000,
+          "stock": 15
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 2185000,
+          "stock": 12
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 2705000,
+          "stock": 8
+        },
+        {
+          "size": "Tipo Libro Doble (140×190)",
+          "dimensions": "140 × 190 cm (Plegable)",
+          "price": 2385000,
+          "stock": 5
+        },
+        {
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
+          "price": 3005000,
+          "stock": 5
+        }
+      ],
+      "featured": true,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-base-cama-sencilla",
+      "slug": "base-cama-sencilla",
+      "name": "Base Cama Sencilla",
+      "tagline": "Estructura en madera de pino canadiense inmunizada con tapizado de alta resistencia",
+      "description": "Base cama tradicional con bastidor reforzado en pino inmunizado contra plagas y humedad. Patas metálicas o de madera con antideslizante. Tapizado en microfibra o lino.",
+      "longDescription": "Base cama tradicional con bastidor reforzado en pino inmunizado contra plagas y humedad. Patas metálicas o de madera con antideslizante. Tapizado en microfibra o lino.",
+      "category": "bases",
+      "technology": [
+        "Madera Inmunizada Certificada",
+        "Ensamble Reforzado",
+        "Silenciosa"
+      ],
+      "materials": [
+        "Madera de Pino Inmunizada",
+        "Espuma D20 amortiguadora",
+        "Tapizado microfibra/lino",
+        "Patas cromadas antideslizantes"
+      ],
+      "imageUrl": "/images/products/base-cama-sencilla/foto-1.webp",
+      "imageGallery": [
+        "/images/products/base-cama-sencilla/foto-1.webp",
+        "/images/products/base-cama-sencilla/foto-2.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 250000,
+          "stock": 30
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 250000,
+          "stock": 30
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 250000,
+          "stock": 30
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 250000,
+          "stock": 30
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 365000,
+          "stock": 25
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 500000,
+          "stock": 15
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-base-cama-baul-con-pistones-hidraulicos",
+      "slug": "base-cama-baul-con-pistones-hidraulicos",
+      "name": "Base Cama Baúl con Pistones Hidráulicos",
+      "tagline": "Máximo almacenamiento bajo la cama con sistema de elevación asistida por gas",
+      "description": "Base baúl con pistones hidráulicos que facilitan la apertura sin esfuerzo. Estructura interna de gran capacidad con fondo tapizado y madera inmunizada.",
+      "longDescription": "Base baúl con pistones hidráulicos que facilitan la apertura sin esfuerzo. Estructura interna de gran capacidad con fondo tapizado y madera inmunizada.",
+      "category": "bases",
+      "technology": [
+        "Elevación Hidráulica Segura",
+        "Espacio de Almacenamiento XL",
+        "Topes de Retención"
+      ],
+      "materials": [
+        "Pistones Hidráulicos a Gas de Alta Presión",
+        "Madera Pino Inmunizada",
+        "Fondo interior protector",
+        "Tapizado de Lujo"
+      ],
+      "imageUrl": "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-1.webp",
+      "imageGallery": [
+        "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-1.webp",
+        "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-2.webp",
+        "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-3.webp",
+        "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 1190000,
+          "stock": 15
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 1190000,
+          "stock": 15
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 1260000,
+          "stock": 15
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1330000,
+          "stock": 15
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1560000,
+          "stock": 10
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 2280000,
+          "stock": 8
+        }
+      ],
+      "featured": true,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-base-cama-nido-doble-cama-auxiliar",
+      "slug": "base-cama-nido-doble-cama-auxiliar",
+      "name": "Base Cama Nido Doble Cama Auxiliar",
+      "tagline": "Dos camas en el espacio de una con carrito deslizable inferior",
+      "description": "Cama principal superior con cama auxiliar extraíble inferior mediante ruedas de nylon suaves. Ideal para cuartos infantiles, visitas o espacios reducidos.",
+      "longDescription": "Cama principal superior con cama auxiliar extraíble inferior mediante ruedas de nylon suaves. Ideal para cuartos infantiles, visitas o espacios reducidos.",
+      "category": "bases",
+      "technology": [
+        "Cama Auxiliar Oculta",
+        "Rodamiento Suave",
+        "Estructura Reforzada"
+      ],
+      "materials": [
+        "Madera Inmunizada",
+        "Sistema de Ruedas de Tracción Suave",
+        "Tapizado Antimanchas"
+      ],
+      "imageUrl": "/images/products/base-cama-nido-doble-cama-auxiliar/foto-1.webp",
+      "imageGallery": [
+        "/images/products/base-cama-nido-doble-cama-auxiliar/foto-1.webp",
+        "/images/products/base-cama-nido-doble-cama-auxiliar/foto-2.webp",
+        "/images/products/base-cama-nido-doble-cama-auxiliar/foto-3.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 840000,
+          "stock": 20
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 840000,
+          "stock": 20
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 940000,
+          "stock": 20
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1040000,
+          "stock": 20
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1360000,
+          "stock": 15
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1560000,
+          "stock": 10
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-base-cama-con-cajones-laterales",
+      "slug": "base-cama-con-cajones-laterales",
+      "name": "Base Cama con Cajones Laterales",
+      "tagline": "Organización perfecta con cajoneras de corredera metálica telescópica",
+      "description": "Base cama con cajones integrados de gran profundidad para guardar sábanas, almohadas y ropa de cama sin ocupar espacio adicional.",
+      "longDescription": "Base cama con cajones integrados de gran profundidad para guardar sábanas, almohadas y ropa de cama sin ocupar espacio adicional.",
+      "category": "bases",
+      "technology": [
+        "Cajones de Cierre Suave",
+        "Apertura Telescópica Total",
+        "Fácil Limpieza"
+      ],
+      "materials": [
+        "Madera Pino Inmunizada",
+        "Rieles Telescópicos de Acero",
+        "Cajones en MDF Forrado",
+        "Tapizado Premium"
+      ],
+      "imageUrl": "/images/products/base-cama-con-cajones-laterales/foto-1.webp",
+      "imageGallery": [
+        "/images/products/base-cama-con-cajones-laterales/foto-1.webp",
+        "/images/products/base-cama-con-cajones-laterales/foto-2.webp",
+        "/images/products/base-cama-con-cajones-laterales/foto-3.webp",
+        "/images/products/base-cama-con-cajones-laterales/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 840000,
+          "stock": 20
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 840000,
+          "stock": 20
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 940000,
+          "stock": 20
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1040000,
+          "stock": 20
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1360000,
+          "stock": 15
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1560000,
+          "stock": 10
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-espaldar-sencillo-tapizado",
+      "slug": "espaldar-sencillo-tapizado",
+      "name": "Espaldar Sencillo Tapizado",
+      "tagline": "Cabecero clásico con acolchado capitoneado y anclaje universal",
+      "description": "Espaldar decorativo y ergonómico con anclaje a pared o ajuste a la base. Estructura de pino inmunizado con espuma de confort.",
+      "longDescription": "Espaldar decorativo y ergonómico con anclaje a pared o ajuste a la base. Estructura de pino inmunizado con espuma de confort.",
+      "category": "bases",
+      "technology": [
+        "Anclaje Seguro",
+        "Acolchado Confort",
+        "Fácil Instalación"
+      ],
+      "materials": [
+        "Estructura Pino Inmunizado",
+        "Espuma D20 Confort",
+        "Tapizado en Tela Antirasguño/Lino"
+      ],
+      "imageUrl": "/images/products/espaldar-sencillo-tapizado/foto-1.webp",
+      "imageGallery": [
+        "/images/products/espaldar-sencillo-tapizado/foto-1.webp",
+        "/images/products/espaldar-sencillo-tapizado/foto-2.webp",
+        "/images/products/espaldar-sencillo-tapizado/foto-3.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 cm ancho",
+          "price": 250000,
+          "stock": 25
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 cm ancho",
+          "price": 250000,
+          "stock": 25
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 cm ancho",
+          "price": 250000,
+          "stock": 25
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 cm ancho",
+          "price": 250000,
+          "stock": 25
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 cm ancho",
+          "price": 365000,
+          "stock": 20
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 cm ancho",
+          "price": 500000,
+          "stock": 15
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-conjunto-base-cama-y-espaldar-nube",
+      "slug": "conjunto-base-cama-y-espaldar-nube",
+      "name": "Conjunto Base Cama y Espaldar Nube",
+      "tagline": "Diseño orgánico curvilíneo en bouclé y telas premium con textura tipo nube",
+      "description": "Juego completo de cama y cabecero con diseño envolvente moderno de bordes redondeados y acolchado ultra suave.",
+      "longDescription": "Juego completo de cama y cabecero con diseño envolvente moderno de bordes redondeados y acolchado ultra suave.",
+      "category": "bases",
+      "technology": [
+        "Diseño Orgánico Nube",
+        "Acolchado Soft Touch",
+        "Estructura Anti-Ruido"
+      ],
+      "materials": [
+        "Madera de Roble/Pino Inmunizada",
+        "Tela Bouclé o Velvet Premium",
+        "Espuma D26 Soft Confort"
+      ],
+      "imageUrl": "/images/products/conjunto-base-cama-y-espaldar-nube/foto-1.webp",
+      "imageGallery": [
+        "/images/products/conjunto-base-cama-y-espaldar-nube/foto-1.webp",
+        "/images/products/conjunto-base-cama-y-espaldar-nube/foto-2.webp",
+        "/images/products/conjunto-base-cama-y-espaldar-nube/foto-3.webp",
+        "/images/products/conjunto-base-cama-y-espaldar-nube/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 1300000,
+          "stock": 10
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 1300000,
+          "stock": 10
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 1350000,
+          "stock": 10
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 1350000,
+          "stock": 10
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1560000,
+          "stock": 8
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1870000,
+          "stock": 6
+        }
+      ],
+      "featured": true,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-conjunto-base-cama-y-espaldar-de-lujo",
+      "slug": "conjunto-base-cama-y-espaldar-de-lujo",
+      "name": "Conjunto Base Cama y Espaldar de Lujo",
+      "tagline": "Elegancia arquitectónica lineal con tapizado reforzado y máxima prestancia",
+      "description": "Juego de base cama y cabecero alto de diseño lineal contemporáneo. Acabados de alta costura para dormitorios principales.",
+      "longDescription": "Juego de base cama y cabecero alto de diseño lineal contemporáneo. Acabados de alta costura para dormitorios principales.",
+      "category": "bases",
+      "technology": [
+        "Acabados de Alta Costura",
+        "Cabecero Extra Alto",
+        "Resistencia de Carga 500kg"
+      ],
+      "materials": [
+        "Estructura Pino Canadiense Inmunizado",
+        "Tapizado Lino Chenille de Alto Tráfico",
+        "Espuma D26",
+        "Patas de Madera Maciza"
+      ],
+      "imageUrl": "/images/products/conjunto-base-cama-y-espaldar-de-lujo/foto-1.webp",
+      "imageGallery": [
+        "/images/products/conjunto-base-cama-y-espaldar-de-lujo/foto-1.webp",
+        "/images/products/conjunto-base-cama-y-espaldar-de-lujo/foto-2.webp",
+        "/images/products/conjunto-base-cama-y-espaldar-de-lujo/foto-3.webp",
+        "/images/products/conjunto-base-cama-y-espaldar-de-lujo/foto-4.webp"
+      ],
+      "variants": [
+        {
+          "size": "Semisencillo (90×190)",
+          "dimensions": "90 × 190 cm",
+          "price": 840000,
+          "stock": 15
+        },
+        {
+          "size": "Sencillo (100×190)",
+          "dimensions": "100 × 190 cm",
+          "price": 840000,
+          "stock": 15
+        },
+        {
+          "size": "Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 840000,
+          "stock": 15
+        },
+        {
+          "size": "Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 840000,
+          "stock": 15
+        },
+        {
+          "size": "Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 1040000,
+          "stock": 12
+        },
+        {
+          "size": "King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 1350000,
+          "stock": 8
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-almohada-ortopedica-ergonomica",
+      "slug": "almohada-ortopedica-ergonomica",
+      "name": "Almohada Ortopédica Ergonómica",
+      "tagline": "Soporte cervical anatómico en espuma troquelada para alivio de hombros y cuello",
+      "description": "Diseñada para brindar un soporte superior y ergonómico durante toda la noche. Su estructura en espuma troquelada favorece la circulación del aire y se adapta a la curvatura natural.",
+      "longDescription": "Diseñada para brindar un soporte superior y ergonómico durante toda la noche. Su estructura en espuma troquelada favorece la circulación del aire y se adapta a la curvatura natural.",
+      "category": "almohadas",
+      "technology": [
+        "Diseño Anatómico Cervical",
+        "Canales de Flujo de Aire",
+        "Alivio de Tensión"
+      ],
+      "materials": [
+        "Espuma Troquelada Ventilada",
+        "Funda suave con elástico",
+        "Hipoalergénica"
+      ],
+      "imageUrl": "/images/products/almohada-ortopedica-ergonomica/foto-1.webp",
+      "imageGallery": [
+        "/images/products/almohada-ortopedica-ergonomica/foto-1.webp",
+        "/images/products/almohada-ortopedica-ergonomica/foto-2.webp",
+        "/images/products/almohada-ortopedica-ergonomica/foto-3.webp"
+      ],
+      "variants": [
+        {
+          "size": "Perfil Alto (50×70) - Unidad",
+          "dimensions": "50 × 70 cm",
+          "price": 60000,
+          "stock": 50
+        },
+        {
+          "size": "Perfil Alto (50×70) - Par",
+          "dimensions": "2 unidades 50 × 70 cm",
+          "price": 100000,
+          "stock": 30
+        },
+        {
+          "size": "Perfil Bajo (50×70) - Unidad",
+          "dimensions": "50 × 70 cm",
+          "price": 60000,
+          "stock": 50
+        },
+        {
+          "size": "Perfil Bajo (50×70) - Par",
+          "dimensions": "2 unidades 50 × 70 cm",
+          "price": 100000,
+          "stock": 30
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-almohada-cervical-gel-12-memory-foam",
+      "slug": "almohada-cervical-gel-12-memory-foam",
+      "name": "Almohada Cervical Gel 12 Memory Foam",
+      "tagline": "Espuma viscoelástica con lámina Cooling Pad Gel para un descanso siempre fresco",
+      "description": "Espuma viscoelástica 100% con efecto memoria y tecnología Cooling Pad Gel que mantiene la temperatura fresca. Funda removible y lavable.",
+      "longDescription": "Espuma viscoelástica 100% con efecto memoria y tecnología Cooling Pad Gel que mantiene la temperatura fresca. Funda removible y lavable.",
+      "category": "almohadas",
+      "technology": [
+        "Cooling Pad Gel Térmico",
+        "Recuperación Lenta Memory Foam",
+        "Protección Antiácaros"
+      ],
+      "materials": [
+        "100% Espuma Viscoelástica Memory Foam",
+        "Almohadilla Cooling Pad Gel",
+        "Funda lavable transpirable"
+      ],
+      "imageUrl": "/images/products/almohada-cervical-gel-12-memory-foam/foto-1.webp",
+      "imageGallery": [
+        "/images/products/almohada-cervical-gel-12-memory-foam/foto-1.webp",
+        "/images/products/almohada-cervical-gel-12-memory-foam/foto-2.webp"
+      ],
+      "variants": [
+        {
+          "size": "Unidad (14×40×60 cm)",
+          "dimensions": "14 × 40 × 60 cm",
+          "price": 130000,
+          "stock": 40
+        },
+        {
+          "size": "Par (2 Unidades)",
+          "dimensions": "2 unidades 14 × 40 × 60 cm",
+          "price": 240000,
+          "stock": 25
+        }
+      ],
+      "featured": true,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-almohada-clasica-gel-14-memory-foam",
+      "slug": "almohada-clasica-gel-14-memory-foam",
+      "name": "Almohada Clásica Gel 14 Memory Foam",
+      "tagline": "Formato tradicional con gel refrigerante y soporte viscoelástico profundo",
+      "description": "Diseño clásico tradicional con altura de 14 cm, lámina de gel refrescante y núcleo viscoelástico de lenta recuperación. Funda extraíble.",
+      "longDescription": "Diseño clásico tradicional con altura de 14 cm, lámina de gel refrescante y núcleo viscoelástico de lenta recuperación. Funda extraíble.",
+      "category": "almohadas",
+      "technology": [
+        "Regulación Térmica Gel",
+        "Soporte Viscoelástico Continuo",
+        "Hipoalergénico"
+      ],
+      "materials": [
+        "Espuma Viscoelástica 100%",
+        "Lámina Refrigerante Cooling Gel",
+        "Funda con cremallera lavable"
+      ],
+      "imageUrl": "/images/products/almohada-clasica-gel-14-memory-foam/foto-1.webp",
+      "imageGallery": [
+        "/images/products/almohada-clasica-gel-14-memory-foam/foto-1.webp",
+        "/images/products/almohada-clasica-gel-14-memory-foam/foto-2.webp"
+      ],
+      "variants": [
+        {
+          "size": "Unidad (14×40×60 cm)",
+          "dimensions": "14 × 40 × 60 cm",
+          "price": 145000,
+          "stock": 40
+        },
+        {
+          "size": "Par (2 Unidades)",
+          "dimensions": "2 unidades 14 × 40 × 60 cm",
+          "price": 270000,
+          "stock": 25
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-almohada-clasica-soft-plus-memory-foam",
+      "slug": "almohada-clasica-soft-plus-memory-foam",
+      "name": "Almohada Clásica Soft Plus Memory Foam",
+      "tagline": "Sensación mullida envolvente en viscoelástica de alta pureza con funda gris",
+      "description": "Espuma viscoelástica con tacto extra suave Soft Plus. Adaptabilidad anatómica inmediata y funda premium bicolor gris con negro lavable.",
+      "longDescription": "Espuma viscoelástica con tacto extra suave Soft Plus. Adaptabilidad anatómica inmediata y funda premium bicolor gris con negro lavable.",
+      "category": "almohadas",
+      "technology": [
+        "Soft Plus Touch",
+        "Efecto Memoria Termosensible",
+        "Alivio Vertebral"
+      ],
+      "materials": [
+        "Espuma Viscoelástica Soft Plus 100%",
+        "Funda Jacquard Bicolor Gris/Negro",
+        "Tratamiento bactericida"
+      ],
+      "imageUrl": "/images/products/almohada-clasica-soft-plus-memory-foam/foto-1.webp",
+      "imageGallery": [
+        "/images/products/almohada-clasica-soft-plus-memory-foam/foto-1.webp",
+        "/images/products/almohada-clasica-soft-plus-memory-foam/foto-2.webp"
+      ],
+      "variants": [
+        {
+          "size": "Unidad (14×40×60 cm)",
+          "dimensions": "14 × 40 × 60 cm",
+          "price": 120000,
+          "stock": 40
+        },
+        {
+          "size": "Par (2 Unidades)",
+          "dimensions": "2 unidades 14 × 40 × 60 cm",
+          "price": 220000,
+          "stock": 25
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-almohada-cervical-soft-plus-anatomica",
+      "slug": "almohada-cervical-soft-plus-anatomica",
+      "name": "Almohada Cervical Soft Plus Anatómica",
+      "tagline": "Doble curvatura cervical ergonómica para máxima alineación de cuello y cabeza",
+      "description": "Perfil anatómico de doble onda (14 cm y 12 cm) para adaptarse al soporte cervical de quienes duermen de lado o boca arriba.",
+      "longDescription": "Perfil anatómico de doble onda (14 cm y 12 cm) para adaptarse al soporte cervical de quienes duermen de lado o boca arriba.",
+      "category": "almohadas",
+      "technology": [
+        "Doble Onda Anatómica",
+        "Memory Foam Certificada",
+        "Protección Antipolvo y Ácaros"
+      ],
+      "materials": [
+        "Espuma Viscoelástica 100% Cervical",
+        "Funda Gris Removible y Lavable"
+      ],
+      "imageUrl": "/images/products/almohada-cervical-soft-plus-anatomica/foto-1.webp",
+      "imageGallery": [
+        "/images/products/almohada-cervical-soft-plus-anatomica/foto-1.webp",
+        "/images/products/almohada-cervical-soft-plus-anatomica/foto-2.webp"
+      ],
+      "variants": [
+        {
+          "size": "Unidad (60×40×14/12 cm)",
+          "dimensions": "60 × 40 × 14/12 cm",
+          "price": 110000,
+          "stock": 40
+        },
+        {
+          "size": "Par (2 Unidades)",
+          "dimensions": "2 unidades 60 × 40 × 14/12 cm",
+          "price": 200000,
+          "stock": 25
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-almohada-entrepierna-y-rodillas-ergonomica",
+      "slug": "almohada-entrepierna-y-rodillas-ergonomica",
+      "name": "Almohada Entrepierna y Rodillas Ergonómica",
+      "tagline": "Alinea la cadera, rodillas y columna lumbar al dormir de lado",
+      "description": "Diseño ergonómico cóncavo en espuma viscoelástica 100% para colocar entre las piernas. Reduce la presión en la pelvis y la zona baja de la espalda.",
+      "longDescription": "Diseño ergonómico cóncavo en espuma viscoelástica 100% para colocar entre las piernas. Reduce la presión en la pelvis y la zona baja de la espalda.",
+      "category": "almohadas",
+      "technology": [
+        "Alineación Lumbo-Pélvica",
+        "Curva de Sujeción Ergonómica",
+        "Efecto Memoria"
+      ],
+      "materials": [
+        "Espuma Viscoelástica Anatómica 100%",
+        "Funda Blanca Transpirable y Lavable"
+      ],
+      "imageUrl": "/images/products/almohada-entrepierna-y-rodillas-ergonomica/foto-1.webp",
+      "imageGallery": [
+        "/images/products/almohada-entrepierna-y-rodillas-ergonomica/foto-1.webp"
+      ],
+      "variants": [
+        {
+          "size": "Unidad Anatómica",
+          "dimensions": "Anatómica para piernas",
+          "price": 45000,
+          "stock": 50
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-protector-de-colchon-termosellado-y-acolchado",
+      "slug": "protector-de-colchon-termosellado-y-acolchado",
+      "name": "Protector de Colchón Termosellado y Acolchado",
+      "tagline": "Tela 100% algodón termosellada con faldón elástico perimetral ajustable",
+      "description": "Manten tu colchón fresco y protegido con nuestro protector tradicional en algodón 100% y disponible también en versión impermeable antifluidos. Totalmente lavable en casa.",
+      "longDescription": "Manten tu colchón fresco y protegido con nuestro protector tradicional en algodón 100% y disponible también en versión impermeable antifluidos. Totalmente lavable en casa.",
+      "category": "protectores",
+      "technology": [
+        "Termosellado Sin Costuras que Rasguñen",
+        "Ajuste Perimetral Firme",
+        "Lavable en Lavadora"
+      ],
+      "materials": [
+        "Tela 100% Algodón Termosellada",
+        "Elástico Perimetral Tipo Sábana",
+        "Opcional Membrana Antifluido"
+      ],
+      "imageUrl": "/images/products/protector-de-colchon-termosellado-y-acolchado/foto-1.webp",
+      "imageGallery": [
+        "/images/products/protector-de-colchon-termosellado-y-acolchado/foto-1.webp",
+        "/images/products/protector-de-colchon-termosellado-y-acolchado/foto-2.webp",
+        "/images/products/protector-de-colchon-termosellado-y-acolchado/foto-3.webp",
+        "/images/products/protector-de-colchon-termosellado-y-acolchado/foto-4.webp",
+        "/images/products/protector-de-colchon-termosellado-y-acolchado/foto-5.webp",
+        "/images/products/protector-de-colchon-termosellado-y-acolchado/foto-6.webp"
+      ],
+      "variants": [
+        {
+          "size": "Normal (90×190 / 100×190)",
+          "dimensions": "90/100 × 190 cm",
+          "price": 60000,
+          "stock": 40
+        },
+        {
+          "size": "Normal Semidoble (120×190)",
+          "dimensions": "120 × 190 cm",
+          "price": 60000,
+          "stock": 40
+        },
+        {
+          "size": "Normal Doble (140×190)",
+          "dimensions": "140 × 190 cm",
+          "price": 60000,
+          "stock": 40
+        },
+        {
+          "size": "Normal Queen (160×190)",
+          "dimensions": "160 × 190 cm",
+          "price": 80000,
+          "stock": 30
+        },
+        {
+          "size": "Normal King (200×200)",
+          "dimensions": "200 × 200 cm",
+          "price": 90000,
+          "stock": 25
+        },
+        {
+          "size": "Antifluido (90×190 / 100×190)",
+          "dimensions": "90/100 × 190 cm (Impermeable)",
+          "price": 90000,
+          "stock": 40
+        },
+        {
+          "size": "Antifluido Semidoble (120×190)",
+          "dimensions": "120 × 190 cm (Impermeable)",
+          "price": 90000,
+          "stock": 40
+        },
+        {
+          "size": "Antifluido Doble (140×190)",
+          "dimensions": "140 × 190 cm (Impermeable)",
+          "price": 90000,
+          "stock": 40
+        },
+        {
+          "size": "Antifluido Queen (160×190)",
+          "dimensions": "160 × 190 cm (Impermeable)",
+          "price": 110000,
+          "stock": 30
+        },
+        {
+          "size": "Antifluido King (200×200)",
+          "dimensions": "200 × 200 cm (Impermeable)",
+          "price": 120000,
+          "stock": 25
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-juego-de-sabanas-genero-algodon-4852-unicolor",
+      "slug": "juego-de-sabanas-genero-algodon-4852-unicolor",
+      "name": "Juego de Sábanas Género Algodón 48/52 Unicolor",
+      "tagline": "Equilibrio perfecto de frescura y durabilidad con suave tacto y fácil planchado",
+      "description": "Juego de sábanas unicolor confeccionado en mezcla 48% algodón y 52% poliéster. Incluye sábana ajustable con resorte perimetral, sobre sábana decorativa y fundas de almohada.",
+      "longDescription": "Juego de sábanas unicolor confeccionado en mezcla 48% algodón y 52% poliéster. Incluye sábana ajustable con resorte perimetral, sobre sábana decorativa y fundas de almohada.",
+      "category": "sabanas",
+      "technology": [
+        "Resistencia al Encogimiento",
+        "Fácil Planchado",
+        "Transpirable"
+      ],
+      "materials": [
+        "48% Algodón Peinado / 52% Poliéster Resistente",
+        "Elástico perimetral total",
+        "Tejido de 180 hilos"
+      ],
+      "imageUrl": "/images/products/juego-de-sabanas-genero-algodon-4852-unicolor/foto-1.webp",
+      "imageGallery": [
+        "/images/products/juego-de-sabanas-genero-algodon-4852-unicolor/foto-1.webp",
+        "/images/products/juego-de-sabanas-genero-algodon-4852-unicolor/foto-2.webp",
+        "/images/products/juego-de-sabanas-genero-algodon-4852-unicolor/foto-3.webp",
+        "/images/products/juego-de-sabanas-genero-algodon-4852-unicolor/foto-4.webp",
+        "/images/products/juego-de-sabanas-genero-algodon-4852-unicolor/foto-5.webp"
+      ],
+      "variants": [
+        {
+          "size": "Sencillo (100×190) - 1 Funda",
+          "dimensions": "100 × 190 cm",
+          "price": 110000,
+          "stock": 30
+        },
+        {
+          "size": "Semidoble (120×190) - 2 Fundas",
+          "dimensions": "120 × 190 cm",
+          "price": 120000,
+          "stock": 30
+        },
+        {
+          "size": "Doble (140×190) - 2 Fundas",
+          "dimensions": "140 × 190 cm",
+          "price": 130000,
+          "stock": 30
+        },
+        {
+          "size": "Queen (160×190) - 2 Fundas",
+          "dimensions": "160 × 190 cm",
+          "price": 140000,
+          "stock": 25
+        },
+        {
+          "size": "King (200×200) - 2 Fundas",
+          "dimensions": "200 × 200 cm",
+          "price": 150000,
+          "stock": 20
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    },
+    {
+      "id": "oasis-juego-de-sabanas-genero-algodon-4852-estampada",
+      "slug": "juego-de-sabanas-genero-algodon-4852-estampada",
+      "name": "Juego de Sábanas Género Algodón 48/52 Estampada",
+      "tagline": "Estampados modernos y frescos con tejido mixto de alta resistencia al lavado",
+      "description": "Dale personalidad a tu alcoba con diseños estampados contemporáneos. Mezcla 48% algodón y 52% poliéster. Incluye sábana ajustable, sobre sábana y fundas a juego.",
+      "longDescription": "Dale personalidad a tu alcoba con diseños estampados contemporáneos. Mezcla 48% algodón y 52% poliéster. Incluye sábana ajustable, sobre sábana y fundas a juego.",
+      "category": "sabanas",
+      "technology": [
+        "Color Fix Larga Duración",
+        "Suave al Tacto",
+        "Fácil Lavado en Casa"
+      ],
+      "materials": [
+        "48% Algodón / 52% Poliéster",
+        "Pigmentos Reactivos de Larga Duración",
+        "Elástico perimetral"
+      ],
+      "imageUrl": "/images/products/juego-de-sabanas-genero-algodon-4852-estampada/foto-1.webp",
+      "imageGallery": [
+        "/images/products/juego-de-sabanas-genero-algodon-4852-estampada/foto-1.webp",
+        "/images/products/juego-de-sabanas-genero-algodon-4852-estampada/foto-2.webp",
+        "/images/products/juego-de-sabanas-genero-algodon-4852-estampada/foto-3.webp",
+        "/images/products/juego-de-sabanas-genero-algodon-4852-estampada/foto-4.webp",
+        "/images/products/juego-de-sabanas-genero-algodon-4852-estampada/foto-5.webp"
+      ],
+      "variants": [
+        {
+          "size": "Sencillo (100×190) - 1 Funda",
+          "dimensions": "100 × 190 cm",
+          "price": 80000,
+          "stock": 30
+        },
+        {
+          "size": "Semidoble (120×190) - 2 Fundas",
+          "dimensions": "120 × 190 cm",
+          "price": 90000,
+          "stock": 30
+        },
+        {
+          "size": "Doble (140×190) - 2 Fundas",
+          "dimensions": "140 × 190 cm",
+          "price": 100000,
+          "stock": 30
+        },
+        {
+          "size": "Queen (160×190) - 2 Fundas",
+          "dimensions": "160 × 190 cm",
+          "price": 110000,
+          "stock": 25
+        },
+        {
+          "size": "King (200×200) - 2 Fundas",
+          "dimensions": "200 × 200 cm",
+          "price": 120000,
+          "stock": 20
+        }
+      ],
+      "featured": false,
+      "createdAt": "2026-11-08T00:00:00.000Z",
+      "updatedAt": "2026-11-08T18:00:00.000Z"
+    }
+  ]
+}
