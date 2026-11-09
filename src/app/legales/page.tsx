@@ -288,7 +288,7 @@ function LegalesContent() {
                         5. Entregas, Cobertura y Despacho
                       </h3>
                       <p>
-                        Entregamos en Bogotá D.C., Cota, Chía, Cajicá y municipios de la Sabana, así como a nivel nacional a través de empresas transportadoras legalmente constituidas (Coordinadora Mercantil y aliadas). La entrega se efectúa en la dirección indicada hasta la puerta del inmueble o portería. El cliente debe verificar que las dimensiones de puertas, pasillos y escaleras permitan el ingreso seguro del producto.
+                        Entregamos en Bogotá D.C. (20 localidades) y municipios de la Sabana (Cota, Chía, Cajicá) mediante cuadrilla técnica directa y flota de Transporte Propio. La entrega se efectúa en la dirección indicada hasta la puerta del inmueble o portería. El cliente debe verificar que las dimensiones de puertas, pasillos y escaleras permitan el ingreso seguro del producto.
                       </p>
                     </section>
 

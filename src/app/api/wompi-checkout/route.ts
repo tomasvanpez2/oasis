@@ -2,7 +2,7 @@
  * Wompi Checkout Session Initialization Endpoint
  * Strictly 0% PCI-DSS Scope: Zero card data captured on our infrastructure.
  * Zero-Trust Architectural Security: Shipping and financial totals are deterministically
- * calculated and enforced on the server using Coordinadora Mercantil logistics matrix.
+ * calculated and enforced on the server using Transporte Propio logistics matrix.
  * Client-side shipping injections or alterations are completely neutralized.
  * Generates cryptographic integrity signature (SHA-256) and returns official Wompi redirect URL.
  * Categorizes and persists the pending order into Vercel Blob with mandatory BI category.
@@ -11,7 +11,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateIntegrityHash, buildWompiCheckoutUrl, getWompiKeys } from '@/lib/wompi'
 import { saveOrder, classifyOrderCategory } from '@/lib/blob'
 import { generateOrderReference } from '@/lib/utils'
-import { resolveShippingFromLocation } from '@/lib/shipping'
+import {
+  resolveShippingFromLocation,
+  ALLOWED_CITIES,
+  isValidBogotaLocalidad,
+  type AllowedCity,
+} from '@/lib/shipping'
 import type { Order, CartItem, CustomerInfo } from '@/types'
 
 export const runtime = 'nodejs'
@@ -50,7 +55,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { fullName, email, phone, document, documentType, city, department, address } = customer
+    const { fullName, email, phone, document, documentType, city, localidad, address } = customer
 
     if (!fullName || !email || !phone || !document || !city || !address) {
       return NextResponse.json(
@@ -66,16 +71,50 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // ── 2. ZERO-TRUST LOGISTICS: Server-side Coordinadora Rate Enforcement ────────
-    // El cálculo en el cliente es meramente visual. Aquí recalculamos de forma autoritativa.
-    const shippingResolution = resolveShippingFromLocation(city, department)
+    // ── 2. ZERO-TRUST LOGISTICS: Server-side Transporte Propio Rate Enforcement ──
+    // Regla estricta: Solo 4 ciudades permitidas (Cota, Chía, Cajicá, Bogotá)
+    if (!ALLOWED_CITIES.includes(city as AllowedCity)) {
+      return NextResponse.json(
+        {
+          error:
+            'Ciudad no autorizada. El servicio logístico de Transporte Propio opera exclusivamente en Cota, Chía, Cajicá y Bogotá D.C.',
+        },
+        { status: 400 }
+      )
+    }
+
+    // Regla estricta: Si la ciudad es Bogotá, la localidad es obligatoria y debe ser oficial
+    if (city === 'Bogotá') {
+      if (!localidad || typeof localidad !== 'string' || localidad.trim().length === 0) {
+        return NextResponse.json(
+          {
+            error:
+              'Para despachos en Bogotá D.C. es estrictamente obligatorio seleccionar una de las 20 localidades oficiales.',
+          },
+          { status: 400 }
+        )
+      }
+
+      if (!isValidBogotaLocalidad(localidad)) {
+        return NextResponse.json(
+          {
+            error:
+              'La localidad indicada no corresponde a ninguna de las 20 localidades oficiales de Bogotá D.C.',
+          },
+          { status: 400 }
+        )
+      }
+    }
+
+    // Recálculo autoritativo e inmutable del flete en el servidor
+    const shippingResolution = resolveShippingFromLocation(city, localidad)
 
     if (!shippingResolution.isCovered) {
       return NextResponse.json(
         {
           error:
             shippingResolution.warning ||
-            'El destino ingresado se encuentra fuera de la cobertura de Coordinadora Mercantil.',
+            'El destino seleccionado se encuentra fuera de la cobertura de Transporte Propio.',
         },
         { status: 400 }
       )
@@ -96,7 +135,7 @@ export async function POST(req: NextRequest) {
     // Detección adversarial de manipulación de precios desde el cliente
     if (clientShipping !== undefined && clientShipping !== trustedShippingFee) {
       console.warn(
-        `[ZeroTrust:TamperMitigated] Client submitted shipping fee $${clientShipping} COP, but server enforced authoritative fee $${trustedShippingFee} COP for "${city}".`
+        `[ZeroTrust:TamperMitigated] Client submitted shipping fee $${clientShipping} COP, but server enforced authoritative fee $${trustedShippingFee} COP for "${city} - ${localidad || 'N/A'}".`
       )
     }
 
@@ -130,7 +169,7 @@ export async function POST(req: NextRequest) {
         document: document.trim(),
         documentType: documentType || 'CC',
         city: city.trim(),
-        department: department ? department.trim() : undefined,
+        localidad: city === 'Bogotá' && localidad ? localidad.trim() : undefined,
         address: address.trim(),
         notes: customer.notes?.trim() || '',
         shippingZoneId: trustedShippingZoneId,

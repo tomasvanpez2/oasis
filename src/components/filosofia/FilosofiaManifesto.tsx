@@ -81,8 +81,8 @@ export function FilosofiaManifesto() {
                 body: 'Cada resorte ensacado se embute en tela no tejida de polipropileno con tratamiento térmico para conservar la tensión elástica durante más de una década.',
               },
               {
-                title: 'Despacho Asegurado en Vehículo Propio',
-                body: 'En Bogotá y Sabana despachamos con flota propia y cuadrilla entrenada. En el resto del país, operamos bajo convenio logístico con Coordinadora Mercantil.',
+                title: 'Despacho Asegurado con Transporte Propio',
+                body: 'En Bogotá y Sabana despachamos exclusivamente con flota propia y cuadrilla técnica entrenada de fábrica.',
               },
               {
                 title: 'Garantía Estructural sin Trampas',

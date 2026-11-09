@@ -247,7 +247,7 @@ export function ProductRow({ product, index }: ProductRowProps) {
                 IVA incluido • Sin intermediarios
               </p>
               <p className="mt-3 font-body text-2xs text-white/40 leading-tight">
-                * Flete asegurado Coordinadora liquidado en checkout según zona de destino.
+                * Flete Transporte Propio liquidado en checkout según zona de destino.
               </p>
             </div>
 

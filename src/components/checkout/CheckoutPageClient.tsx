@@ -15,7 +15,7 @@ function CheckoutContent() {
   const [step, setStep] = useState<CheckoutStep>('customer')
   const [orderRef, setOrderRef] = useState('')
   const [transactionId, setTransactionId] = useState('')
-  const [selectedShippingZoneId, setSelectedShippingZoneId] = useState('bogota-centro-occidente')
+  const [selectedShippingZoneId, setSelectedShippingZoneId] = useState('bogota-grupo-1')
   const [mounted, setMounted] = useState(false)
   const searchParams = useSearchParams()
 

@@ -345,7 +345,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
         <div className="inline-flex items-center gap-2.5 border border-[#C5A059]/40 bg-[#C5A059]/10 px-3.5 py-1.5 backdrop-blur-sm mb-4">
           <span className="h-1.5 w-1.5 rounded-full bg-[#C5A059] animate-pulse" />
           <span className="font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059] font-medium">
-            Transacción Confirmada • Despacho Coordinadora Programado
+            Transacción Confirmada • Despacho con Transporte Propio Programado
           </span>
         </div>
 
@@ -435,13 +435,13 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
           {/* Tile 3: Logistics & Zone */}
           <div className="space-y-1">
             <span className="font-body text-2xs uppercase tracking-wider text-white/40">
-              Logística Coordinadora
+              Logística Transporte Propio
             </span>
             <p className="font-body text-sm font-medium text-white">
-              {order.shippingZone || 'Bogotá Urbana'}
+              {order.shippingZone || 'Transporte Propio'}
             </p>
             <p className="font-body text-[11px] text-white/40">
-              Salida: Bodega Normandía, Bogotá
+              Entrega coordinada por mensaje • Salida: Bodega Normandía
             </p>
           </div>
 
@@ -478,7 +478,10 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
             <div>
               <span className="text-white/40 block text-[10px] uppercase tracking-wider">Dirección Exacta</span>
               <span className="text-white">{order.customer.address}</span>
-              <span className="block text-white/50">{order.customer.city}</span>
+              <span className="block text-white/50">
+                {order.customer.city}
+                {order.customer.localidad ? ` — ${order.customer.localidad}` : ''}
+              </span>
               {order.customer.notes && (
                 <span className="block text-[#C5A059] italic mt-1 text-[11px]">Nota: {order.customer.notes}</span>
               )}
@@ -542,7 +545,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
               <span className="text-white">{formatCOP(order.subtotal)}</span>
             </div>
             <div className="flex justify-between text-xs font-body text-white/60">
-              <span>Flete Coordinadora ({order.shippingZone || 'Zona seleccionada'}):</span>
+              <span>Flete Transporte Propio ({order.shippingZone || 'Zona seleccionada'}):</span>
               <span className="text-[#C5A059] font-medium">{formatCOP(order.shipping)}</span>
             </div>
             <div className="border-t border-white/15 pt-3 flex justify-between items-baseline">

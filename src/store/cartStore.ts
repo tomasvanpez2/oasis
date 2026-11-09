@@ -1,7 +1,7 @@
 /**
  * Oasis Colchones — Global Cart Store
  * Zustand with resilient SSR-safe localStorage persistence.
- * Manejo integral y automatizado del flete logístico con Coordinadora Mercantil.
+ * Manejo integral y automatizado del flete logístico con Transporte Propio.
  */
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
@@ -28,10 +28,11 @@ export const useCartStore = create<CartState>()(
       items: [],
       isOpen: false,
 
-      // ── Coordinadora Automated Shipping State ──────────────────────────────
+      // ── Transporte Propio Automated Shipping State ──────────────────────────────
       shipping: initialZone.price,
       shippingZone: initialZone,
       shippingCity: '',
+      shippingLocalidad: '',
       shippingDepartment: '',
       shippingResolution: null,
       isCalculatingShipping: false,
@@ -86,6 +87,7 @@ export const useCartStore = create<CartState>()(
         set({
           items: [],
           shippingCity: '',
+          shippingLocalidad: '',
           shippingDepartment: '',
           shippingResolution: null,
           shipping: initialZone.price,
@@ -107,20 +109,21 @@ export const useCartStore = create<CartState>()(
         )
       },
 
-      // ── Coordinadora Freight Automation Methods ────────────────────────────
+      // ── Transporte Propio Freight Automation Methods ────────────────────────────
 
       /**
-       * Cruza automáticamente la ciudad ingresada contra la matriz de Coordinadora
-       * y actualiza el estado global de envío de forma reactiva.
+       * Cruza automáticamente la ciudad y localidad seleccionada contra la matriz
+       * de Transporte Propio y actualiza el estado global de envío de forma reactiva.
        */
-      updateShippingLocation: (city: string, department?: string): ShippingResolution => {
+      updateShippingLocation: (city: string, localidadOrDepartment?: string): ShippingResolution => {
         set({ isCalculatingShipping: true })
 
-        const resolution = resolveShippingFromLocation(city, department)
+        const resolution = resolveShippingFromLocation(city, localidadOrDepartment)
 
         set({
           shippingCity: city,
-          shippingDepartment: department || '',
+          shippingLocalidad: city === 'Bogotá' ? (localidadOrDepartment || '') : '',
+          shippingDepartment: '',
           shipping: resolution.zone.price,
           shippingZone: resolution.zone,
           shippingResolution: resolution,

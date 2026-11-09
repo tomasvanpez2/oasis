@@ -172,7 +172,7 @@ export function CartDrawer() {
                   </p>
                 </div>
                 <p className="font-body text-2xs text-[#C5A059] leading-relaxed">
-                  * Flete Coordinadora Mercantil calculado en checkout según tu zona.
+                  * Flete Transporte Propio calculado en checkout según tu zona.
                 </p>
                 <Link
                   href="/checkout"

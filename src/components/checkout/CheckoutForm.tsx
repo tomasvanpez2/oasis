@@ -7,27 +7,53 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
 import { formatCOP } from '@/lib/utils'
 import { SecurityBadges } from './SecurityBadges'
-import type { ShippingZone } from '@/lib/shipping'
+import {
+  ALLOWED_CITIES,
+  BOGOTA_LOCALIDADES,
+  isValidBogotaLocalidad,
+  type ShippingZone,
+} from '@/lib/shipping'
 
-const customerSchema = z.object({
-  fullName: z.string().min(3, 'Nombre completo requerido (mínimo 3 caracteres)'),
-  email: z.string().email('Ingresa un correo electrónico válido'),
-  phone: z
-    .string()
-    .min(10, 'Número de celular colombiano de 10 dígitos (ej. 3001234567)')
-    .max(15, 'Máximo 15 dígitos')
-    .regex(/^[0-9+ ]+$/, 'Solo números y espacios'),
-  documentType: z.enum(['CC', 'CE', 'NIT', 'PP']),
-  document: z.string().min(6, 'Número de documento válido (mínimo 6 dígitos)'),
-  city: z.string().min(2, 'Indica la ciudad o municipio de destino en Colombia'),
-  department: z.string().optional(),
-  address: z.string().min(8, 'Dirección de entrega completa y nomenclatura'),
-  notes: z.string().optional(),
-  shippingZoneId: z.string().optional(),
-  acceptTerms: z.boolean().refine((val) => val === true, {
-    message: 'Debes aceptar los términos y la política de tratamiento de datos conforme a la ley colombiana para continuar con el pago',
-  }),
-})
+const customerSchema = z
+  .object({
+    fullName: z.string().min(3, 'Nombre completo requerido (mínimo 3 caracteres)'),
+    email: z.string().email('Ingresa un correo electrónico válido'),
+    phone: z
+      .string()
+      .min(10, 'Número de celular colombiano de 10 dígitos (ej. 3001234567)')
+      .max(15, 'Máximo 15 dígitos')
+      .regex(/^[0-9+ ]+$/, 'Solo números y espacios'),
+    documentType: z.enum(['CC', 'CE', 'NIT', 'PP']),
+    document: z.string().min(6, 'Número de documento válido (mínimo 6 dígitos)'),
+    city: z.enum(ALLOWED_CITIES, {
+      errorMap: () => ({ message: 'Debes seleccionar una ciudad válida (Cota, Chía, Cajicá o Bogotá)' }),
+    }),
+    localidad: z.string().optional(),
+    address: z.string().min(8, 'Dirección de entrega completa y nomenclatura'),
+    notes: z.string().optional(),
+    shippingZoneId: z.string().optional(),
+    acceptTerms: z.boolean().refine((val) => val === true, {
+      message:
+        'Debes aceptar los términos y la política de tratamiento de datos conforme a la ley colombiana para continuar con el pago',
+    }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.city === 'Bogotá') {
+      if (!data.localidad || data.localidad.trim() === '') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Debes seleccionar la localidad de Bogotá para liquidar el flete de Transporte Propio',
+          path: ['localidad'],
+        })
+      } else if (!isValidBogotaLocalidad(data.localidad)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Debes seleccionar una de las 20 localidades oficiales de Bogotá',
+          path: ['localidad'],
+        })
+      }
+    }
+  })
 
 type CustomerFormData = z.infer<typeof customerSchema>
 
@@ -41,7 +67,7 @@ const INPUT_CLASS =
   'w-full border border-white/20 bg-transparent px-4 py-3.5 font-body text-sm text-white placeholder-white/25 outline-none transition-colors duration-200 focus:border-[#C5A059] focus:ring-0 disabled:opacity-50'
 
 const SELECT_CLASS =
-  'w-full border border-white/20 bg-[#0A1B54] px-4 py-3.5 font-body text-sm text-white outline-none transition-colors duration-200 focus:border-[#C5A059] focus:ring-0 disabled:opacity-50 cursor-pointer'
+  'w-full appearance-none border border-white/20 bg-[#0A1B54] px-4 py-3.5 font-body text-sm text-white outline-none transition-colors duration-200 focus:border-[#C5A059] focus:ring-0 disabled:opacity-50 cursor-pointer'
 
 const LABEL_CLASS = 'block font-body text-2xs uppercase tracking-[0.18em] text-white/50 mb-2'
 const ERROR_CLASS = 'mt-1.5 font-body text-xs text-red-400 font-light'
@@ -74,30 +100,37 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
       phone: '',
       documentType: 'CC',
       document: '',
-      city: '',
-      department: '',
+      city: undefined,
+      localidad: '',
       address: '',
       notes: '',
-      shippingZoneId: shippingZone?.id || 'bogota-centro-occidente',
+      shippingZoneId: shippingZone?.id || 'bogota-grupo-1',
       acceptTerms: false,
     },
   })
 
-  // Escuchar en tiempo real los cambios en ciudad y departamento
+  // Escuchar reactivamente ciudad y localidad
   const watchedCity = watch('city')
-  const watchedDepartment = watch('department')
+  const watchedLocalidad = watch('localidad')
 
+  // Limpiar localidad si el usuario cambia de Bogotá a otra ciudad
   useEffect(() => {
-    // Cruce automático con la matriz de Coordinadora cada vez que el usuario escribe
-    const res = updateShippingLocation(watchedCity || '', watchedDepartment || '')
+    if (watchedCity && watchedCity !== 'Bogotá') {
+      setValue('localidad', '')
+    }
+  }, [watchedCity, setValue])
+
+  // Recalcular flete en tiempo real al seleccionar ciudad o localidad
+  useEffect(() => {
+    const res = updateShippingLocation(watchedCity || '', watchedLocalidad || '')
     setValue('shippingZoneId', res.zone.id)
     onZoneChange?.(res.zone.id)
-  }, [watchedCity, watchedDepartment, updateShippingLocation, setValue, onZoneChange])
+  }, [watchedCity, watchedLocalidad, updateShippingLocation, setValue, onZoneChange])
 
-  const isCovered = shippingResolution ? shippingResolution.isCovered : true
+  const isCovered = shippingResolution ? shippingResolution.isCovered : false
   const activeZone: ShippingZone = shippingZone
   const subtotal = getTotalPrice()
-  const shippingFee = isCovered ? shipping : 0
+  const shippingFee = isCovered ? shipping : activeZone.price
   const grandTotal = subtotal + shippingFee
 
   async function onSubmit(data: CustomerFormData) {
@@ -108,7 +141,9 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
 
     if (!isCovered) {
       setSubmitError(
-        'El destino ingresado se encuentra fuera de cobertura. Coordinadora Mercantil despacha únicamente dentro de Colombia.'
+        watchedCity === 'Bogotá' && !watchedLocalidad
+          ? 'Por favor selecciona la localidad de Bogotá para liquidar el flete de Transporte Propio.'
+          : 'Por favor selecciona un destino válido con cobertura de Transporte Propio.'
       )
       return
     }
@@ -117,8 +152,8 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
     setSubmitError(null)
 
     try {
-      // Arquitectura Zero-Trust: Enviamos los datos del cliente y los ítems.
-      // El backend recalcula y valida el flete de forma obligatoria en el servidor.
+      // Arquitectura Zero-Trust: Enviamos ciudad y localidad.
+      // El backend recalcula y valida la tarifa de forma autoritativa.
       const response = await fetch('/api/wompi-checkout', {
         method: 'POST',
         headers: {
@@ -132,7 +167,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             documentType: data.documentType,
             document: data.document,
             city: data.city,
-            department: data.department || '',
+            localidad: data.city === 'Bogotá' ? data.localidad : undefined,
             address: data.address,
             notes: data.notes,
             shippingZoneId: activeZone.id,
@@ -155,7 +190,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
       // Limpiar el carrito local antes de la redirección
       clearCart()
 
-      // Redirigir directamente al Web Checkout oficial alojado por Wompi (0% PCI Scope)
+      // Redirigir directamente al Web Checkout oficial de Wompi (0% PCI Scope)
       window.location.href = result.checkoutUrl
     } catch (err) {
       console.error('[checkout:error]', err)
@@ -184,7 +219,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             Datos de entrega y facturación
           </h2>
           <p className="mt-2 font-body text-xs text-white/50">
-            Flete de transporte liquidado automáticamente con Coordinadora Mercantil (Origen Oficial: Bodega Normandía, Bogotá D.C.).
+            Flete de transporte liquidado automáticamente con Transporte Propio (Origen Oficial: Bodega Normandía, Bogotá D.C.).
           </p>
         </div>
 
@@ -199,7 +234,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
           {/* Full Name */}
           <div>
-            <label className={LABEL_CLASS}>Nombre completo del titular</label>
+            <label className={LABEL_CLASS}>Nombre completo del titular *</label>
             <input
               {...register('fullName')}
               className={INPUT_CLASS}
@@ -213,7 +248,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
           {/* Email + Phone */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-              <label className={LABEL_CLASS}>Correo electrónico</label>
+              <label className={LABEL_CLASS}>Correo electrónico *</label>
               <input
                 {...register('email')}
                 type="email"
@@ -225,7 +260,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
               {errors.email && <p className={ERROR_CLASS}>{errors.email.message}</p>}
             </div>
             <div>
-              <label className={LABEL_CLASS}>Teléfono celular (Colombia)</label>
+              <label className={LABEL_CLASS}>Teléfono celular (Colombia) *</label>
               <input
                 {...register('phone')}
                 type="tel"
@@ -241,20 +276,27 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
           {/* Document type + number */}
           <div className="grid grid-cols-[130px_1fr] gap-4">
             <div>
-              <label className={LABEL_CLASS}>Tipo doc.</label>
-              <select
-                {...register('documentType')}
-                className={SELECT_CLASS}
-                disabled={isSubmitting}
-              >
-                <option value="CC">C.C. Cédula</option>
-                <option value="CE">C.E. Extranjería</option>
-                <option value="NIT">NIT Empresa</option>
-                <option value="PP">Pasaporte</option>
-              </select>
+              <label className={LABEL_CLASS}>Tipo doc. *</label>
+              <div className="relative">
+                <select
+                  {...register('documentType')}
+                  className={SELECT_CLASS}
+                  disabled={isSubmitting}
+                >
+                  <option value="CC" className="bg-[#0A1B54] text-white">C.C. Cédula</option>
+                  <option value="CE" className="bg-[#0A1B54] text-white">C.E. Extranjería</option>
+                  <option value="NIT" className="bg-[#0A1B54] text-white">NIT Empresa</option>
+                  <option value="PP" className="bg-[#0A1B54] text-white">Pasaporte</option>
+                </select>
+                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/40">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </div>
+              </div>
             </div>
             <div>
-              <label className={LABEL_CLASS}>Número de identificación</label>
+              <label className={LABEL_CLASS}>Número de identificación *</label>
               <input
                 {...register('document')}
                 className={INPUT_CLASS}
@@ -265,49 +307,95 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             </div>
           </div>
 
-          {/* ── CIUDAD Y DEPARTAMENTO CON CRUCE AUTOMÁTICO EN TIEMPO REAL ── */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1.5fr_1fr]">
-            <div>
-              <label className={LABEL_CLASS}>Ciudad o Municipio de Entrega *</label>
-              <input
-                {...register('city')}
-                className={INPUT_CLASS}
-                placeholder="Ej. Bogotá, Medellín, Cali, Cartagena, Chía, Tunja..."
-                autoComplete="address-level2"
-                disabled={isSubmitting}
-              />
-              {errors.city && <p className={ERROR_CLASS}>{errors.city.message}</p>}
-            </div>
-            <div>
-              <label className={LABEL_CLASS}>Departamento (Opcional)</label>
-              <input
-                {...register('department')}
-                className={INPUT_CLASS}
-                placeholder="Ej. Cundinamarca, Antioquia, Valle..."
-                autoComplete="address-level1"
-                disabled={isSubmitting}
-              />
+          {/* ── CIUDAD Y SELECTOR CONDICIONAL DE LOCALIDAD CON ANIMACIÓN FRAMER MOTION ── */}
+          <div className="space-y-4">
+            <div className={`grid grid-cols-1 gap-4 ${watchedCity === 'Bogotá' ? 'sm:grid-cols-2' : 'sm:grid-cols-1'}`}>
+              {/* Selector Ciudad */}
+              <div>
+                <label className={LABEL_CLASS}>Ciudad de Entrega (Transporte Propio) *</label>
+                <div className="relative">
+                  <select
+                    {...register('city')}
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting}
+                    defaultValue=""
+                  >
+                    <option value="" disabled className="bg-[#0A1B54] text-white/40">
+                      Selecciona una ciudad
+                    </option>
+                    {ALLOWED_CITIES.map((c) => (
+                      <option key={c} value={c} className="bg-[#0A1B54] text-white">
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/40">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </div>
+                </div>
+                {errors.city && <p className={ERROR_CLASS}>{errors.city.message}</p>}
+              </div>
+
+              {/* Selector Condicional de Localidad para Bogotá */}
+              <AnimatePresence mode="wait">
+                {watchedCity === 'Bogotá' && (
+                  <motion.div
+                    key="localidad-selector"
+                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <label className={LABEL_CLASS}>Localidad Oficial de Bogotá *</label>
+                    <div className="relative">
+                      <select
+                        {...register('localidad')}
+                        className={SELECT_CLASS}
+                        disabled={isSubmitting}
+                        defaultValue=""
+                      >
+                        <option value="" disabled className="bg-[#0A1B54] text-white/40">
+                          Selecciona una de las 20 localidades
+                        </option>
+                        {BOGOTA_LOCALIDADES.map((loc) => (
+                          <option key={loc} value={loc} className="bg-[#0A1B54] text-white">
+                            {loc}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/40">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M6 9l6 6 6-6" />
+                        </svg>
+                      </div>
+                    </div>
+                    {errors.localidad && <p className={ERROR_CLASS}>{errors.localidad.message}</p>}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
-          {/* ── HUD COORDINADORA: RENDERIZACIÓN ELEGANTE DE SOLO LECTURA (QUIET LUXURY) ── */}
+          {/* ── HUD TRANSPORTE PROPIO: RENDERIZACIÓN ELEGANTE DE SOLO LECTURA (QUIET LUXURY) ── */}
           <div className="border border-[#C5A059]/40 bg-[#07133B]/80 p-5 space-y-4 rounded transition-all duration-300">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-[#C5A059] animate-pulse" />
                 <label className="block font-body text-xs uppercase tracking-[0.18em] text-[#C5A059] font-medium">
-                  Cálculo Oficial Coordinadora Mercantil
+                  Cálculo Oficial Transporte Propio
                 </label>
               </div>
               <span className="font-mono text-[10px] border border-[#C5A059]/60 bg-[#C5A059]/10 px-2 py-0.5 text-[#C5A059] uppercase tracking-wider">
-                Automático
+                Tarifa Blindada
               </span>
             </div>
 
             {/* Display de solo lectura animado con Framer Motion */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={`${activeZone.id}-${shippingFee}-${isCovered}-${watchedCity}`}
+                key={`${activeZone.id}-${shippingFee}-${isCovered}-${watchedCity}-${watchedLocalidad}`}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
@@ -322,7 +410,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                           Zona de despacho asignada:
                         </span>
                         <p className="font-display text-base text-white font-medium">
-                          Flete Coordinadora ({activeZone.name}) — {formatCOP(activeZone.price)} COP
+                          Flete Transporte Propio ({activeZone.name}) — {formatCOP(activeZone.price)} COP
                         </p>
                       </div>
                       <div className="text-left sm:text-right">
@@ -337,40 +425,30 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-2xs">
                       <div>
-                        <span className="text-white/40 block uppercase tracking-wider">Tiempo Estimado:</span>
-                        <span className="text-white font-medium">{activeZone.estimatedDays}</span>
+                        <span className="text-white/40 block uppercase tracking-wider">Tiempo de Entrega:</span>
+                        <span className="text-white font-medium">Entrega coordinada por mensaje</span>
                       </div>
                       <div>
                         <span className="text-white/40 block uppercase tracking-wider">Origen de Bodega:</span>
                         <span className="text-white/70 block">Normandía, Bogotá D.C.</span>
                       </div>
                       <div>
-                        <span className="text-white/40 block uppercase tracking-wider">Estado del Cruce:</span>
-                        {shippingResolution?.matchedBy === 'specific_city' && (
-                          <span className="text-[#C5A059] font-medium">
-                            ✓ Coincidencia exacta ({shippingResolution.matchedTerm || watchedCity})
-                          </span>
-                        )}
-                        {shippingResolution?.matchedBy === 'national_fallback' && (
-                          <span className="text-white/80 font-medium">
-                            ✓ Tarifa Nacional Coordinadora
-                          </span>
-                        )}
-                        {(!shippingResolution || shippingResolution.matchedBy === 'default_origin') && (
-                          <span className="text-white/50">
-                            • Estimado inicial — Escribe tu ciudad
-                          </span>
-                        )}
+                        <span className="text-white/40 block uppercase tracking-wider">Estado del Despacho:</span>
+                        <span className="text-[#C5A059] font-medium">
+                          ✓ Flota Propia Directa
+                        </span>
                       </div>
                     </div>
                   </>
                 ) : (
-                  <div className="border border-red-500/30 bg-red-950/20 p-3 rounded">
-                    <p className="font-body text-xs text-red-300 font-medium">
-                      ⚠️ Destino fuera de cobertura nacional
+                  <div className="border border-white/10 bg-white/5 p-3 rounded">
+                    <p className="font-body text-xs text-white/80 font-medium">
+                      {watchedCity === 'Bogotá' && !watchedLocalidad
+                        ? '📍 Selecciona tu localidad de Bogotá para liquidar la tarifa exacta.'
+                        : '📍 Selecciona tu ciudad de destino para liquidar el flete de Transporte Propio.'}
                     </p>
-                    <p className="mt-1 font-body text-2xs text-red-200/70">
-                      Coordinadora Mercantil realiza despachos exclusivamente en municipios dentro de Colombia. Por favor ingresa una ciudad o municipio colombiano válido.
+                    <p className="mt-1 font-body text-2xs text-white/50">
+                      Cobertura autorizada con flota propia en Cota, Chía, Cajicá y las 20 localidades oficiales de Bogotá D.C.
                     </p>
                   </div>
                 )}
@@ -380,7 +458,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
 
           {/* Address */}
           <div>
-            <label className={LABEL_CLASS}>Dirección exacta y nomenclatura de entrega</label>
+            <label className={LABEL_CLASS}>Dirección exacta y nomenclatura de entrega *</label>
             <input
               {...register('address')}
               className={INPUT_CLASS}
@@ -393,7 +471,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
 
           {/* Notes */}
           <div>
-            <label className={LABEL_CLASS}>Notas para el equipo de despacho en bodega (opcional)</label>
+            <label className={LABEL_CLASS}>Notas para la cuadrilla de despacho en bodega (opcional)</label>
             <textarea
               {...register('notes')}
               className={INPUT_CLASS + ' resize-none'}
@@ -407,7 +485,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
           <div className="border border-white/15 bg-white/5 p-4 flex items-start gap-3">
             <span className="text-[#C5A059] text-base">🚛</span>
             <p className="font-body text-xs text-white/70 leading-relaxed">
-              <strong>Despacho Oficial con Coordinadora Mercantil:</strong> El costo de transporte oficial ({formatCOP(activeZone.price)}) se liquida de forma automática y se transfiere de manera transparente al total a pagar en Wompi. Tu colchón viaja con guía oficial asegurada desde nuestra planta en Normandía, Bogotá D.C.
+              <strong>Despacho Oficial con Transporte Propio:</strong> El costo de transporte oficial ({formatCOP(activeZone.price)}) se liquida de forma automática y se transfiere de manera transparente al total a pagar en Wompi. Tu colchón viaja con cuadrilla y flota propia desde nuestra planta en Normandía, Bogotá D.C.
             </p>
           </div>
 
@@ -448,7 +526,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                 >
                   Política de Prevención de Fraude y Devolución
                 </a>{' '}
-                de Oasis Colchones y Muebles. Autorizo el tratamiento de mis datos personales para la emisión de factura electrónica y coordinación del despacho asegurado con transportadora.
+                de Oasis Colchones y Muebles. Autorizo el tratamiento de mis datos personales para la emisión de factura electrónica y coordinación del despacho con Transporte Propio.
               </span>
             </label>
             {errors.acceptTerms && (
@@ -468,7 +546,9 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                 Redirigiendo a pasarela segura Wompi...
               </span>
             ) : !isCovered ? (
-              'Destino sin cobertura nacional'
+              watchedCity === 'Bogotá' && !watchedLocalidad
+                ? 'Selecciona una Localidad para continuar'
+                : 'Selecciona una Ciudad de entrega'
             ) : (
               `Pagar Orden Segura con Wompi • ${formatCOP(grandTotal)}`
             )}

@@ -57,6 +57,7 @@ export interface CartState {
   shipping: number
   shippingZone: ShippingZone
   shippingCity: string
+  shippingLocalidad?: string
   shippingDepartment?: string
   shippingResolution: ShippingResolution | null
   isCalculatingShipping: boolean
@@ -69,7 +70,7 @@ export interface CartState {
   toggleCart: () => void
   getTotalItems: () => number
   getTotalPrice: () => number
-  updateShippingLocation: (city: string, department?: string) => ShippingResolution
+  updateShippingLocation: (city: string, localidadOrDepartment?: string) => ShippingResolution
   setShippingZone: (zone: ShippingZone) => void
   getShippingFee: () => number
   getGrandTotal: () => number
@@ -107,6 +108,7 @@ export interface CustomerInfo {
   document: string
   documentType: 'CC' | 'CE' | 'NIT' | 'PP'
   city: string
+  localidad?: string
   department?: string
   address: string
   notes?: string
@@ -250,7 +252,8 @@ export interface CheckoutFormData {
   documentType: 'CC' | 'CE' | 'NIT' | 'PP'
   document: string
   shippingZoneId?: string
-  city: string
+  city: 'Cota' | 'Chía' | 'Cajicá' | 'Bogotá' | string
+  localidad?: string
   department?: string
   address: string
   notes?: string

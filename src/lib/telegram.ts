@@ -139,8 +139,8 @@ export function buildFactoryOrderMessage(order: Order): string {
 
   const shippingNote =
     order.shippingZone
-      ? `🚛 <b>Flete Coordinadora:</b> ${formatCOP(order.shipping)} (Origen: Bodega Normandía → ${escapeHtml(order.shippingZone)})`
-      : `🚛 <b>Flete Coordinadora:</b> ${formatCOP(order.shipping)} (Origen: Bodega Normandía)`
+      ? `🚛 <b>Flete Transporte Propio:</b> ${formatCOP(order.shipping)} (Origen: Bodega Normandía → ${escapeHtml(order.shippingZone)})`
+      : `🚛 <b>Flete Transporte Propio:</b> ${formatCOP(order.shipping)} (Origen: Bodega Normandía)`
 
   const installmentsText =
     order.wompiInstallments && order.wompiInstallments > 1

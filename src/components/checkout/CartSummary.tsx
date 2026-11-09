@@ -17,6 +17,7 @@ export function CartSummary({ selectedZoneId }: CartSummaryProps) {
     shipping,
     shippingZone,
     shippingCity,
+    shippingLocalidad,
     shippingResolution,
   } = useCartStore()
 
@@ -29,7 +30,7 @@ export function CartSummary({ selectedZoneId }: CartSummaryProps) {
 
   const effectiveShippingFee = typeof shipping === 'number' ? shipping : activeZone.price
   const subtotal = getTotalPrice()
-  const isCovered = shippingResolution ? shippingResolution.isCovered : true
+  const isCovered = shippingResolution ? shippingResolution.isCovered : false
   const total = isCovered ? subtotal + effectiveShippingFee : subtotal
 
   return (
@@ -63,37 +64,32 @@ export function CartSummary({ selectedZoneId }: CartSummaryProps) {
         ))}
       </ul>
 
-      {/* Desglose financiero y Flete Coordinadora Quiet Luxury */}
+      {/* Desglose financiero y Flete Transporte Propio Quiet Luxury */}
       <div className="mt-6 space-y-4 border-t border-white/10 pt-6">
         <div className="flex items-center justify-between">
           <p className="font-body text-xs text-white/50">Subtotal Productos</p>
           <p className="font-body text-sm text-white">{formatCOP(subtotal)}</p>
         </div>
 
-        {/* Flete Coordinadora en formato texto elegante de solo lectura con transiciones Framer Motion */}
+        {/* Flete Transporte Propio en formato texto elegante de solo lectura con transiciones Framer Motion */}
         <div className="rounded border border-white/10 bg-[#07133B]/40 p-4 transition-all duration-300 hover:border-[#C5A059]/40">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="font-body text-2xs uppercase tracking-[0.16em] text-[#C5A059] font-medium">
-                  Logística Coordinadora Mercantil
+                  Logística Transporte Propio
                 </span>
-                {shippingResolution?.matchedBy === 'specific_city' && (
+                {isCovered && (
                   <span className="inline-flex items-center rounded-full bg-[#C5A059]/15 px-2 py-0.5 font-mono text-[10px] text-[#C5A059] border border-[#C5A059]/30">
-                    Tarifa Oficial Cruzada
-                  </span>
-                )}
-                {shippingResolution?.matchedBy === 'national_fallback' && (
-                  <span className="inline-flex items-center rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] text-white/70 border border-white/15">
-                    Tarifa Nacional
+                    Tarifa Oficial Confirmada
                   </span>
                 )}
               </div>
 
-              {/* Texto elegante de solo lectura con animación fluida al escribir la ciudad */}
+              {/* Texto elegante de solo lectura con animación fluida al seleccionar ciudad y localidad */}
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`${activeZone.id}-${effectiveShippingFee}-${isCovered}`}
+                  key={`${activeZone.id}-${effectiveShippingFee}-${isCovered}-${shippingCity}-${shippingLocalidad}`}
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -5 }}
@@ -103,28 +99,30 @@ export function CartSummary({ selectedZoneId }: CartSummaryProps) {
                   {isCovered ? (
                     <div>
                       <p className="font-display text-base text-white tracking-wide">
-                        Flete Coordinadora ({activeZone.name}) — {formatCOP(effectiveShippingFee)} COP
+                        Flete Transporte Propio ({activeZone.name}) — {formatCOP(effectiveShippingFee)} COP
                       </p>
                       <p className="mt-1 font-body text-[11px] text-white/50">
-                        {activeZone.estimatedDays} de tránsito • Origen: Bodega Normandía, Bogotá D.C.
+                        Entrega coordinada por mensaje • Origen: Bodega Normandía, Bogotá D.C.
                       </p>
-                      {shippingCity ? (
+                      {shippingCity && (
                         <p className="mt-1 font-body text-[11px] text-[#C5A059]/90 italic">
-                          Calculado dinámicamente para: <strong className="not-italic text-white capitalize">{shippingCity}</strong>
-                        </p>
-                      ) : (
-                        <p className="mt-1 font-body text-[11px] text-white/40">
-                          (Escribe tu ciudad o municipio en el formulario para cruzar la tarifa exacta)
+                          Destino liquidado:{' '}
+                          <strong className="not-italic text-white">
+                            {shippingCity}
+                            {shippingLocalidad ? ` — ${shippingLocalidad}` : ''}
+                          </strong>
                         </p>
                       )}
                     </div>
                   ) : (
                     <div>
-                      <p className="font-display text-sm text-red-300">
-                        Sin cobertura directa para la ubicación ingresada
+                      <p className="font-display text-sm text-white/70">
+                        {shippingCity === 'Bogotá' && !shippingLocalidad
+                          ? 'Selecciona una localidad en Bogotá'
+                          : 'Selecciona tu ciudad de entrega en el formulario'}
                       </p>
-                      <p className="mt-0.5 font-body text-[11px] text-red-400/80">
-                        Coordinadora despacha exclusivamente dentro del territorio colombiano.
+                      <p className="mt-0.5 font-body text-[11px] text-white/40">
+                        Transporte Propio opera exclusivamente en Cota, Chía, Cajicá y Bogotá D.C.
                       </p>
                     </div>
                   )}
@@ -147,7 +145,7 @@ export function CartSummary({ selectedZoneId }: CartSummaryProps) {
                 </motion.p>
               </AnimatePresence>
               <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest block mt-0.5">
-                Carga Asegurada
+                Flota Directa
               </span>
             </div>
           </div>
@@ -159,13 +157,13 @@ export function CartSummary({ selectedZoneId }: CartSummaryProps) {
             <p className="font-body text-sm text-white font-medium">Total a pagar en Wompi</p>
             <p className="font-body text-2xs text-white/40">
               {isCovered
-                ? 'Incluye IVA y flete oficial de carga liquidado'
-                : 'Pendiente validar cobertura de destino'}
+                ? 'Incluye IVA y flete de Transporte Propio liquidado'
+                : 'Pendiente seleccionar destino de entrega'}
             </p>
           </div>
           <AnimatePresence mode="wait">
             <motion.p
-              key={`grand-total-${total}`}
+              key={`grand-total-${total}-${isCovered}`}
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
@@ -187,7 +185,7 @@ export function CartSummary({ selectedZoneId }: CartSummaryProps) {
           </p>
         </div>
         <p className="mt-1 font-body text-2xs text-white/60 leading-relaxed">
-          Bodega Central: Normandía, Bogotá D.C. Guía y monitoreo activo en tiempo real con Coordinadora Mercantil. Tarifa blindada ante alteraciones.
+          Bodega Central: Normandía, Bogotá D.C. Monitoreo y entrega directa con Transporte Propio. Tarifa blindada ante alteraciones.
         </p>
       </div>
 
