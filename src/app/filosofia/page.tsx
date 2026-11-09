@@ -1,16 +1,16 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { FilosofiaHero } from '@/components/filosofia/FilosofiaHero'
-import { FilosofiaMissionVision } from '@/components/filosofia/FilosofiaMissionVision'
 import { FilosofiaManifesto } from '@/components/filosofia/FilosofiaManifesto'
+import { FilosofiaMissionVision } from '@/components/filosofia/FilosofiaMissionVision'
 import { FilosofiaGallery } from '@/components/filosofia/FilosofiaGallery'
 import { FilosofiaValues } from '@/components/filosofia/FilosofiaValues'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Filosofía de Manufactura',
+  title: 'Quiénes Somos | Oasis Colchones y Muebles',
   description:
-    'Misión, Visión, Valores industriales y confección directa de colchones biomecánicos en Bogotá. Sin intermediación comercial ni margen de retail.',
+    'Oasis Colchones y Muebles: trayectoria desde 1998 con raíces boyacenses. Conoce nuestra historia, misión, visión y nuestro compromiso de calidad transparente.',
 }
 
 export default function FilosofiaPage() {
@@ -18,8 +18,8 @@ export default function FilosofiaPage() {
     <main className="bg-[#0A1B54] min-h-screen">
       <Header />
       <FilosofiaHero />
-      <FilosofiaMissionVision />
       <FilosofiaManifesto />
+      <FilosofiaMissionVision />
       <FilosofiaGallery />
       <FilosofiaValues />
       <Footer />

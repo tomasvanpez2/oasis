@@ -3,20 +3,20 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-const MANIFESTO_LINES = [
-  'El descanso biomecánico no es un artificio publicitario.',
-  'Es el resultado exacto de la física de materiales.',
-  'No pagamos alquileres en centros comerciales de lujo.',
-  'Invertimos ese margen en mayor gramaje de espuma y resortes de acero continuo.',
-  'Nuestra reputación se sostiene en 15 años de soporte sin deformación.',
-]
-
 export function FilosofiaManifesto() {
   return (
-    <section className="relative border-t border-white/10 px-6 py-24 lg:px-16 lg:py-36 bg-[#0A1B54]">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-12">
-          {/* Left Column: Asymmetric Typography */}
+    <section className="relative border-t border-white/10 px-6 py-24 lg:px-16 lg:py-32 bg-[#0A1B54]">
+      {/* Background architectural guides */}
+      <div className="pointer-events-none absolute inset-0 grid grid-cols-4 opacity-5">
+        <div className="border-r border-white" />
+        <div className="border-r border-white" />
+        <div className="border-r border-white" />
+        <div className="border-r border-transparent" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 items-center">
+          {/* Left Column: Big Philosophy Statement */}
           <div className="lg:col-span-7">
             <motion.p
               initial={{ opacity: 0 }}
@@ -24,84 +24,82 @@ export function FilosofiaManifesto() {
               viewport={{ once: true }}
               className="font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059]"
             >
-              Manifiesto de Manufactura
+              Transparencia Constructiva
             </motion.p>
 
-            <div className="mt-8 space-y-4">
-              {MANIFESTO_LINES.map((line, i) => (
-                <div key={i} className="overflow-hidden">
-                  <motion.p
-                    className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal italic text-white leading-snug"
-                    initial={{ y: '100%', opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      duration: 0.8,
-                      delay: i * 0.08,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                  >
-                    «{line}»
-                  </motion.p>
-                </div>
-              ))}
-            </div>
+            <motion.h2
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="mt-3 font-display text-3xl sm:text-5xl font-normal text-white leading-tight"
+            >
+              La confianza se construye con hechos y la transparencia se demuestra desde el interior.
+            </motion.h2>
 
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-              className="mt-12 border-l border-[#C5A059] pl-6 py-1"
+              transition={{ duration: 0.7, delay: 0.25 }}
+              className="mt-8 border-l-2 border-[#C5A059] pl-6 py-2"
             >
-              <p className="font-body text-xs sm:text-sm text-white/70 leading-relaxed max-w-xl">
-                Al comprar directo en nuestra fábrica en Bogotá, el 100% de tu pago remunera mano de obra técnica y materiales de alta especificación. Cero comisiones a vendedores de piso, cero márgenes de distribución intermediada.
+              <p className="font-display italic text-xl sm:text-2xl text-white/95 leading-relaxed font-light">
+                «Por eso, fabricamos nuestros colchones con materiales de calidad y estructuras que puedes ver por dentro.»
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-8 inline-block border border-[#C5A059]/40 bg-[#C5A059]/10 px-5 py-3"
+            >
+              <p className="font-display text-lg sm:text-xl font-medium text-[#C5A059] tracking-wide">
+                En Oasis, la calidad no se promete, se muestra.
               </p>
             </motion.div>
           </div>
 
-          {/* Right Column: Industrial Rigor Cards */}
-          <div className="lg:col-span-5 space-y-6 lg:border-l lg:border-white/10 lg:pl-12">
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059]"
-            >
-              Compromisos Verificables
-            </motion.p>
-
+          {/* Right Column: 3 Real Value Cards */}
+          <div className="lg:col-span-5 space-y-5 lg:border-l lg:border-white/10 lg:pl-10">
             {[
               {
-                title: 'Densidad Declarada vs. Densidad Real',
-                body: 'No usamos denominaciones ambiguas como "ultra firme". Especificamos densidad métrica: 40 kg/m³, 45 kg/m³ y 60 kg/m³, auditables en laboratorio.',
+                number: '01',
+                title: 'Hechos Antes que Promesas',
+                desc: 'La confianza no surge de palabras bonitas; nace de la constancia, el cumplimiento y el compromiso diario con cada familia colombiana.',
               },
               {
-                title: 'Alambre de Acero al Carbono Templado',
-                body: 'Cada resorte ensacado se embute en tela no tejida de polipropileno con tratamiento térmico para conservar la tensión elástica durante más de una década.',
+                number: '02',
+                title: 'Transparencia desde el Interior',
+                desc: 'No escondemos nada: facilitamos la verificación de nuestras estructuras y materiales para que sepas exactamente sobre qué estás descansando.',
               },
               {
-                title: 'Despacho Asegurado con Transporte Propio',
-                body: 'En Bogotá y Sabana despachamos exclusivamente con flota propia y cuadrilla técnica entrenada de fábrica.',
+                number: '03',
+                title: 'Materiales de Calidad y Durabilidad',
+                desc: 'Seleccionamos cada insumo y cuidamos cada proceso de confección para entregar colchones y muebles verdaderamente duraderos.',
               },
-              {
-                title: 'Garantía Estructural sin Trampas',
-                body: 'Nuestra póliza cubre pérdida de cota mayor a 2.5 cm y quiebre de espirales. Trámite directo con la dirección técnica de planta.',
-              },
-            ].map((item, i) => (
+            ].map((card, i) => (
               <motion.div
-                key={item.title}
+                key={card.number}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="border border-white/10 bg-[#07133B]/40 p-5 hover:border-[#C5A059]/40 transition-colors"
+                transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
+                className="group border border-white/10 bg-[#07133B]/50 p-6 transition-all duration-300 hover:border-[#C5A059]/50 hover:bg-[#07133B]/80"
               >
-                <h4 className="font-display text-base font-normal text-white">
-                  {item.title}
-                </h4>
-                <p className="mt-2 font-body text-xs text-white/60 leading-relaxed">
-                  {item.body}
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-xs font-semibold text-[#C5A059]">
+                    {card.number}
+                  </span>
+                  <div className="h-px flex-1 bg-white/10 group-hover:bg-[#C5A059]/30 transition-colors" />
+                </div>
+                <h3 className="mt-3 font-display text-lg font-normal text-white">
+                  {card.title}
+                </h3>
+                <p className="mt-2 font-body text-xs sm:text-sm text-white/70 leading-relaxed">
+                  {card.desc}
                 </p>
               </motion.div>
             ))}

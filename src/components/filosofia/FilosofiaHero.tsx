@@ -8,22 +8,22 @@ import { TextSplitReveal } from '@/components/ui/TextSplitReveal'
 export function FilosofiaHero() {
   return (
     <section className="relative min-h-[85vh] overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-24">
-      {/* Background industrial visual */}
+      {/* Background visual overlay with brand warmth */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.3 }}
+        animate={{ opacity: 0.35 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         className="film-grain absolute inset-0"
       >
         <Image
-          src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85"
-          alt="Línea de confección industrial Oasis Colchones en Bogotá"
+          src="/images/products/colchon-pillow-top-original/foto-1.webp"
+          alt="Oasis Colchones y Muebles - Confección artesanal y calidad transparente"
           fill
           className="object-cover"
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A1B54] via-[#0A1B54]/85 to-[#0A1B54]/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A1B54] via-[#0A1B54]/90 to-[#0A1B54]/75" />
       </motion.div>
 
       {/* Precision 1px grid guides */}
@@ -45,14 +45,14 @@ export function FilosofiaHero() {
             <span className="inline-flex items-center gap-2 border border-[#C5A059]/40 bg-[#C5A059]/10 px-3.5 py-1.5 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-[#C5A059]" />
               <span className="font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059] font-medium">
-                Manufactura Directa — Bogotá, Colombia
+                Trayectoria desde 1998 — Raíces Boyacenses
               </span>
             </span>
           </motion.div>
 
           <div className="mt-6">
             <TextSplitReveal
-              text="Nuestra Filosofía."
+              text="Quiénes somos"
               as="h1"
               className="font-display text-4xl sm:text-6xl lg:text-7xl font-normal text-white leading-[0.95] tracking-tight"
               delay={0.15}
@@ -62,23 +62,34 @@ export function FilosofiaHero() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-3 font-display italic text-2xl sm:text-3xl font-light text-[#C5A059]"
+              className="mt-4 font-display italic text-2xl sm:text-3xl font-light text-[#C5A059]"
             >
-              Hacer el colchón correcto, no el más rentable para el intermediario.
+              En Oasis, la calidad no se promete, se muestra.
             </motion.p>
           </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 font-body text-sm sm:text-base text-white/75 max-w-2xl leading-relaxed"
-          >
-            En un mercado saturado de promesas abstractas y márgenes de retail inflados hasta un 350%, Oasis opera como un taller de ingeniería industrial abierto. Confeccionamos en nuestra planta de Bogotá cada pieza bajo normas técnicas medibles: calibres de acero templado, látex Dunlop de alta resiliencia y espumas de densidad certificada.
-          </motion.p>
+          <div className="mt-6 space-y-4">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="font-body text-sm sm:text-base text-white/90 leading-relaxed"
+            >
+              Oasis Colchones es una marca con trayectoria desde 1998, fundada por una familia de raíces boyacenses. Nuestros comienzos estuvieron marcados por el trabajo y la perseverancia: recorríamos pueblos en un camión, llevando nuestros colchones y persiguiendo un sueño sencillo: poner a dormir bien a todos los colombianos.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              className="font-body text-sm sm:text-base text-white/80 leading-relaxed"
+            >
+              Hoy evolucionamos hacia una nueva etapa como <strong className="font-semibold text-white">Oasis Colchones y Muebles</strong>, renovando nuestra imagen y ampliando nuestros horizontes, sin perder la esencia familiar que nos ha acompañado desde el comienzo.
+            </motion.p>
+          </div>
         </div>
 
-        {/* Industrial Metrics Footer Bar */}
+        {/* Historical and Strategic Pillars Bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -86,15 +97,18 @@ export function FilosofiaHero() {
           className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-white/15 pt-8"
         >
           {[
-            { value: '2,400 m²', label: 'Nave de Producción' },
-            { value: '38', label: 'Especialistas de Planta' },
-            { value: '10–15 Años', label: 'Garantía Estructural Real' },
-            { value: '0%', label: 'Intermediación Comercial' },
-          ].map(({ value, label }) => (
+            { value: '1998', label: 'Año de Fundación', desc: 'Raíces boyacenses y vocación de servicio' },
+            { value: 'Pueblo a Pueblo', label: 'Nuestros Inicios', desc: 'En un camión llevando descanso a Colombia' },
+            { value: 'Esencia Familiar', label: 'Valores Intactos', desc: 'El corazón y cercanía de siempre' },
+            { value: 'Nueva Etapa', label: 'Colchones y Muebles', desc: 'Renovación y expansión de horizontes' },
+          ].map(({ value, label, desc }) => (
             <div key={label} className="border-r border-white/10 pr-4 last:border-r-0">
-              <p className="font-display text-2xl sm:text-3xl font-normal text-white">{value}</p>
-              <p className="mt-1 font-body text-2xs uppercase tracking-wider text-white/50">
+              <p className="font-display text-xl sm:text-2xl font-normal text-white">{value}</p>
+              <p className="mt-1 font-body text-2xs uppercase tracking-wider text-[#C5A059] font-medium">
                 {label}
+              </p>
+              <p className="mt-1 font-body text-2xs text-white/50 leading-snug">
+                {desc}
               </p>
             </div>
           ))}
