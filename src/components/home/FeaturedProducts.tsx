@@ -230,9 +230,10 @@ export function FeaturedProducts() {
                     src={product.imageUrl}
                     alt={product.name}
                     fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority={i < 2}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
+                    {...(i < 2 ? {} : { loading: 'lazy' as const })}
                   />
                   <div className="absolute left-3 top-3 border border-white/20 bg-[#0A1B54]/90 px-2.5 py-1 backdrop-blur-sm">
                     <span className="font-body text-2xs uppercase tracking-wider text-[#C5A059]">

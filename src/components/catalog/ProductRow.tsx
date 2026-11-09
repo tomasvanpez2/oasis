@@ -82,9 +82,10 @@ export function ProductRow({ product, index }: ProductRowProps) {
                     src={currentImage}
                     alt={`${product.name} — Foto ${activeImgIdx + 1} de ${gallery.length}`}
                     fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    priority={index < 2}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-102"
-                    loading="lazy"
+                    {...(index < 2 ? {} : { loading: 'lazy' as const })}
                   />
                 </motion.div>
               </AnimatePresence>

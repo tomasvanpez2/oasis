@@ -10,7 +10,7 @@ export function Footer() {
           <Link href="/" className="inline-flex items-center gap-3">
             <div className="relative h-10 w-10 flex-shrink-0">
               <Image
-                src="/logo-white.svg"
+                src="/logo.png"
                 alt="Oasis Colchones y Muebles"
                 width={40}
                 height={40}

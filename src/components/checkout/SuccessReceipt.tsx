@@ -504,6 +504,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
                       src={item.imageUrl || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&q=80'}
                       alt={item.productName}
                       fill
+                      sizes="80px"
                       className="object-cover"
                     />
                   </div>

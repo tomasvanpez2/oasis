@@ -50,7 +50,7 @@ export function Header() {
         <Link href="/" className="group flex items-center gap-3.5 sm:gap-4 focus:outline-none">
           <div className="relative h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
             <Image
-              src="/logo-white.svg"
+              src="/logo.png"
               alt="Oasis Colchones & Muebles"
               width={56}
               height={56}

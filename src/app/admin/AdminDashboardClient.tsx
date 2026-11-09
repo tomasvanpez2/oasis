@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import type { Order, OrderStatus, BICategory } from '@/types'
 import { BI_CATEGORIES } from '@/types'
@@ -970,12 +971,15 @@ export default function AdminDashboardClient({ initialOrders }: AdminDashboardCl
                                           className="flex items-center gap-3 bg-[#0D2266]/60 p-3 rounded-lg border border-gold/15"
                                         >
                                           {item.imageUrl && (
-                                            /* eslint-disable-next-line @next/next/no-img-element */
-                                            <img
-                                              src={item.imageUrl}
-                                              alt={item.productName}
-                                              className="w-12 h-12 object-cover rounded-md border border-gold/20 shrink-0"
-                                            />
+                                            <div className="relative w-12 h-12 shrink-0 overflow-hidden rounded-md border border-gold/20">
+                                              <Image
+                                                src={item.imageUrl}
+                                                alt={item.productName}
+                                                fill
+                                                sizes="48px"
+                                                className="object-cover"
+                                              />
+                                            </div>
                                           )}
                                           <div className="flex-1 min-w-0">
                                             <div className="font-medium text-xs text-ivory truncate">
@@ -1295,12 +1299,15 @@ export default function AdminDashboardClient({ initialOrders }: AdminDashboardCl
                                           className="flex items-center gap-3 bg-[#050b1a] p-3 rounded-lg border border-amber-500/15 opacity-80"
                                         >
                                           {item.imageUrl && (
-                                            /* eslint-disable-next-line @next/next/no-img-element */
-                                            <img
-                                              src={item.imageUrl}
-                                              alt={item.productName}
-                                              className="w-12 h-12 object-cover rounded-md border border-amber-500/20 shrink-0 grayscale"
-                                            />
+                                            <div className="relative w-12 h-12 shrink-0 overflow-hidden rounded-md border border-amber-500/20 grayscale">
+                                              <Image
+                                                src={item.imageUrl}
+                                                alt={item.productName}
+                                                fill
+                                                sizes="48px"
+                                                className="object-cover"
+                                              />
+                                            </div>
                                           )}
                                           <div className="flex-1 min-w-0">
                                             <div className="font-medium text-xs text-ivory/80 truncate">

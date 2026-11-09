@@ -73,7 +73,7 @@ export function FilosofiaGallery() {
                 alt={item.alt}
                 fill
                 className="object-cover opacity-65 transition-transform duration-700 ease-out group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
               <figcaption className="absolute bottom-0 left-0 right-0 border-t border-white/15 bg-[#0A1B54]/90 px-4 py-3 backdrop-blur-md flex items-center justify-between">
                 <div>

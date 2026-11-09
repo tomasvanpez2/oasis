@@ -73,7 +73,7 @@ export function FabricaGallery() {
               alt={item.alt}
               fill
               className="object-cover opacity-70 transition-transform duration-700 hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             <figcaption className="absolute bottom-0 left-0 right-0 border-t border-white/15 bg-[#0A1B54]/80 px-4 py-3 backdrop-blur-sm flex items-center justify-between">
               <p className="font-body text-2xs uppercase tracking-wider text-white">
