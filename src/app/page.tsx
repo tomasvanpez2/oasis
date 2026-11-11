@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main className="bg-[#0A1B54] min-h-screen">
+    <main className="bg-white min-h-screen text-[#0A1B54]">
       <Header />
       <HeroSection />
       <ScrollStory />

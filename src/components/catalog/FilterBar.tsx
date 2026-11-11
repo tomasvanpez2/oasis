@@ -25,22 +25,22 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
   return (
     <div
       ref={barRef}
-      className="sticky top-[4.5rem] z-20 border-b border-white/10 bg-[#0A1B54]/95 backdrop-blur-md"
+      className="sticky top-[4.5rem] z-20 border-b border-[#0A1B54]/10 bg-white/95 backdrop-blur-md"
     >
-      <div className="flex items-center gap-0 overflow-x-auto px-8 lg:px-16">
+      <div className="flex items-center gap-0 overflow-x-auto px-8 lg:px-16 scrollbar-none">
         {FILTERS.map(({ value, label }) => (
           <button
             key={value}
             onClick={() => onFilterChange(value)}
             className={`relative flex-shrink-0 py-4 pr-8 font-body text-xs uppercase tracking-widest transition-colors duration-200 ${
-              activeFilter === value ? 'text-white' : 'text-white/30 hover:text-white/60'
+              activeFilter === value ? 'text-[#0A1B54] font-semibold' : 'text-[#0A1B54]/40 hover:text-[#0A1B54]/80'
             }`}
           >
             {label}
             {activeFilter === value && (
               <motion.div
                 layoutId="filter-underline"
-                className="absolute bottom-0 left-0 right-8 h-px bg-[#C5A059]"
+                className="absolute bottom-0 left-0 right-8 h-[2px] bg-[#C5A059]"
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               />
             )}

@@ -62,15 +62,15 @@ function LegalesContent() {
   const currentTabMeta = TABS.find((t) => t.id === activeTab) || TABS[0]
 
   return (
-    <main className="bg-[#070D38] min-h-screen text-white">
+    <main className="bg-white min-h-screen text-[#0A1B54]">
       <Header />
 
       <section className="relative pt-36 pb-24 lg:pt-44 lg:pb-36 px-6 lg:px-16 overflow-hidden">
         {/* Subtle architectural grid lines */}
         <div className="pointer-events-none absolute inset-0 grid grid-cols-4 opacity-5">
-          <div className="border-r border-white" />
-          <div className="border-r border-white" />
-          <div className="border-r border-white" />
+          <div className="border-r border-[#0A1B54]" />
+          <div className="border-r border-[#0A1B54]" />
+          <div className="border-r border-[#0A1B54]" />
           <div className="border-r border-transparent" />
         </div>
 
@@ -89,7 +89,7 @@ function LegalesContent() {
               <TextSplitReveal
                 text="Documentación Legal Oficial."
                 as="h1"
-                className="font-display text-4xl sm:text-6xl lg:text-7xl font-normal text-white leading-tight"
+                className="font-display text-4xl sm:text-6xl lg:text-7xl font-normal text-[#0A1B54] leading-tight"
                 delay={0.1}
                 stagger={0.06}
               />
@@ -98,7 +98,7 @@ function LegalesContent() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="mt-6 font-body text-sm sm:text-base text-white/70 max-w-2xl leading-relaxed"
+              className="mt-6 font-body text-sm sm:text-base text-[#0A1B54]/70 max-w-2xl leading-relaxed"
             >
               Documentación legal completa de Oasis Colchones y Muebles conforme al Estatuto del Consumidor en Colombia (Ley 1480 de 2011), la Ley de Habeas Data (Ley 1581 de 2012) y los lineamientos de la Superintendencia de Industria y Comercio.
             </motion.p>
@@ -109,42 +109,42 @@ function LegalesContent() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-10 border border-white/10 bg-[#0E1754]/40 p-6 sm:p-8 backdrop-blur-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="mt-10 border border-[#0A1B54]/10 bg-[#FAF9F7] p-6 sm:p-8 backdrop-blur-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             <div>
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
                 Razón Comercial & Titular:
               </p>
-              <p className="mt-1 font-body text-sm text-white font-medium">
+              <p className="mt-1 font-body text-sm text-[#0A1B54] font-medium">
                 Oasis Colchones y Muebles
               </p>
-              <p className="font-body text-xs text-white/60">
+              <p className="font-body text-xs text-[#0A1B54]/60">
                 Titular: Luna Valentina Ramírez Vallejo
               </p>
             </div>
-            <div className="sm:border-l sm:border-white/10 sm:pl-6">
+            <div className="sm:border-l sm:border-[#0A1B54]/10 sm:pl-6">
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
                 NIT de Operación:
               </p>
-              <p className="mt-1 font-mono text-sm text-white font-medium">
+              <p className="mt-1 font-mono text-sm text-[#0A1B54] font-medium">
                 1011091483-4
               </p>
-              <p className="font-body text-xs text-white/60">
+              <p className="font-body text-xs text-[#0A1B54]/60">
                 Persona Natural Responsable
               </p>
             </div>
-            <div className="lg:border-l lg:border-white/10 lg:pl-6">
+            <div className="lg:border-l lg:border-[#0A1B54]/10 lg:pl-6">
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
                 Domicilio y Sede Física:
               </p>
-              <p className="mt-1 font-body text-sm text-white">
+              <p className="mt-1 font-body text-sm text-[#0A1B54]">
                 Carrera 5 #2-01, Local 11
               </p>
-              <p className="font-body text-xs text-white/60">
+              <p className="font-body text-xs text-[#0A1B54]/60">
                 Cota, Cundinamarca, Colombia
               </p>
             </div>
-            <div className="lg:border-l lg:border-white/10 lg:pl-6">
+            <div className="lg:border-l lg:border-[#0A1B54]/10 lg:pl-6">
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
                 Canal Oficial de Atención:
               </p>
@@ -152,11 +152,11 @@ function LegalesContent() {
                 href="http://wa.link/cfrej0"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 font-mono text-sm text-[#2A21EA] hover:underline block font-semibold text-white"
+                className="mt-1 font-mono text-sm text-[#0A1B54] hover:underline block font-semibold text-[#0A1B54]"
               >
                 WhatsApp: 350 403 5144
               </a>
-              <p className="font-body text-xs text-white/60">
+              <p className="font-body text-xs text-[#0A1B54]/60">
                 Lunes a Viernes: 10am – 6pm
               </p>
             </div>
@@ -179,8 +179,8 @@ function LegalesContent() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full text-left p-4 border transition-all duration-200 flex items-center justify-between ${
                       isActive
-                        ? 'border-[#2A21EA] bg-[#2A21EA]/15 text-white shadow-[0_0_20px_rgba(42,33,234,0.2)]'
-                        : 'border-white/10 bg-[#0E1754]/20 text-white/70 hover:border-white/30 hover:text-white'
+                        ? 'border-[#0A1B54] bg-[#C5A059]/15 text-[#0A1B54] '
+                        : 'border-[#0A1B54]/10 bg-[#FAF9F7] text-[#0A1B54]/70 hover:border-[#0A1B54]/30 hover:text-[#0A1B54]'
                     }`}
                   >
                     <div>
@@ -192,14 +192,14 @@ function LegalesContent() {
                       </span>
                     </div>
                     {isActive && (
-                      <span className="h-2 w-2 rounded-full bg-[#2A21EA] shadow-[0_0_8px_#2A21EA]" />
+                      <span className="h-2 w-2 rounded-full bg-[#0A1B54] " />
                     )}
                   </button>
                 )
               })}
 
               {/* Direct PDF Download Box */}
-              <div className="pt-6 border-t border-white/10 px-2">
+              <div className="pt-6 border-t border-[#0A1B54]/10 px-2">
                 <a
                   href={currentTabMeta.pdfUrl}
                   target="_blank"
@@ -212,27 +212,27 @@ function LegalesContent() {
                   </svg>
                   Descargar PDF Oficial
                 </a>
-                <p className="mt-2 text-2xs font-body text-white/40 text-center">
+                <p className="mt-2 text-2xs font-body text-[#0A1B54]/40 text-center">
                   Copia fiel original con validez legal probatoria.
                 </p>
               </div>
             </div>
 
             {/* Document Body Content */}
-            <div className="lg:col-span-8 border border-white/10 bg-[#0E1754]/30 p-8 sm:p-12 space-y-8 backdrop-blur-md">
+            <div className="lg:col-span-8 border border-[#0A1B54]/10 bg-[#FAF9F7] p-8 sm:p-12 space-y-8 backdrop-blur-md">
               
               {/* TAB 1: TÉRMINOS Y CONDICIONES */}
               {activeTab === 'terminos' && (
                 <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
                         Marco Regulatorio 01
                       </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
                         Términos y Condiciones Generales de Compra y Uso
                       </h2>
-                      <p className="mt-1 font-body text-xs text-white/60">
+                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
                         Vigentes desde el 4 de noviembre de 2026 • www.oasiscolchonesymuebles.com
                       </p>
                     </div>
@@ -240,15 +240,15 @@ function LegalesContent() {
                       href="/docs/terminos-y-condiciones.pdf"
                       target="_blank"
                       download
-                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
                     >
                       Descargar PDF
                     </a>
                   </div>
 
-                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
+                  <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         1. Quiénes somos
                       </h3>
                       <p>
@@ -257,7 +257,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         2. Aceptación y Capacidad Legal
                       </h3>
                       <p>
@@ -266,7 +266,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         3. Productos, Medidas y Precios
                       </h3>
                       <p>
@@ -275,7 +275,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         4. Medios de Pago Autorizados
                       </h3>
                       <p>
@@ -284,7 +284,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         5. Entregas, Cobertura y Despacho
                       </h3>
                       <p>
@@ -293,7 +293,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         6. Derecho de Retracto (Ley 1480 de 2011, Art. 47)
                       </h3>
                       <p>
@@ -302,7 +302,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         7. Garantía Legal
                       </h3>
                       <p>
@@ -316,15 +316,15 @@ function LegalesContent() {
               {/* TAB 2: TRATAMIENTO DE DATOS PERSONALES (HABEAS DATA) */}
               {activeTab === 'datos' && (
                 <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
                         Marco Regulatorio 02
                       </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
                         Política de Tratamiento de Datos Personales (Ley 1581 de 2012)
                       </h2>
-                      <p className="mt-1 font-body text-xs text-white/60">
+                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
                         Habeas Data • Vigente desde el 4 de noviembre de 2026
                       </p>
                     </div>
@@ -332,15 +332,15 @@ function LegalesContent() {
                       href="/docs/politica-tratamiento-datos-personales.pdf"
                       target="_blank"
                       download
-                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
                     >
                       Descargar PDF
                     </a>
                   </div>
 
-                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
+                  <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         1. Responsable del Tratamiento
                       </h3>
                       <p>
@@ -349,7 +349,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         2. Marco Legal
                       </h3>
                       <p>
@@ -358,10 +358,10 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         3. Finalidades del Tratamiento
                       </h3>
-                      <ul className="list-disc pl-5 space-y-1.5 text-white/70">
+                      <ul className="list-disc pl-5 space-y-1.5 text-[#0A1B54]/70">
                         <li>Procesar, confirmar, facturar y despachar sus pedidos de colchones y muebles.</li>
                         <li>Coordinar las entregas domiciliarias y contactarle vía telefónica o WhatsApp para notificar el estado del envío.</li>
                         <li>Gestionar garantías, solicitudes de servicio posventa y peticiones, quejas y reclamos (PQR).</li>
@@ -371,13 +371,13 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         4. Derechos del Titular de los Datos
                       </h3>
                       <p>
                         Conforme al artículo 8 de la Ley 1581 de 2012, usted tiene derecho a:
                       </p>
-                      <ul className="list-disc pl-5 space-y-1.5 text-white/70 mt-2">
+                      <ul className="list-disc pl-5 space-y-1.5 text-[#0A1B54]/70 mt-2">
                         <li><strong>Conocer, actualizar y rectificar</strong> sus datos personales frente a Oasis Colchones y Muebles.</li>
                         <li><strong>Solicitar prueba</strong> de la autorización otorgada para el tratamiento.</li>
                         <li><strong>Revocar la autorización</strong> y/o solicitar la supresión de sus datos cuando no medie un deber legal o contractual de conservarlos.</li>
@@ -386,7 +386,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         5. Canales para Ejercer sus Derechos
                       </h3>
                       <p>
@@ -400,15 +400,15 @@ function LegalesContent() {
               {/* TAB 3: POLÍTICA DE PRIVACIDAD & COOKIES */}
               {activeTab === 'privacidad' && (
                 <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
                         Marco Regulatorio 03
                       </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
                         Política de Privacidad y Manejo de Cookies
                       </h2>
-                      <p className="mt-1 font-body text-xs text-white/60">
+                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
                         Transparencia digital • Vigente desde el 4 de noviembre de 2026
                       </p>
                     </div>
@@ -416,15 +416,15 @@ function LegalesContent() {
                       href="/docs/politica-privacidad.pdf"
                       target="_blank"
                       download
-                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
                     >
                       Descargar PDF
                     </a>
                   </div>
 
-                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
+                  <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         1. Información Recopilada
                       </h3>
                       <p>
@@ -433,13 +433,13 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         2. Terceros Aliados de Confianza
                       </h3>
                       <p>
                         Solo compartimos los datos estrictamente necesarios con aliados operativos indispensables:
                       </p>
-                      <ul className="list-disc pl-5 space-y-1.5 text-white/70 mt-2">
+                      <ul className="list-disc pl-5 space-y-1.5 text-[#0A1B54]/70 mt-2">
                         <li><strong>Pasarelas de Pago:</strong> Wompi (Bancolombia), Addi y Sistecrédito. Sus datos financieros viajan encriptados y Oasis nunca tiene acceso ni custodia de números de tarjeta de crédito.</li>
                         <li><strong>Empresas de Transporte:</strong> Para coordinar el envío de su pedido hasta la puerta de su domicilio.</li>
                         <li><strong>Autoridades Tributarias:</strong> DIAN para cumplimiento de obligaciones de facturación electrónica.</li>
@@ -447,7 +447,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         3. Uso de Cookies
                       </h3>
                       <p>
@@ -461,15 +461,15 @@ function LegalesContent() {
               {/* TAB 4: PREVENCIÓN DE FRAUDE Y DEVOLUCIÓN */}
               {activeTab === 'fraude' && (
                 <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
                         Marco Regulatorio 04
                       </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
                         Política de Prevención de Fraude y Devolución de Dinero
                       </h2>
-                      <p className="mt-1 font-body text-xs text-white/60">
+                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
                         Seguridad en transacciones • Vigente desde el 4 de noviembre de 2026
                       </p>
                     </div>
@@ -477,15 +477,15 @@ function LegalesContent() {
                       href="/docs/politica-prevencion-fraude-devolucion.pdf"
                       target="_blank"
                       download
-                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
                     >
                       Descargar PDF
                     </a>
                   </div>
 
-                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
+                  <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         1. Pagos Seguros y Verificación
                       </h3>
                       <p>
@@ -494,10 +494,10 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         2. Cuándo Procede la Devolución de Dinero
                       </h3>
-                      <ul className="list-disc pl-5 space-y-1.5 text-white/70">
+                      <ul className="list-disc pl-5 space-y-1.5 text-[#0A1B54]/70">
                         <li><strong>Falta de Disponibilidad:</strong> Cuando el producto adquirido no esté disponible y el cliente no acepte un cambio de referencia.</li>
                         <li><strong>Cancelación por Oasis:</strong> Por imposibilidad logística de entrega en la zona de destino.</li>
                         <li><strong>Ejercicio Oportuno del Derecho de Retracto:</strong> Notificado formalmente dentro de los 5 días hábiles siguientes a la entrega, con el producto en perfecto estado y empaque sellado.</li>
@@ -506,7 +506,7 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         3. Plazos y Modalidades de Reembolso
                       </h3>
                       <p>
@@ -520,15 +520,15 @@ function LegalesContent() {
               {/* TAB 5: GARANTÍA INDUSTRIAL & FICHA TÉCNICA */}
               {activeTab === 'garantia' && (
                 <div className="space-y-6">
-                  <div className="border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
                         Protocolo Técnico 05
                       </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-white">
+                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
                         Garantía Industrial de Fábrica & Ficha Técnica Oficial
                       </h2>
-                      <p className="mt-1 font-body text-xs text-white/60">
+                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
                         Resortes Bonell, Pocket y Núcleos de Espuma D120/D26 • 10 a 15 Años
                       </p>
                     </div>
@@ -536,15 +536,15 @@ function LegalesContent() {
                       href="/docs/colchones-oasis-ficha-tecnica.pdf"
                       target="_blank"
                       download
-                      className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
+                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
                     >
                       Descargar Ficha Técnica PDF
                     </a>
                   </div>
 
-                  <div className="space-y-6 font-body text-xs sm:text-sm text-white/80 leading-relaxed">
+                  <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         1. Cobertura Estructural de Manufactura
                       </h3>
                       <p>
@@ -553,12 +553,12 @@ function LegalesContent() {
                     </section>
 
                     <section>
-                      <h3 className="font-display text-base sm:text-lg text-white mb-2 text-[#C5A059]">
+                      <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
                         2. Tabla de Referencias y Especificaciones
                       </h3>
-                      <div className="mt-3 overflow-x-auto border border-white/10">
+                      <div className="mt-3 overflow-x-auto border border-[#0A1B54]/10">
                         <table className="w-full text-left font-body text-xs">
-                          <thead className="bg-[#070D38] border-b border-white/10 text-white/60 uppercase font-mono text-[10px]">
+                          <thead className="bg-white border-b border-[#0A1B54]/10 text-[#0A1B54]/60 uppercase font-mono text-[10px]">
                             <tr>
                               <th className="p-3">Línea / Modelo</th>
                               <th className="p-3">Núcleo</th>
@@ -567,44 +567,44 @@ function LegalesContent() {
                               <th className="p-3">Garantía</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-white/5 text-white/80">
+                          <tbody className="divide-y divide-white/5 text-[#0A1B54]/80">
                             <tr>
-                              <td className="p-3 font-medium text-white">Colchón Pillow Top Pocket</td>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Pillow Top Pocket</td>
                               <td className="p-3">Resortes Pocket + Cazata D120 + Penta D26</td>
                               <td className="p-3">42 cm</td>
                               <td className="p-3 text-[#C5A059]">Media-Suave</td>
                               <td className="p-3 font-mono">15 Años</td>
                             </tr>
                             <tr>
-                              <td className="p-3 font-medium text-white">Colchón Pillow Top Original</td>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Pillow Top Original</td>
                               <td className="p-3">Panel Bonell 5v + Politubos + Cazata D120</td>
                               <td className="p-3">35 cm</td>
                               <td className="p-3 text-[#C5A059]">Media</td>
                               <td className="p-3 font-mono">15 Años</td>
                             </tr>
                             <tr>
-                              <td className="p-3 font-medium text-white">Colchón Pillow Top Encapsulado</td>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Pillow Top Encapsulado</td>
                               <td className="p-3">Bonell Encapsulado + Tacos Perimetrales</td>
                               <td className="p-3">35 cm</td>
                               <td className="p-3 text-[#C5A059]">Media-Firme</td>
                               <td className="p-3 font-mono">15 Años</td>
                             </tr>
                             <tr>
-                              <td className="p-3 font-medium text-white">Colchón Ortopédico Clínico</td>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Ortopédico Clínico</td>
                               <td className="p-3">Cazata D120 (10cm) + Doble Rosada D26 (5cm)</td>
                               <td className="p-3">22 cm</td>
                               <td className="p-3 text-[#C5A059]">Alta (Firme)</td>
                               <td className="p-3 font-mono">10 Años</td>
                             </tr>
                             <tr>
-                              <td className="p-3 font-medium text-white">Colchón Ortopédico Resortado</td>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Ortopédico Resortado</td>
                               <td className="p-3">Panel Bonell + Cazata D120 + Rosada D26</td>
                               <td className="p-3">28 cm</td>
                               <td className="p-3 text-[#C5A059]">Media-Alta</td>
                               <td className="p-3 font-mono">10 Años</td>
                             </tr>
                             <tr>
-                              <td className="p-3 font-medium text-white">Colchón Semi-Ortopédico Resortado</td>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Semi-Ortopédico Resortado</td>
                               <td className="p-3">Panel Bonell 5v + Algodón Laminado + Rosada D26</td>
                               <td className="p-3">26 cm</td>
                               <td className="p-3 text-[#C5A059]">Media</td>
@@ -631,7 +631,7 @@ function LegalesContent() {
 export default function LegalesPage() {
   return (
     <Suspense fallback={
-      <div className="bg-[#070D38] min-h-screen flex items-center justify-center">
+      <div className="bg-white min-h-screen flex items-center justify-center">
         <div className="h-8 w-8 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin" />
       </div>
     }>

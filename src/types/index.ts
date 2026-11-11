@@ -25,6 +25,8 @@ export interface Product {
   materials: string[]
   imageUrl: string
   imageGallery: string[]
+  technicalDiagramUrl?: string
+  firmness?: 'Suave' | 'Medio' | 'Firme'
   variants: ProductVariant[]
   featured: boolean
   createdAt: string

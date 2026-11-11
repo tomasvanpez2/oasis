@@ -46,9 +46,9 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
       : products.filter((p) => p.category === activeFilter)
 
   return (
-    <div className="relative min-h-screen pt-28 pb-24 bg-[#0A1B54]">
+    <div className="relative min-h-screen pt-28 pb-24 bg-white text-[#0A1B54]">
       {/* Editorial Page Header with Text-Splitting */}
-      <div className="border-b border-white/10 px-6 pb-12 lg:px-16">
+      <div className="border-b border-[#0A1B54]/10 px-6 pb-12 lg:px-16">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <motion.p
@@ -63,7 +63,7 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
               <TextSplitReveal
                 text="Catálogo Completo de Descanso."
                 as="h1"
-                className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal text-white"
+                className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal text-[#0A1B54]"
                 delay={0.1}
                 stagger={0.07}
               />
@@ -73,7 +73,7 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="font-body text-xs sm:text-sm text-white/70 max-w-md leading-relaxed"
+            className="font-body text-xs sm:text-sm text-[#0A1B54]/75 max-w-md leading-relaxed"
           >
             Línea completa de colchones ortopédicos, colchonetas, bases cama, almohadas y lencería. Fotografías reales de fábrica, especificaciones técnicas y despacho asegurado.
           </motion.p>
@@ -84,11 +84,11 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
       <FilterBar activeFilter={activeFilter} onFilterChange={setActiveFilter} />
 
       {/* Catalog Metric Sub-bar */}
-      <div className="flex items-center justify-between border-b border-white/10 px-6 py-3.5 lg:px-16 bg-[#07133B]/60">
-        <span className="font-body text-2xs uppercase tracking-[0.2em] text-white/50">
+      <div className="flex items-center justify-between border-b border-[#0A1B54]/10 px-6 py-3.5 lg:px-16 bg-[#FAF9F7]">
+        <span className="font-body text-2xs uppercase tracking-[0.2em] text-[#0A1B54]/60 font-medium">
           Mostrando {filtered.length} de {products.length} productos
         </span>
-        <span className="font-body text-2xs text-[#C5A059]">
+        <span className="font-body text-2xs text-[#C5A059] font-medium">
           Garantía directa de 10 a 15 años • Despacho Transporte Propio
         </span>
       </div>
@@ -97,12 +97,12 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
       {loading ? (
         <div className="flex flex-col items-center justify-center px-6 py-32 lg:px-16">
           <div className="h-6 w-6 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="font-body text-xs uppercase tracking-widest text-white/50">
-            Cargando catálogo industrial...
+          <p className="font-body text-xs uppercase tracking-widest text-[#0A1B54]/50">
+            Cargando catálogo oficial...
           </p>
         </div>
       ) : (
-        <ul className="divide-y divide-white/10">
+        <ul className="divide-y divide-[#0A1B54]/10">
           {filtered.map((product, i) => (
             <ProductRow
               key={product.id}

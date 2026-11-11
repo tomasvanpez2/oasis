@@ -20,11 +20,12 @@
         "Revestimiento Satín Sencillo acolchado",
         "Tela poliéster transpirable"
       ],
-      "imageUrl": "/images/products/colchoneta-de-espuma-rosada-d26/foto-1.webp",
+      "imageUrl": "/images/products/colchoneta-de-espuma-rosada-d26/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchoneta-de-espuma-rosada-d26/foto-1.webp",
-        "/images/products/colchoneta-de-espuma-rosada-d26/foto-2.webp",
-        "/images/products/colchoneta-de-espuma-rosada-d26/foto-3.webp"
+        "/images/products/colchoneta-de-espuma-rosada-d26/ambientada.webp",
+        "/images/products/colchoneta-de-espuma-rosada-d26/frente.webp",
+        "/images/products/colchoneta-de-espuma-rosada-d26/lado.webp",
+        "/images/products/colchoneta-de-espuma-rosada-d26/detalle.webp"
       ],
       "variants": [
         {
@@ -66,7 +67,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Medio",
+      "technicalDiagramUrl": "/images/products/colchoneta-de-espuma-rosada-d26/diagrama.webp"
     },
     {
       "id": "oasis-colchon-semi-anatomico-de-espuma-rosada-d26",
@@ -86,12 +89,12 @@
         "Jacquard doble acolchado",
         "Lámina D15 1 cm + guata 200g"
       ],
-      "imageUrl": "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-1.webp",
+      "imageUrl": "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-1.webp",
-        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-2.webp",
-        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-3.webp",
-        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/foto-4.webp"
+        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/ambientada.webp",
+        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/frente.webp",
+        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/lado.webp",
+        "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/detalle.webp"
       ],
       "variants": [
         {
@@ -133,7 +136,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Firme",
+      "technicalDiagramUrl": "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/diagrama.webp"
     },
     {
       "id": "oasis-colchon-semi-ortopedico-resortado",
@@ -154,12 +159,12 @@
         "Espuma Rosada D26",
         "Jacquard Acolchado"
       ],
-      "imageUrl": "/images/products/colchon-semi-ortopedico-resortado/foto-1.webp",
+      "imageUrl": "/images/products/colchon-semi-ortopedico-resortado/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-semi-ortopedico-resortado/foto-1.webp",
-        "/images/products/colchon-semi-ortopedico-resortado/foto-2.webp",
-        "/images/products/colchon-semi-ortopedico-resortado/foto-3.webp",
-        "/images/products/colchon-semi-ortopedico-resortado/foto-4.webp"
+        "/images/products/colchon-semi-ortopedico-resortado/ambientada.webp",
+        "/images/products/colchon-semi-ortopedico-resortado/frente.webp",
+        "/images/products/colchon-semi-ortopedico-resortado/lado.webp",
+        "/images/products/colchon-semi-ortopedico-resortado/detalle.webp"
       ],
       "variants": [
         {
@@ -213,7 +218,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Medio",
+      "technicalDiagramUrl": "/images/products/colchon-semi-ortopedico-resortado/diagrama.webp"
     },
     {
       "id": "oasis-colchon-ortopedico-resortado",
@@ -234,12 +241,12 @@
         "Espuma Rosada D26",
         "Jacquard Acolchado"
       ],
-      "imageUrl": "/images/products/colchon-ortopedico-resortado/foto-1.webp",
+      "imageUrl": "/images/products/colchon-ortopedico-resortado/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-ortopedico-resortado/foto-1.webp",
-        "/images/products/colchon-ortopedico-resortado/foto-2.webp",
-        "/images/products/colchon-ortopedico-resortado/foto-3.webp",
-        "/images/products/colchon-ortopedico-resortado/foto-4.webp"
+        "/images/products/colchon-ortopedico-resortado/ambientada.webp",
+        "/images/products/colchon-ortopedico-resortado/frente.webp",
+        "/images/products/colchon-ortopedico-resortado/lado.webp",
+        "/images/products/colchon-ortopedico-resortado/detalle.webp"
       ],
       "variants": [
         {
@@ -293,7 +300,9 @@
       ],
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Firme",
+      "technicalDiagramUrl": "/images/products/colchon-ortopedico-resortado/diagrama.webp"
     },
     {
       "id": "oasis-colchon-ortopedico-clinico",
@@ -313,12 +322,12 @@
         "Doble lámina Espuma Rosada D26 (5 cm c/u)",
         "Jacquard doble acolchado con algodón"
       ],
-      "imageUrl": "/images/products/colchon-ortopedico-clinico/foto-1.webp",
+      "imageUrl": "/images/products/colchon-ortopedico-clinico/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-ortopedico-clinico/foto-1.webp",
-        "/images/products/colchon-ortopedico-clinico/foto-2.webp",
-        "/images/products/colchon-ortopedico-clinico/foto-3.webp",
-        "/images/products/colchon-ortopedico-clinico/foto-4.webp"
+        "/images/products/colchon-ortopedico-clinico/ambientada.webp",
+        "/images/products/colchon-ortopedico-clinico/frente.webp",
+        "/images/products/colchon-ortopedico-clinico/lado.webp",
+        "/images/products/colchon-ortopedico-clinico/detalle.webp"
       ],
       "variants": [
         {
@@ -372,7 +381,9 @@
       ],
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Firme",
+      "technicalDiagramUrl": "/images/products/colchon-ortopedico-clinico/diagrama.webp"
     },
     {
       "id": "oasis-colchon-imitacion-pillow-penta",
@@ -393,12 +404,12 @@
         "Espuma Penta D26 (3 cm)",
         "Jacquard acolchado"
       ],
-      "imageUrl": "/images/products/colchon-imitacion-pillow-penta/foto-1.webp",
+      "imageUrl": "/images/products/colchon-imitacion-pillow-penta/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-imitacion-pillow-penta/foto-1.webp",
-        "/images/products/colchon-imitacion-pillow-penta/foto-2.webp",
-        "/images/products/colchon-imitacion-pillow-penta/foto-3.webp",
-        "/images/products/colchon-imitacion-pillow-penta/foto-4.webp"
+        "/images/products/colchon-imitacion-pillow-penta/ambientada.webp",
+        "/images/products/colchon-imitacion-pillow-penta/frente.webp",
+        "/images/products/colchon-imitacion-pillow-penta/lado.webp",
+        "/images/products/colchon-imitacion-pillow-penta/detalle.webp"
       ],
       "variants": [
         {
@@ -452,7 +463,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Medio",
+      "technicalDiagramUrl": "/images/products/colchon-imitacion-pillow-penta/diagrama.webp"
     },
     {
       "id": "oasis-colchon-imitacion-pillow-antiescaras",
@@ -473,12 +486,12 @@
         "Panel Bonell 5 vueltas",
         "Jacquard Hipoalergénico"
       ],
-      "imageUrl": "/images/products/colchon-imitacion-pillow-antiescaras/foto-1.webp",
+      "imageUrl": "/images/products/colchon-imitacion-pillow-antiescaras/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-imitacion-pillow-antiescaras/foto-1.webp",
-        "/images/products/colchon-imitacion-pillow-antiescaras/foto-2.webp",
-        "/images/products/colchon-imitacion-pillow-antiescaras/foto-3.webp",
-        "/images/products/colchon-imitacion-pillow-antiescaras/foto-4.webp"
+        "/images/products/colchon-imitacion-pillow-antiescaras/ambientada.webp",
+        "/images/products/colchon-imitacion-pillow-antiescaras/frente.webp",
+        "/images/products/colchon-imitacion-pillow-antiescaras/lado.webp",
+        "/images/products/colchon-imitacion-pillow-antiescaras/detalle.webp"
       ],
       "variants": [
         {
@@ -532,7 +545,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Firme",
+      "technicalDiagramUrl": "/images/products/colchon-imitacion-pillow-antiescaras/diagrama.webp"
     },
     {
       "id": "oasis-colchon-pillow-top-original",
@@ -553,12 +568,12 @@
         "Espuma Penta D26",
         "Jacquard Doble Acolchado"
       ],
-      "imageUrl": "/images/products/colchon-pillow-top-original/foto-1.webp",
+      "imageUrl": "/images/products/colchon-pillow-top-original/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-pillow-top-original/foto-1.webp",
-        "/images/products/colchon-pillow-top-original/foto-2.webp",
-        "/images/products/colchon-pillow-top-original/foto-3.webp",
-        "/images/products/colchon-pillow-top-original/foto-4.webp"
+        "/images/products/colchon-pillow-top-original/ambientada.webp",
+        "/images/products/colchon-pillow-top-original/frente.webp",
+        "/images/products/colchon-pillow-top-original/lado.webp",
+        "/images/products/colchon-pillow-top-original/detalle.webp"
       ],
       "variants": [
         {
@@ -612,7 +627,9 @@
       ],
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Medio",
+      "technicalDiagramUrl": "/images/products/colchon-pillow-top-original/diagrama.webp"
     },
     {
       "id": "oasis-colchon-pillow-top-encapsulado",
@@ -633,12 +650,12 @@
         "Cazata D120 + Espuma Rosada D26",
         "Jacquard de lujo"
       ],
-      "imageUrl": "/images/products/colchon-pillow-top-encapsulado/foto-1.webp",
+      "imageUrl": "/images/products/colchon-pillow-top-encapsulado/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-pillow-top-encapsulado/foto-1.webp",
-        "/images/products/colchon-pillow-top-encapsulado/foto-2.webp",
-        "/images/products/colchon-pillow-top-encapsulado/foto-3.webp",
-        "/images/products/colchon-pillow-top-encapsulado/foto-4.webp"
+        "/images/products/colchon-pillow-top-encapsulado/ambientada.webp",
+        "/images/products/colchon-pillow-top-encapsulado/frente.webp",
+        "/images/products/colchon-pillow-top-encapsulado/lado.webp",
+        "/images/products/colchon-pillow-top-encapsulado/detalle.webp"
       ],
       "variants": [
         {
@@ -692,7 +709,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Firme",
+      "technicalDiagramUrl": "/images/products/colchon-pillow-top-encapsulado/diagrama.webp"
     },
     {
       "id": "oasis-colchon-pillow-top-pocket-resortes-independientes",
@@ -713,12 +732,12 @@
         "Láminas Cazata D120 + Penta D26",
         "Jacquard de lujo 400g"
       ],
-      "imageUrl": "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-1.webp",
+      "imageUrl": "/images/products/colchon-pillow-top-pocket-resortes-independientes/ambientada.webp",
       "imageGallery": [
-        "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-1.webp",
-        "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-2.webp",
-        "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-3.webp",
-        "/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-4.webp"
+        "/images/products/colchon-pillow-top-pocket-resortes-independientes/ambientada.webp",
+        "/images/products/colchon-pillow-top-pocket-resortes-independientes/frente.webp",
+        "/images/products/colchon-pillow-top-pocket-resortes-independientes/lado.webp",
+        "/images/products/colchon-pillow-top-pocket-resortes-independientes/detalle.webp"
       ],
       "variants": [
         {
@@ -772,7 +791,9 @@
       ],
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "firmness": "Medio",
+      "technicalDiagramUrl": "/images/products/colchon-pillow-top-pocket-resortes-independientes/diagrama.webp"
     },
     {
       "id": "oasis-base-cama-sencilla",

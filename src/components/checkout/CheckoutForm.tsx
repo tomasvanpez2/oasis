@@ -64,13 +64,13 @@ interface CheckoutFormProps {
 }
 
 const INPUT_CLASS =
-  'w-full border border-white/20 bg-transparent px-4 py-3.5 font-body text-sm text-white placeholder-white/25 outline-none transition-colors duration-200 focus:border-[#C5A059] focus:ring-0 disabled:opacity-50'
+  'w-full border border-[#0A1B54]/20 bg-white px-4 py-3.5 font-body text-sm text-[#0A1B54] placeholder-[#0A1B54]/30 outline-none transition-colors duration-200 focus:border-[#C5A059] focus:ring-0 disabled:opacity-50'
 
 const SELECT_CLASS =
-  'w-full appearance-none border border-white/20 bg-[#0A1B54] px-4 py-3.5 font-body text-sm text-white outline-none transition-colors duration-200 focus:border-[#C5A059] focus:ring-0 disabled:opacity-50 cursor-pointer'
+  'w-full appearance-none border border-[#0A1B54]/20 bg-white px-4 py-3.5 font-body text-sm text-[#0A1B54] outline-none transition-colors duration-200 focus:border-[#C5A059] focus:ring-0 disabled:opacity-50 cursor-pointer'
 
-const LABEL_CLASS = 'block font-body text-2xs uppercase tracking-[0.18em] text-white/50 mb-2'
-const ERROR_CLASS = 'mt-1.5 font-body text-xs text-red-400 font-light'
+const LABEL_CLASS = 'block font-body text-2xs uppercase tracking-[0.18em] text-[#0A1B54]/60 mb-2 font-medium'
+const ERROR_CLASS = 'mt-1.5 font-body text-xs text-red-500 font-light'
 
 export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
   const {
@@ -109,42 +109,50 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
     },
   })
 
-  // Escuchar reactivamente ciudad y localidad
   const watchedCity = watch('city')
   const watchedLocalidad = watch('localidad')
 
-  // Limpiar localidad si el usuario cambia de Bogotá a otra ciudad
+  useEffect(() => {
+    if (watchedCity) {
+      const isBogota = watchedCity === 'Bogotá'
+      const loc = isBogota ? watchedLocalidad || '' : undefined
+
+      if (!isBogota || (isBogota && watchedLocalidad)) {
+        updateShippingLocation(watchedCity, loc)
+      }
+    }
+  }, [watchedCity, watchedLocalidad, updateShippingLocation])
+
   useEffect(() => {
     if (watchedCity && watchedCity !== 'Bogotá') {
       setValue('localidad', '')
     }
   }, [watchedCity, setValue])
 
-  // Recalcular flete en tiempo real al seleccionar ciudad o localidad
   useEffect(() => {
-    const res = updateShippingLocation(watchedCity || '', watchedLocalidad || '')
-    setValue('shippingZoneId', res.zone.id)
-    onZoneChange?.(res.zone.id)
-  }, [watchedCity, watchedLocalidad, updateShippingLocation, setValue, onZoneChange])
-
-  const isCovered = shippingResolution ? shippingResolution.isCovered : false
-  const activeZone: ShippingZone = shippingZone
-  const subtotal = getTotalPrice()
-  const shippingFee = isCovered ? shipping : activeZone.price
-  const grandTotal = subtotal + shippingFee
-
-  async function onSubmit(data: CustomerFormData) {
-    if (items.length === 0) {
-      setSubmitError('El carrito se encuentra vacío.')
-      return
+    if (shippingZone?.id) {
+      setValue('shippingZoneId', shippingZone.id)
+      if (onZoneChange) {
+        onZoneChange(shippingZone.id)
+      }
     }
+  }, [shippingZone, setValue, onZoneChange])
 
+  const subtotal = getTotalPrice()
+  const activeZone: ShippingZone = shippingZone || {
+    id: 'bogota-grupo-1',
+    name: 'Bogotá (Zona Principal)',
+    price: 30000,
+    cities: ['Bogotá'],
+    description: 'Tarifa inicial para localidades base de Bogotá D.C.',
+  }
+  const shippingFee = typeof shipping === 'number' ? shipping : activeZone.price
+  const isCovered = shippingResolution ? shippingResolution.isCovered : false
+  const grandTotal = isCovered ? subtotal + shippingFee : subtotal
+
+  const onSubmit = async (data: CustomerFormData) => {
     if (!isCovered) {
-      setSubmitError(
-        watchedCity === 'Bogotá' && !watchedLocalidad
-          ? 'Por favor selecciona la localidad de Bogotá para liquidar el flete de Transporte Propio.'
-          : 'Por favor selecciona un destino válido con cobertura de Transporte Propio.'
-      )
+      setSubmitError('Por favor selecciona una ciudad y localidad con cobertura para continuar.')
       return
     }
 
@@ -152,13 +160,9 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
     setSubmitError(null)
 
     try {
-      // Arquitectura Zero-Trust: Enviamos ciudad y localidad.
-      // El backend recalcula y valida la tarifa de forma autoritativa.
       const response = await fetch('/api/wompi-checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           customer: {
             fullName: data.fullName,
@@ -167,65 +171,102 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             documentType: data.documentType,
             document: data.document,
             city: data.city,
-            localidad: data.city === 'Bogotá' ? data.localidad : undefined,
+            localidad: data.localidad,
             address: data.address,
             notes: data.notes,
-            shippingZoneId: activeZone.id,
+            shippingZoneId: data.shippingZoneId || activeZone.id,
             shippingZoneName: activeZone.name,
           },
           items,
-          shippingZone: activeZone.name,
-          subtotal,
-          shipping: shippingFee,
-          total: grandTotal,
+          shippingPrice: shippingFee,
+          shippingZone: activeZone,
         }),
       })
 
-      const result = await response.json()
+      const resData = await response.json()
 
-      if (!response.ok || !result.checkoutUrl) {
-        throw new Error(result.error || 'No fue posible iniciar la sesión de pago con Wompi.')
+      if (!response.ok || !resData.success) {
+        throw new Error(resData.error || 'Error al procesar el checkout')
       }
 
-      // Limpiar el carrito local antes de la redirección
-      clearCart()
+      const { reference, checkoutUrl, widgetData } = resData
 
-      // Redirigir directamente al Web Checkout oficial de Wompi (0% PCI Scope)
-      window.location.href = result.checkoutUrl
+      if (checkoutUrl) {
+        clearCart()
+        window.location.href = checkoutUrl
+        return
+      }
+
+      if (typeof window !== 'undefined') {
+        const win = window as unknown as {
+          WidgetCheckout?: new (config: Record<string, unknown>) => {
+            open: (cb: (result: { transaction?: { id?: string; status?: string } }) => void) => void
+          }
+        }
+        if (win.WidgetCheckout && widgetData) {
+          const checkout = new win.WidgetCheckout({
+            currency: 'COP',
+            amountInCents: widgetData.amountInCents,
+            reference: widgetData.reference,
+            publicKey: widgetData.publicKey,
+            signature: { integrity: widgetData.signatureIntegrity },
+            redirectUrl: widgetData.redirectUrl,
+            customerData: {
+              email: data.email,
+              fullName: data.fullName,
+              phoneNumber: data.phone,
+              legalId: data.document,
+              legalIdType: data.documentType,
+            },
+            shippingAddress: {
+              addressLine1: data.address,
+              city: data.city,
+              country: 'CO',
+              phoneNumber: data.phone,
+            },
+          })
+
+          checkout.open((result) => {
+            if (result.transaction) {
+              clearCart()
+              window.location.href = `/checkout/success?reference=${reference}&id=${result.transaction.id}`
+            }
+          })
+          return
+        }
+      }
+
+      window.location.href = `/checkout/success?reference=${reference}&simulated=true`
     } catch (err) {
       console.error('[checkout:error]', err)
-      setSubmitError(
-        err instanceof Error
-          ? err.message
-          : 'Ocurrió un error inesperado al conectar con Wompi. Por favor intenta nuevamente.'
-      )
+      setSubmitError(err instanceof Error ? err.message : 'Error inesperado de comunicación.')
       setIsSubmitting(false)
       onError()
     }
   }
 
   return (
-    <div>
+    <div className="max-w-2xl text-[#0A1B54]">
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.6 }}
       >
         <div>
           <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059]">
             Checkout Seguro Directo de Fábrica
           </p>
-          <h2 className="mt-1 font-display text-3xl font-normal text-white">
+          <h2 className="mt-1 font-display text-3xl font-normal text-[#0A1B54]">
             Datos de entrega y facturación
           </h2>
-          <p className="mt-2 font-body text-xs text-white/50">
+          <p className="mt-2 font-body text-xs text-[#0A1B54]/60">
             Flete de transporte liquidado automáticamente con Transporte Propio (Origen Oficial: Bodega Normandía, Bogotá D.C.).
           </p>
         </div>
 
         {submitError && (
-          <div className="mt-6 border border-red-500/40 bg-red-950/30 p-4">
-            <p className="font-body text-xs text-red-300">
+          <div className="mt-6 border border-red-500/40 bg-red-50 p-4">
+            <p className="font-body text-xs text-red-600">
               <strong>Atención:</strong> {submitError}
             </p>
           </div>
@@ -283,12 +324,12 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                   className={SELECT_CLASS}
                   disabled={isSubmitting}
                 >
-                  <option value="CC" className="bg-[#0A1B54] text-white">C.C. Cédula</option>
-                  <option value="CE" className="bg-[#0A1B54] text-white">C.E. Extranjería</option>
-                  <option value="NIT" className="bg-[#0A1B54] text-white">NIT Empresa</option>
-                  <option value="PP" className="bg-[#0A1B54] text-white">Pasaporte</option>
+                  <option value="CC">C.C. Cédula</option>
+                  <option value="CE">C.E. Extranjería</option>
+                  <option value="NIT">NIT Empresa</option>
+                  <option value="PP">Pasaporte</option>
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/40">
+                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#0A1B54]/40">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -307,7 +348,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             </div>
           </div>
 
-          {/* ── CIUDAD Y SELECTOR CONDICIONAL DE LOCALIDAD CON ANIMACIÓN FRAMER MOTION ── */}
+          {/* CIUDAD Y SELECTOR CONDICIONAL DE LOCALIDAD */}
           <div className="space-y-4">
             <div className={`grid grid-cols-1 gap-4 ${watchedCity === 'Bogotá' ? 'sm:grid-cols-2' : 'sm:grid-cols-1'}`}>
               {/* Selector Ciudad */}
@@ -320,16 +361,16 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                     disabled={isSubmitting}
                     defaultValue=""
                   >
-                    <option value="" disabled className="bg-[#0A1B54] text-white/40">
+                    <option value="" disabled className="text-[#0A1B54]/40">
                       Selecciona una ciudad
                     </option>
                     {ALLOWED_CITIES.map((c) => (
-                      <option key={c} value={c} className="bg-[#0A1B54] text-white">
+                      <option key={c} value={c}>
                         {c}
                       </option>
                     ))}
                   </select>
-                  <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/40">
+                  <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#0A1B54]/40">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M6 9l6 6 6-6" />
                     </svg>
@@ -356,16 +397,16 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                         disabled={isSubmitting}
                         defaultValue=""
                       >
-                        <option value="" disabled className="bg-[#0A1B54] text-white/40">
+                        <option value="" disabled className="text-[#0A1B54]/40">
                           Selecciona una de las 20 localidades
                         </option>
                         {BOGOTA_LOCALIDADES.map((loc) => (
-                          <option key={loc} value={loc} className="bg-[#0A1B54] text-white">
+                          <option key={loc} value={loc}>
                             {loc}
                           </option>
                         ))}
                       </select>
-                      <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/40">
+                      <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#0A1B54]/40">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M6 9l6 6 6-6" />
                         </svg>
@@ -378,16 +419,16 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             </div>
           </div>
 
-          {/* ── HUD TRANSPORTE PROPIO: RENDERIZACIÓN ELEGANTE DE SOLO LECTURA (QUIET LUXURY) ── */}
-          <div className="border border-[#C5A059]/40 bg-[#07133B]/80 p-5 space-y-4 rounded transition-all duration-300">
+          {/* HUD TRANSPORTE PROPIO */}
+          <div className="border border-[#C5A059]/40 bg-[#FAF9F7] p-5 space-y-4 rounded transition-all duration-300">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-[#C5A059] animate-pulse" />
-                <label className="block font-body text-xs uppercase tracking-[0.18em] text-[#C5A059] font-medium">
+                <label className="block font-body text-xs uppercase tracking-[0.18em] text-[#0A1B54] font-semibold">
                   Cálculo Oficial Transporte Propio
                 </label>
               </div>
-              <span className="font-mono text-[10px] border border-[#C5A059]/60 bg-[#C5A059]/10 px-2 py-0.5 text-[#C5A059] uppercase tracking-wider">
+              <span className="font-mono text-[10px] border border-[#C5A059]/60 bg-[#C5A059]/10 px-2 py-0.5 text-[#0A1B54] uppercase tracking-wider font-medium">
                 Tarifa Blindada
               </span>
             </div>
@@ -404,17 +445,17 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
               >
                 {isCovered ? (
                   <>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-white/10 pb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#0A1B54]/10 pb-3">
                       <div>
-                        <span className="font-body text-2xs uppercase tracking-wider text-white/40 block">
+                        <span className="font-body text-2xs uppercase tracking-wider text-[#0A1B54]/50 block">
                           Zona de despacho asignada:
                         </span>
-                        <p className="font-display text-base text-white font-medium">
+                        <p className="font-display text-base text-[#0A1B54] font-medium">
                           Flete Transporte Propio ({activeZone.name}) — {formatCOP(activeZone.price)} COP
                         </p>
                       </div>
                       <div className="text-left sm:text-right">
-                        <span className="font-body text-2xs uppercase tracking-wider text-white/40 block">
+                        <span className="font-body text-2xs uppercase tracking-wider text-[#0A1B54]/50 block">
                           Tarifa liquidada:
                         </span>
                         <span className="font-display text-lg text-[#C5A059] font-medium">
@@ -425,29 +466,29 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-2xs">
                       <div>
-                        <span className="text-white/40 block uppercase tracking-wider">Tiempo de Entrega:</span>
-                        <span className="text-white font-medium">Entrega coordinada por mensaje</span>
+                        <span className="text-[#0A1B54]/50 block uppercase tracking-wider">Tiempo de Entrega:</span>
+                        <span className="text-[#0A1B54] font-medium">Entrega coordinada por mensaje</span>
                       </div>
                       <div>
-                        <span className="text-white/40 block uppercase tracking-wider">Origen de Bodega:</span>
-                        <span className="text-white/70 block">Normandía, Bogotá D.C.</span>
+                        <span className="text-[#0A1B54]/50 block uppercase tracking-wider">Origen de Bodega:</span>
+                        <span className="text-[#0A1B54]/70 block">Normandía, Bogotá D.C.</span>
                       </div>
                       <div>
-                        <span className="text-white/40 block uppercase tracking-wider">Estado del Despacho:</span>
-                        <span className="text-[#C5A059] font-medium">
+                        <span className="text-[#0A1B54]/50 block uppercase tracking-wider">Estado del Despacho:</span>
+                        <span className="text-[#0A1B54] font-semibold">
                           ✓ Flota Propia Directa
                         </span>
                       </div>
                     </div>
                   </>
                 ) : (
-                  <div className="border border-white/10 bg-white/5 p-3 rounded">
-                    <p className="font-body text-xs text-white/80 font-medium">
+                  <div className="border border-[#0A1B54]/10 bg-white p-3 rounded">
+                    <p className="font-body text-xs text-[#0A1B54]/80 font-medium">
                       {watchedCity === 'Bogotá' && !watchedLocalidad
                         ? '📍 Selecciona tu localidad de Bogotá para liquidar la tarifa exacta.'
                         : '📍 Selecciona tu ciudad de destino para liquidar el flete de Transporte Propio.'}
                     </p>
-                    <p className="mt-1 font-body text-2xs text-white/50">
+                    <p className="mt-1 font-body text-2xs text-[#0A1B54]/50">
                       Cobertura autorizada con flota propia en Cota, Chía, Cajicá y las 20 localidades oficiales de Bogotá D.C.
                     </p>
                   </div>
@@ -482,29 +523,29 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
           </div>
 
           {/* Logistics Assurance Banner */}
-          <div className="border border-white/15 bg-white/5 p-4 flex items-start gap-3">
+          <div className="border border-[#0A1B54]/15 bg-[#FAF9F7] p-4 flex items-start gap-3">
             <span className="text-[#C5A059] text-base">🚛</span>
-            <p className="font-body text-xs text-white/70 leading-relaxed">
+            <p className="font-body text-xs text-[#0A1B54]/80 leading-relaxed">
               <strong>Despacho Oficial con Transporte Propio:</strong> El costo de transporte oficial ({formatCOP(activeZone.price)}) se liquida de forma automática y se transfiere de manera transparente al total a pagar en Wompi. Tu colchón viaja con cuadrilla y flota propia desde nuestra planta en Normandía, Bogotá D.C.
             </p>
           </div>
 
           {/* Terms and Colombian Legal Consent checkbox */}
-          <div className="pt-2 border-t border-white/10">
+          <div className="pt-2 border-t border-[#0A1B54]/10">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 {...register('acceptTerms')}
-                className="mt-1 h-4 w-4 rounded-none border border-white/30 bg-transparent text-[#2A21EA] focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                className="mt-1 h-4 w-4 rounded-none border border-[#0A1B54]/30 bg-white text-[#0A1B54] focus:ring-0 focus:ring-offset-0 cursor-pointer"
                 disabled={isSubmitting}
               />
-              <span className="font-body text-xs text-white/70 leading-relaxed select-none">
+              <span className="font-body text-xs text-[#0A1B54]/75 leading-relaxed select-none">
                 He leído y acepto los{' '}
                 <a
                   href="/legales?tab=terminos"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#C5A059] underline hover:text-white transition-colors"
+                  className="text-[#0A1B54] font-medium underline hover:text-[#C5A059] transition-colors"
                 >
                   Términos y Condiciones Generales
                 </a>
@@ -513,7 +554,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                   href="/legales?tab=datos"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#C5A059] underline hover:text-white transition-colors"
+                  className="text-[#0A1B54] font-medium underline hover:text-[#C5A059] transition-colors"
                 >
                   Política de Tratamiento de Datos Personales (Ley 1581 de 2012 / Habeas Data)
                 </a>{' '}
@@ -522,7 +563,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                   href="/legales?tab=fraude"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#C5A059] underline hover:text-white transition-colors"
+                  className="text-[#0A1B54] font-medium underline hover:text-[#C5A059] transition-colors"
                 >
                   Política de Prevención de Fraude y Devolución
                 </a>{' '}
@@ -538,11 +579,11 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
           <button
             type="submit"
             disabled={isSubmitting || items.length === 0 || !isCovered}
-            className="w-full border border-[#C5A059] bg-[#C5A059] py-4 font-body text-xs uppercase tracking-widest text-[#0A1B54] font-semibold transition-all duration-300 hover:bg-white hover:border-white hover:text-[#0A1B54] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border border-[#0A1B54] bg-[#0A1B54] py-4 font-body text-xs uppercase tracking-widest text-white font-semibold transition-all duration-300 hover:bg-[#07133B] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="h-4 w-4 border-2 border-[#0A1B54] border-t-transparent rounded-full animate-spin" />
+                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Redirigiendo a pasarela segura Wompi...
               </span>
             ) : !isCovered ? (

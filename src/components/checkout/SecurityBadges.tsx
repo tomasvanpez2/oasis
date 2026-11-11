@@ -1,12 +1,12 @@
 export function SecurityBadges() {
   return (
-    <div className="space-y-6 border-t border-white/10 pt-6">
+    <div className="space-y-6 border-t border-[#0A1B54]/10 pt-6">
       <div className="flex items-center justify-between">
-        <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059]">
+        <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059] font-medium">
           Pasarela Certificada y Seguridad Bancaria
         </p>
-        <span className="flex items-center gap-1.5 font-body text-2xs text-emerald-400">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <span className="flex items-center gap-1.5 font-body text-2xs text-emerald-600 font-medium">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Conexión TLS 1.3
         </span>
       </div>
@@ -14,7 +14,7 @@ export function SecurityBadges() {
       {/* Grid of authentic official SVG brand vectors */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {/* Wompi SVG Official Logo */}
-        <div className="flex h-14 items-center justify-center border border-white/10 bg-white/5 px-4 transition-colors hover:border-[#00C3A5]/60 hover:bg-[#00C3A5]/5">
+        <div className="flex h-14 items-center justify-center border border-[#0A1B54]/15 bg-white px-4 transition-colors hover:border-[#00C3A5]">
           <svg viewBox="0 0 110 32" className="h-6 w-auto" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Wompi">
             <path
               d="M10.8 24.5L5.2 6.8h4.6l3.4 12.3 3.6-12.3h4.2l3.6 12.3 3.4-12.3h4.6l-5.6 17.7h-4.8l-3.3-11.4-3.3 11.4h-4.8z"
@@ -22,15 +22,15 @@ export function SecurityBadges() {
             />
             <path
               d="M34.5 17.2c0-4.6 3.4-8 8.1-8s8.1 3.4 8.1 8-3.4 8-8.1 8-8.1-3.4-8.1-8zm11.8 0c0-2.3-1.6-4.2-3.7-4.2s-3.7 1.9-3.7 4.2 1.6 4.2 3.7 4.2 3.7-1.9 3.7-4.2z"
-              fill="#FFFFFF"
+              fill="#0A1B54"
             />
             <path
               d="M54.2 24.5V9.6h4.2v2.2c1.1-1.6 3.1-2.5 5.1-2.5 2.5 0 4.4 1.2 5.2 3.2 1.2-2 3.3-3.2 5.6-3.2 3.5 0 5.7 2.3 5.7 6.2v9h-4.4v-8.4c0-1.9-1-3-2.6-3-1.6 0-2.8 1.2-2.8 3.2v8.2h-4.4v-8.4c0-1.9-1-3-2.6-3-1.6 0-2.8 1.2-2.8 3.2v8.2h-4.2z"
-              fill="#FFFFFF"
+              fill="#0A1B54"
             />
             <path
               d="M83.2 28.5V9.6h4.2v2.2c1.2-1.6 3.2-2.5 5.4-2.5 4.4 0 7.8 3.4 7.8 8s-3.4 8-7.8 8c-2.1 0-4-0.9-5.2-2.4v5.6h-4.4zm13 -11.3c0-2.4-1.7-4.2-3.8-4.2s-3.8 1.8-3.8 4.2 1.7 4.2 3.8 4.2 3.8-1.8 3.8-4.2z"
-              fill="#FFFFFF"
+              fill="#0A1B54"
             />
             <path
               d="M104.2 24.5V9.6h4.4v14.9h-4.4zm0-18V2.8h4.4v3.7h-4.4z"
@@ -40,7 +40,7 @@ export function SecurityBadges() {
         </div>
 
         {/* Bancolombia SVG Official Geometric Ribbon Logo */}
-        <div className="flex h-14 items-center justify-center border border-white/10 bg-white/5 px-4 transition-colors hover:border-[#FDDA24]/60 hover:bg-[#FDDA24]/5">
+        <div className="flex h-14 items-center justify-center border border-[#0A1B54]/15 bg-white px-4 transition-colors hover:border-[#FDDA24]">
           <svg viewBox="0 0 140 32" className="h-6 w-auto" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Bancolombia">
             {/* Bancolombia modern geometric symbol */}
             <path d="M4 22L12 6h5l-8 16H4z" fill="#FDDA24" />
@@ -50,7 +50,7 @@ export function SecurityBadges() {
             <text
               x="36"
               y="20"
-              fill="#FFFFFF"
+              fill="#0A1B54"
               fontFamily="system-ui, -apple-system, sans-serif"
               fontSize="12"
               fontWeight="700"
@@ -62,7 +62,7 @@ export function SecurityBadges() {
         </div>
 
         {/* PSE (Pagos Seguros en Línea) Official SVG */}
-        <div className="flex h-14 items-center justify-center border border-white/10 bg-white/5 px-4 transition-colors hover:border-sky-400/60 hover:bg-sky-400/5">
+        <div className="flex h-14 items-center justify-center border border-[#0A1B54]/15 bg-white px-4 transition-colors hover:border-[#0072CE]">
           <svg viewBox="0 0 80 32" className="h-6 w-auto" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="PSE">
             <circle cx="20" cy="16" r="12" fill="#003366" />
             <circle cx="20" cy="16" r="9" fill="#0072CE" />
@@ -80,7 +80,7 @@ export function SecurityBadges() {
             <text
               x="36"
               y="15"
-              fill="#FFFFFF"
+              fill="#0A1B54"
               fontFamily="system-ui, sans-serif"
               fontSize="8"
               fontWeight="800"
@@ -102,7 +102,7 @@ export function SecurityBadges() {
         </div>
 
         {/* Visa & Mastercard combined vector */}
-        <div className="flex h-14 items-center justify-center gap-3 border border-white/10 bg-white/5 px-3 transition-colors hover:border-amber-400/60 hover:bg-amber-400/5">
+        <div className="flex h-14 items-center justify-center gap-3 border border-[#0A1B54]/15 bg-white px-3 transition-colors hover:border-[#C5A059]">
           {/* Mastercard circles */}
           <svg viewBox="0 0 36 24" className="h-5 w-auto" fill="none" aria-label="Mastercard">
             <circle cx="13" cy="12" r="9" fill="#EB001B" />
@@ -123,7 +123,7 @@ export function SecurityBadges() {
       </div>
 
       {/* Security explanation text */}
-      <div className="flex items-start gap-3 border border-white/5 bg-[#0D2266]/30 p-3.5">
+      <div className="flex items-start gap-3 border border-[#0A1B54]/10 bg-[#FAF9F7] p-3.5">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="mt-0.5 shrink-0 text-[#C5A059]">
           <path
             d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
@@ -134,8 +134,8 @@ export function SecurityBadges() {
           />
           <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <p className="font-body text-xs text-white/50 leading-relaxed">
-          <strong className="text-white">Procesamiento Nativo y Encriptado:</strong> Los datos de tu tarjeta nunca se almacenan en servidores locales. La transacción se liquida directamente contra la bóveda tokenizada de Bancolombia / Wompi con certificado PCI-DSS Nivel 1.
+        <p className="font-body text-xs text-[#0A1B54]/70 leading-relaxed">
+          <strong className="text-[#0A1B54]">Procesamiento Nativo y Encriptado:</strong> Los datos de tu tarjeta nunca se almacenan en servidores locales. La transacción se liquida directamente contra la bóveda tokenizada de Bancolombia / Wompi con certificado PCI-DSS Nivel 1.
         </p>
       </div>
     </div>

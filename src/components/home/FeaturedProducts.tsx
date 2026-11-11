@@ -28,13 +28,14 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       'Espuma Rosada D26',
       'Jacquard Acolchado'
     ],
-    imageUrl: '/images/products/colchon-ortopedico-resortado/foto-1.webp',
+    imageUrl: '/images/products/colchon-ortopedico-resortado/ambientada.webp',
     imageGallery: [
-      '/images/products/colchon-ortopedico-resortado/foto-1.webp',
-      '/images/products/colchon-ortopedico-resortado/foto-2.webp',
-      '/images/products/colchon-ortopedico-resortado/foto-3.webp',
-      '/images/products/colchon-ortopedico-resortado/foto-4.webp'
+      '/images/products/colchon-ortopedico-resortado/ambientada.webp',
+      '/images/products/colchon-ortopedico-resortado/frente.webp',
+      '/images/products/colchon-ortopedico-resortado/lado.webp',
+      '/images/products/colchon-ortopedico-resortado/detalle.webp'
     ],
+    firmness: 'Firme',
     variants: [
       { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 770000, stock: 30 },
       { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 770000, stock: 30 },
@@ -67,13 +68,14 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       'Doble lámina Espuma Rosada D26 (5 cm c/u)',
       'Jacquard doble acolchado con algodón'
     ],
-    imageUrl: '/images/products/colchon-ortopedico-clinico/foto-1.webp',
+    imageUrl: '/images/products/colchon-ortopedico-clinico/ambientada.webp',
     imageGallery: [
-      '/images/products/colchon-ortopedico-clinico/foto-1.webp',
-      '/images/products/colchon-ortopedico-clinico/foto-2.webp',
-      '/images/products/colchon-ortopedico-clinico/foto-3.webp',
-      '/images/products/colchon-ortopedico-clinico/foto-4.webp'
+      '/images/products/colchon-ortopedico-clinico/ambientada.webp',
+      '/images/products/colchon-ortopedico-clinico/frente.webp',
+      '/images/products/colchon-ortopedico-clinico/lado.webp',
+      '/images/products/colchon-ortopedico-clinico/detalle.webp'
     ],
+    firmness: 'Firme',
     variants: [
       { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 940000, stock: 25 },
       { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 940000, stock: 25 },
@@ -107,13 +109,14 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       'Espuma Penta D26',
       'Jacquard Doble Acolchado'
     ],
-    imageUrl: '/images/products/colchon-pillow-top-original/foto-1.webp',
+    imageUrl: '/images/products/colchon-pillow-top-original/ambientada.webp',
     imageGallery: [
-      '/images/products/colchon-pillow-top-original/foto-1.webp',
-      '/images/products/colchon-pillow-top-original/foto-2.webp',
-      '/images/products/colchon-pillow-top-original/foto-3.webp',
-      '/images/products/colchon-pillow-top-original/foto-4.webp'
+      '/images/products/colchon-pillow-top-original/ambientada.webp',
+      '/images/products/colchon-pillow-top-original/frente.webp',
+      '/images/products/colchon-pillow-top-original/lado.webp',
+      '/images/products/colchon-pillow-top-original/detalle.webp'
     ],
+    firmness: 'Medio',
     variants: [
       { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 1350000, stock: 15 },
       { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 1350000, stock: 15 },
@@ -147,13 +150,14 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       'Láminas Cazata D120 + Penta D26',
       'Jacquard de lujo 400g'
     ],
-    imageUrl: '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-1.webp',
+    imageUrl: '/images/products/colchon-pillow-top-pocket-resortes-independientes/ambientada.webp',
     imageGallery: [
-      '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-1.webp',
-      '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-2.webp',
-      '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-3.webp',
-      '/images/products/colchon-pillow-top-pocket-resortes-independientes/foto-4.webp'
+      '/images/products/colchon-pillow-top-pocket-resortes-independientes/ambientada.webp',
+      '/images/products/colchon-pillow-top-pocket-resortes-independientes/frente.webp',
+      '/images/products/colchon-pillow-top-pocket-resortes-independientes/lado.webp',
+      '/images/products/colchon-pillow-top-pocket-resortes-independientes/detalle.webp'
     ],
+    firmness: 'Medio',
     variants: [
       { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 1560000, stock: 15 },
       { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 1560000, stock: 15 },
@@ -194,23 +198,23 @@ export function FeaturedProducts() {
   }, [])
 
   return (
-    <section className="px-6 lg:px-16 py-24 lg:py-32 border-t border-white/10 bg-[#0A1B54]">
+    <section className="px-6 lg:px-16 py-24 lg:py-32 border-t border-[#0A1B54]/10 bg-white">
       {/* Header */}
-      <div className="mb-14 flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-8 gap-4">
+      <div className="mb-14 flex flex-col md:flex-row md:items-end justify-between border-b border-[#0A1B54]/10 pb-8 gap-4">
         <div>
-          <span className="font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059]">
+          <span className="font-body text-2xs uppercase tracking-[0.25em] text-[#C5A059] font-medium">
             Selección de Alta Ingeniería
           </span>
-          <h2 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-normal text-white">
+          <h2 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-normal text-[#0A1B54]">
             Modelos Biomecánicos Destacados.
           </h2>
-          <p className="mt-2 font-body text-xs sm:text-sm text-white/60 max-w-lg">
+          <p className="mt-2 font-body text-xs sm:text-sm text-[#0A1B54]/70 max-w-lg">
             Modelos confeccionados en nuestra planta de Bogotá con certificación de fatiga y garantía directa de 10 a 15 años.
           </p>
         </div>
         <Link
           href="/catalogo"
-          className="inline-flex items-center gap-2 border border-white/30 px-5 py-3 font-body text-xs uppercase tracking-widest text-white transition-all hover:border-[#C5A059] hover:text-[#C5A059]"
+          className="inline-flex items-center gap-2 border border-[#0A1B54] bg-[#0A1B54] px-5 py-3 font-body text-xs uppercase tracking-widest text-white transition-all hover:bg-[#C5A059] hover:border-[#C5A059]"
         >
           Ve nuestro catálogo →
         </Link>
@@ -220,6 +224,11 @@ export function FeaturedProducts() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
         {products.map((product, i) => {
           const minPrice = Math.min(...product.variants.map((v) => v.price))
+          const firmness =
+            product.firmness ||
+            (product.slug.includes('clinico') || product.slug.includes('resortado')
+              ? 'Firme'
+              : 'Medio')
           return (
             <motion.article
               key={product.id}
@@ -227,11 +236,11 @@ export function FeaturedProducts() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="group border border-white/10 bg-[#07133B]/40 p-6 lg:p-8 transition-colors duration-300 hover:border-[#C5A059]/60 hover:bg-[#07133B]/70 flex flex-col justify-between"
+              className="group border border-[#0A1B54]/15 bg-[#FAF9F7] p-6 lg:p-8 transition-colors duration-300 hover:border-[#C5A059] hover:bg-white flex flex-col justify-between"
             >
               <div>
                 {/* Product Image Showcase with Clip-Path Reveal */}
-                <div className="relative mb-6 h-60 sm:h-72 w-full overflow-hidden border border-white/10 bg-[#07133B]">
+                <div className="relative mb-6 h-60 sm:h-72 w-full overflow-hidden border border-[#0A1B54]/10 bg-[#F5F5F3]">
                   <Image
                     src={product.imageUrl}
                     alt={product.name}
@@ -241,13 +250,13 @@ export function FeaturedProducts() {
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     {...(i < 2 ? {} : { loading: 'lazy' as const })}
                   />
-                  <div className="absolute left-3 top-3 border border-white/20 bg-[#0A1B54]/90 px-2.5 py-1 backdrop-blur-sm">
-                    <span className="font-body text-2xs uppercase tracking-wider text-[#C5A059]">
-                      {product.category}
+                  <div className="absolute left-3 top-3 border border-[#C5A059] bg-[#0A1B54] px-2.5 py-1 backdrop-blur-sm">
+                    <span className="font-body text-2xs uppercase tracking-wider text-white font-semibold">
+                      Firmeza: {firmness}
                     </span>
                   </div>
-                  <div className="absolute right-3 top-3 border border-white/20 bg-[#0A1B54]/90 px-2.5 py-1 backdrop-blur-sm">
-                    <span className="font-mono text-2xs text-white/70">
+                  <div className="absolute right-3 top-3 border border-[#0A1B54]/15 bg-white/90 px-2.5 py-1 backdrop-blur-sm">
+                    <span className="font-mono text-2xs text-[#0A1B54]/80">
                       5 Medidas
                     </span>
                   </div>
@@ -255,10 +264,10 @@ export function FeaturedProducts() {
 
                 {/* Details */}
                 <div className="space-y-2">
-                  <h3 className="font-display text-2xl sm:text-3xl font-normal text-white transition-colors duration-300 group-hover:text-[#C5A059]">
+                  <h3 className="font-display text-2xl sm:text-3xl font-normal text-[#0A1B54] transition-colors duration-300 group-hover:text-[#C5A059]">
                     {product.name}
                   </h3>
-                  <p className="font-body text-xs sm:text-sm text-white/70 leading-relaxed line-clamp-2">
+                  <p className="font-body text-xs sm:text-sm text-[#0A1B54]/75 leading-relaxed line-clamp-2">
                     {product.tagline}
                   </p>
                 </div>
@@ -268,7 +277,7 @@ export function FeaturedProducts() {
                   {product.technology.slice(0, 3).map((tech) => (
                     <span
                       key={tech}
-                      className="border border-white/15 bg-white/5 px-2.5 py-1 font-body text-2xs uppercase tracking-wider text-white/60"
+                      className="border border-[#0A1B54]/15 bg-white px-2.5 py-1 font-body text-2xs uppercase tracking-wider text-[#0A1B54]/70"
                     >
                       {tech}
                     </span>
@@ -277,16 +286,16 @@ export function FeaturedProducts() {
               </div>
 
               {/* Price & Action */}
-              <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
+              <div className="mt-8 flex items-center justify-between border-t border-[#0A1B54]/10 pt-6">
                 <div>
-                  <p className="font-body text-2xs uppercase tracking-wider text-white/40">Precio de fábrica desde</p>
-                  <p className="font-display text-2xl font-normal text-white">
+                  <p className="font-body text-2xs uppercase tracking-wider text-[#0A1B54]/50">Precio de fábrica desde</p>
+                  <p className="font-display text-2xl font-normal text-[#0A1B54]">
                     {formatCOP(minPrice)}
                   </p>
                 </div>
                 <Link
                   href={`/catalogo#${product.slug}`}
-                  className="flex items-center gap-2 border border-[#C5A059] bg-[#C5A059]/10 px-4 py-2.5 font-body text-xs uppercase tracking-widest text-[#C5A059] transition-all duration-300 hover:bg-[#C5A059] hover:text-[#0A1B54]"
+                  className="flex items-center gap-2 border border-[#0A1B54] bg-[#0A1B54] px-4 py-2.5 font-body text-xs uppercase tracking-widest text-white transition-all duration-300 hover:bg-[#C5A059] hover:border-[#C5A059]"
                 >
                   Personalizar
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">

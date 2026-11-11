@@ -5,7 +5,6 @@ import { useCartStore } from '@/store/cartStore'
 import { CheckoutForm } from './CheckoutForm'
 import { CartSummary } from './CartSummary'
 import { SuccessReceipt } from './SuccessReceipt'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 
 export type CheckoutStep = 'customer' | 'success' | 'error'
@@ -32,7 +31,7 @@ function CheckoutContent() {
 
   if (!mounted) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-white/50 font-body text-sm">
+      <div className="flex min-h-screen items-center justify-center text-[#0A1B54]/50 font-body text-sm bg-white">
         <div className="flex flex-col items-center gap-3">
           <div className="h-6 w-6 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin" />
           <span>Iniciando entorno seguro de compra...</span>
@@ -41,9 +40,10 @@ function CheckoutContent() {
     )
   }
 
+  // EXCEPCIÓN: La pantalla post-pago conserva background azul (#0A1B54)
   if (step === 'success') {
     return (
-      <div className="min-h-screen pt-20 pb-20">
+      <div className="min-h-screen pt-20 pb-20 bg-[#0A1B54] text-white">
         <SuccessReceipt reference={orderRef} transactionId={transactionId} />
       </div>
     )
@@ -51,17 +51,17 @@ function CheckoutContent() {
 
   if (items.length === 0) {
     return (
-      <div className="flex min-h-screen flex-col items-start justify-center px-8 pt-24 pb-24 lg:px-16">
+      <div className="flex min-h-screen flex-col items-start justify-center px-8 pt-24 pb-24 lg:px-16 bg-white">
         <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059]">Carrito vacío</p>
-        <h1 className="mt-3 font-display text-4xl sm:text-5xl font-normal text-white">
+        <h1 className="mt-3 font-display text-4xl sm:text-5xl font-normal text-[#0A1B54]">
           No hay productos<br />seleccionados.
         </h1>
-        <p className="mt-6 font-body text-sm text-white/60">
+        <p className="mt-6 font-body text-sm text-[#0A1B54]/70">
           Agrega colchones desde el catálogo para continuar al checkout seguro.
         </p>
         <Link
           href="/catalogo"
-          className="mt-8 border border-white px-6 py-3.5 font-body text-xs uppercase tracking-widest text-white transition-all hover:bg-white hover:text-[#0A1B54]"
+          className="mt-8 border border-[#0A1B54] bg-[#0A1B54] px-6 py-3.5 font-body text-xs uppercase tracking-widest text-white transition-all hover:bg-transparent hover:text-[#0A1B54]"
         >
           Ir al catálogo
         </Link>
@@ -71,17 +71,17 @@ function CheckoutContent() {
 
   if (step === 'error') {
     return (
-      <div className="flex min-h-screen flex-col items-start justify-center px-8 pt-24 pb-24 lg:px-16">
-        <p className="font-body text-2xs uppercase tracking-[0.2em] text-red-400">Error de conexión</p>
-        <h1 className="mt-3 font-display text-4xl sm:text-5xl font-normal text-white">
+      <div className="flex min-h-screen flex-col items-start justify-center px-8 pt-24 pb-24 lg:px-16 bg-white">
+        <p className="font-body text-2xs uppercase tracking-[0.2em] text-red-500">Error de conexión</p>
+        <h1 className="mt-3 font-display text-4xl sm:text-5xl font-normal text-[#0A1B54]">
           No fue posible<br />iniciar el pago.
         </h1>
-        <p className="mt-6 font-body text-sm text-white/60 max-w-md">
+        <p className="mt-6 font-body text-sm text-[#0A1B54]/70 max-w-md">
           Ocurrió un problema de comunicación con los servicios de pasarela. Tus productos continúan en el carrito y ningún cargo ha sido efectuado.
         </p>
         <button
           onClick={() => setStep('customer')}
-          className="mt-8 border border-white px-6 py-3.5 font-body text-xs uppercase tracking-widest text-white transition-all hover:bg-white hover:text-[#0A1B54]"
+          className="mt-8 border border-[#0A1B54] bg-[#0A1B54] px-6 py-3.5 font-body text-xs uppercase tracking-widest text-white transition-all hover:bg-transparent hover:text-[#0A1B54]"
         >
           Intentar nuevamente
         </button>
@@ -90,10 +90,10 @@ function CheckoutContent() {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-24">
+    <div className="min-h-screen pt-24 pb-24 bg-white text-[#0A1B54]">
       <div className="grid grid-cols-1 gap-0 lg:grid-cols-[1fr_420px]">
         {/* Form */}
-        <div className="border-b border-white/10 px-8 py-12 lg:border-b-0 lg:border-r lg:px-16">
+        <div className="border-b border-[#0A1B54]/10 px-8 py-12 lg:border-b-0 lg:border-r lg:px-16">
           <CheckoutForm
             selectedZoneId={selectedShippingZoneId}
             onZoneChange={setSelectedShippingZoneId}
@@ -114,7 +114,7 @@ export function CheckoutPageClient() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center text-white/40 font-body text-sm">
+        <div className="flex min-h-screen items-center justify-center text-[#0A1B54]/40 font-body text-sm bg-white">
           Cargando checkout seguro...
         </div>
       }

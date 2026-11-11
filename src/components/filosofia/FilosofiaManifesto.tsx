@@ -5,12 +5,12 @@ import { motion } from 'framer-motion'
 
 export function FilosofiaManifesto() {
   return (
-    <section className="relative border-t border-white/10 px-6 py-24 lg:px-16 lg:py-32 bg-[#0A1B54]">
+    <section className="relative border-t border-[#0A1B54]/10 px-6 py-24 lg:px-16 lg:py-32 bg-[#FAF9F7]">
       {/* Background architectural guides */}
       <div className="pointer-events-none absolute inset-0 grid grid-cols-4 opacity-5">
-        <div className="border-r border-white" />
-        <div className="border-r border-white" />
-        <div className="border-r border-white" />
+        <div className="border-r border-[#0A1B54]" />
+        <div className="border-r border-[#0A1B54]" />
+        <div className="border-r border-[#0A1B54]" />
         <div className="border-r border-transparent" />
       </div>
 
@@ -32,7 +32,7 @@ export function FilosofiaManifesto() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="mt-3 font-display text-3xl sm:text-5xl font-normal text-white leading-tight"
+              className="mt-3 font-display text-3xl sm:text-5xl font-normal text-[#0A1B54] leading-tight"
             >
               La confianza se construye con hechos y la transparencia se demuestra desde el interior.
             </motion.h2>
@@ -44,7 +44,7 @@ export function FilosofiaManifesto() {
               transition={{ duration: 0.7, delay: 0.25 }}
               className="mt-8 border-l-2 border-[#C5A059] pl-6 py-2"
             >
-              <p className="font-display italic text-xl sm:text-2xl text-white/95 leading-relaxed font-light">
+              <p className="font-display italic text-xl sm:text-2xl text-[#0A1B54]/90 leading-relaxed font-light">
                 «Por eso, fabricamos nuestros colchones con materiales de calidad y estructuras que puedes ver por dentro.»
               </p>
             </motion.div>
@@ -56,14 +56,14 @@ export function FilosofiaManifesto() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="mt-8 inline-block border border-[#C5A059]/40 bg-[#C5A059]/10 px-5 py-3"
             >
-              <p className="font-display text-lg sm:text-xl font-medium text-[#C5A059] tracking-wide">
+              <p className="font-display text-lg sm:text-xl font-medium text-[#0A1B54] tracking-wide">
                 En Oasis, la calidad no se promete, se muestra.
               </p>
             </motion.div>
           </div>
 
           {/* Right Column: 3 Real Value Cards */}
-          <div className="lg:col-span-5 space-y-5 lg:border-l lg:border-white/10 lg:pl-10">
+          <div className="lg:col-span-5 space-y-5 lg:border-l lg:border-[#0A1B54]/10 lg:pl-10">
             {[
               {
                 number: '01',
@@ -87,18 +87,18 @@ export function FilosofiaManifesto() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
-                className="group border border-white/10 bg-[#07133B]/50 p-6 transition-all duration-300 hover:border-[#C5A059]/50 hover:bg-[#07133B]/80"
+                className="group border border-[#0A1B54]/15 bg-white p-6 transition-all duration-300 hover:border-[#C5A059]"
               >
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-xs font-semibold text-[#C5A059]">
                     {card.number}
                   </span>
-                  <div className="h-px flex-1 bg-white/10 group-hover:bg-[#C5A059]/30 transition-colors" />
+                  <div className="h-px flex-1 bg-[#0A1B54]/10 group-hover:bg-[#C5A059]/30 transition-colors" />
                 </div>
-                <h3 className="mt-3 font-display text-lg font-normal text-white">
+                <h3 className="mt-3 font-display text-lg font-normal text-[#0A1B54]">
                   {card.title}
                 </h3>
-                <p className="mt-2 font-body text-xs sm:text-sm text-white/70 leading-relaxed">
+                <p className="mt-2 font-body text-xs sm:text-sm text-[#0A1B54]/70 leading-relaxed">
                   {card.desc}
                 </p>
               </motion.div>

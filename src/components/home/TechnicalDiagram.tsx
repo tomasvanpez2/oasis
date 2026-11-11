@@ -481,7 +481,7 @@ export function TechnicalDiagram() {
       `}</style>
 
       {/* ── CONTROL HUD BAR SUPERIOR ──────────────────────────────────────── */}
-      <div className="border border-white/10 bg-[#07133B]/80 backdrop-blur-md p-4 sm:p-5">
+      <div className="border border-[#0A1B54]/15 bg-[#F9F9F8] p-4 sm:p-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Status Indicator */}
           <div className="flex items-center gap-3">
@@ -490,7 +490,7 @@ export function TechnicalDiagram() {
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#C5A059]" />
             </span>
             <div>
-              <p className="font-body text-2xs uppercase tracking-[0.22em] text-white font-medium">
+              <p className="font-body text-2xs uppercase tracking-[0.22em] text-[#0A1B54] font-medium">
                 Diagrama Isométrico 3D — Corte Técnico
               </p>
               <p className="font-mono text-2xs text-[#C5A059]">
@@ -502,14 +502,14 @@ export function TechnicalDiagram() {
           {/* Interactive Assembly Controls (Scrubber & Mode Buttons) */}
           <div className="flex items-center gap-3 self-end md:self-auto">
             {/* Quick Toggle Buttons */}
-            <div className="flex items-center border border-white/15 bg-[#0A1B54]/60 p-0.5">
+            <div className="flex items-center border border-[#0A1B54]/15 bg-white p-0.5">
               <button
                 type="button"
                 onClick={() => setManualAssemblyFactor(0)}
                 className={`px-3 py-1 font-mono text-[10px] uppercase tracking-wider transition-all duration-200 ${
                   currentProgress < 0.4
-                    ? 'bg-[#C5A059] text-[#0A1B54] font-bold shadow-sm'
-                    : 'text-white/60 hover:text-white'
+                    ? 'bg-[#0A1B54] text-white font-bold shadow-sm'
+                    : 'text-[#0A1B54]/60 hover:text-[#0A1B54]'
                 }`}
               >
                 Vista Explotada
@@ -519,8 +519,8 @@ export function TechnicalDiagram() {
                 onClick={() => setManualAssemblyFactor(1)}
                 className={`px-3 py-1 font-mono text-[10px] uppercase tracking-wider transition-all duration-200 ${
                   currentProgress >= 0.7
-                    ? 'bg-[#C5A059] text-[#0A1B54] font-bold shadow-sm'
-                    : 'text-white/60 hover:text-white'
+                    ? 'bg-[#0A1B54] text-white font-bold shadow-sm'
+                    : 'text-[#0A1B54]/60 hover:text-[#0A1B54]'
                 }`}
               >
                 Ensamblado
@@ -542,17 +542,17 @@ export function TechnicalDiagram() {
         </div>
 
         {/* Live Assembly Factor Scrub Bar */}
-        <div className="mt-4 pt-3 border-t border-white/10 flex items-center gap-3">
-          <span className="font-mono text-[10px] text-white/50 tracking-wider uppercase">
+        <div className="mt-4 pt-3 border-t border-[#0A1B54]/10 flex items-center gap-3">
+          <span className="font-mono text-[10px] text-[#0A1B54]/50 tracking-wider uppercase">
             Despiece:
           </span>
-          <div className="relative flex-1 h-1.5 bg-white/10 overflow-hidden cursor-pointer">
+          <div className="relative flex-1 h-1.5 bg-[#0A1B54]/10 overflow-hidden cursor-pointer">
             <motion.div
-              className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-[#C5A059] to-[#E5C378]"
+              className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-[#C5A059] to-[#0A1B54]"
               style={{ width: `${(1 - currentProgress) * 100}%` }}
             />
           </div>
-          <span className="font-mono text-[10px] text-[#C5A059] font-bold min-w-[36px] text-right">
+          <span className="font-mono text-[10px] text-[#0A1B54] font-bold min-w-[36px] text-right">
             {Math.round((1 - currentProgress) * 100)}%
           </span>
         </div>
@@ -563,7 +563,7 @@ export function TechnicalDiagram() {
         ref={stageViewportRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative w-full overflow-visible border-x border-b border-white/10 bg-gradient-to-b from-[#07133B]/60 via-[#0A1B54]/40 to-[#07133B]/90 flex items-center justify-center py-6 transition-all"
+        className="relative w-full overflow-visible border-x border-b border-[#0A1B54]/15 bg-gradient-to-b from-[#FBFBFA] via-white to-[#F5F5F3] flex items-center justify-center py-6 transition-all"
         style={{
           minHeight: `${480 * responsiveScale + 40}px`,
         }}
@@ -729,8 +729,8 @@ export function TechnicalDiagram() {
                       {layer.id === 'layer-4' && (
                         /* Center Gold Matrix Badge for Pocket Springs */
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className="border border-[#C5A059]/40 bg-[#07133B]/80 px-2 py-0.5 backdrop-blur-sm">
-                            <span className="font-mono text-[8px] uppercase tracking-widest text-[#C5A059] font-bold">
+                          <div className="border border-[#C5A059]/40 bg-white/90 px-2 py-0.5 backdrop-blur-sm">
+                            <span className="font-mono text-[8px] uppercase tracking-widest text-[#0A1B54] font-bold">
                               800 INDIVIDUAL COILS
                             </span>
                           </div>
@@ -740,21 +740,21 @@ export function TechnicalDiagram() {
                       {layer.id === 'layer-5' && (
                         /* HD-45 Monolithic Technical Foundation Silkscreen */
                         <div className="absolute inset-x-3 bottom-2 flex justify-between items-center pointer-events-none">
-                          <span className="font-mono text-[7px] uppercase tracking-[0.2em] text-[#C5A059]/50">
+                          <span className="font-mono text-[7px] uppercase tracking-[0.2em] text-[#C5A059]">
                             HD-45 HIGH RESILIENCE BASE • ISO 9001
                           </span>
-                          <span className="font-mono text-[7px] text-white/40">
+                          <span className="font-mono text-[7px] text-[#0A1B54]/50">
                             120,000 CYCLES
                           </span>
                         </div>
                       )}
 
                       {/* Technical Layer Badge Chip on Top-Left */}
-                      <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-[#07133B]/90 px-1.5 py-0.5 border border-white/20">
+                      <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-white/95 px-1.5 py-0.5 border border-[#0A1B54]/20">
                         <span className="font-mono text-[9px] font-bold text-[#C5A059]">
                           {layer.num}
                         </span>
-                        <span className="font-mono text-[8px] text-white/80">
+                        <span className="font-mono text-[8px] text-[#0A1B54]">
                           {layer.thickness}
                         </span>
                       </div>
@@ -832,8 +832,8 @@ export function TechnicalDiagram() {
                         <div
                           className={`group/label cursor-pointer whitespace-nowrap border px-3 py-1.5 backdrop-blur-md transition-all duration-300 ${
                             isActive
-                              ? 'border-[#C5A059] bg-[#07133B]/95 shadow-[0_4px_16px_rgba(197,160,89,0.3)]'
-                              : 'border-white/15 bg-[#0A1B54]/80 hover:border-white/40 hover:bg-[#0D2266]/90'
+                              ? 'border-[#C5A059] bg-[#0A1B54] text-white shadow-[0_4px_16px_rgba(10,27,84,0.15)]'
+                              : 'border-[#0A1B54]/15 bg-white text-[#0A1B54] hover:border-[#C5A059] hover:bg-[#F9F9F8]'
                           }`}
                         >
                           <div className="flex items-center gap-2">
@@ -842,12 +842,12 @@ export function TechnicalDiagram() {
                             </span>
                             <span
                               className={`font-body text-xs font-medium transition-colors ${
-                                isActive ? 'text-white' : 'text-white/80 group-hover/label:text-white'
+                                isActive ? 'text-white' : 'text-[#0A1B54] group-hover/label:text-[#0A1B54]'
                               }`}
                             >
                               {layer.shortName}
                             </span>
-                            <span className="font-mono text-[9px] uppercase tracking-wider text-[#C5A059]/80 border-l border-white/15 pl-1.5">
+                            <span className="font-mono text-[9px] uppercase tracking-wider text-[#C5A059] border-l border-[#0A1B54]/15 pl-1.5 font-medium">
                               {layer.thickness}
                             </span>
                           </div>
@@ -863,10 +863,10 @@ export function TechnicalDiagram() {
       </div>
 
       {/* ── TECHNICAL DOSSIER HUD CARD (DETALLE TÉCNICO DE LA CAPA ACTIVA) ─── */}
-      <div className="border-x border-b border-white/10 bg-[#07133B]/90 p-5 sm:p-6 backdrop-blur-md">
+      <div className="border-x border-b border-[#0A1B54]/15 bg-[#F9F9F8] p-5 sm:p-6 text-[#0A1B54]">
         {/* Layer Selector Chips */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-4 border-b border-white/10 scrollbar-none">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-white/40 mr-2 flex-shrink-0">
+        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-4 border-b border-[#0A1B54]/10 scrollbar-none">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#0A1B54]/50 mr-2 flex-shrink-0">
             Capas:
           </span>
           {TECHNICAL_LAYERS.map((layer) => {
@@ -878,11 +878,11 @@ export function TechnicalDiagram() {
                 onClick={() => setActiveLayerId(layer.id)}
                 className={`flex-shrink-0 px-3 py-1.5 font-mono text-[11px] border transition-all duration-200 flex items-center gap-2 ${
                   isChipActive
-                    ? 'border-[#C5A059] bg-[#C5A059]/15 text-white font-bold'
-                    : 'border-white/10 bg-white/5 text-white/60 hover:border-white/30 hover:text-white'
+                    ? 'border-[#0A1B54] bg-[#0A1B54] text-white font-bold'
+                    : 'border-[#0A1B54]/15 bg-white text-[#0A1B54]/70 hover:border-[#0A1B54]/40 hover:text-[#0A1B54]'
                 }`}
               >
-                <span className="text-[#C5A059]">{layer.num}</span>
+                <span className={isChipActive ? 'text-[#C5A059]' : 'text-[#0A1B54]/50'}>{layer.num}</span>
                 <span>{layer.shortName}</span>
               </button>
             )
@@ -905,12 +905,12 @@ export function TechnicalDiagram() {
                   <span className="font-mono text-xs font-bold text-[#C5A059]">
                     Capa {activeLayer.num}
                   </span>
-                  <span className="text-white/30">•</span>
-                  <span className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]/80">
+                  <span className="text-[#0A1B54]/30">•</span>
+                  <span className="font-mono text-2xs uppercase tracking-wider text-[#C5A059] font-medium">
                     {activeLayer.badge}
                   </span>
                 </div>
-                <h3 className="font-display text-lg sm:text-xl font-normal text-white mt-0.5">
+                <h3 className="font-display text-lg sm:text-xl font-normal text-[#0A1B54] mt-0.5">
                   {activeLayer.name}
                 </h3>
               </div>
@@ -921,29 +921,29 @@ export function TechnicalDiagram() {
               </div>
             </div>
 
-            <p className="font-body text-xs sm:text-sm text-white/80 leading-relaxed max-w-3xl">
+            <p className="font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed max-w-3xl">
               {activeLayer.description}
             </p>
 
             {/* Certified Technical Metric */}
-            <div className="border-l-2 border-[#C5A059] bg-[#0A1B54]/40 p-3">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40 block">
+            <div className="border-l-2 border-[#C5A059] bg-white p-3 border border-[#0A1B54]/10">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#0A1B54]/50 block">
                 Especificación Industrial & Densidad:
               </span>
-              <span className="font-body text-xs text-white/90 font-medium">
+              <span className="font-body text-xs text-[#0A1B54] font-medium">
                 {activeLayer.technicalSpec}
               </span>
             </div>
 
             {/* Chemical & Mechanical Composition Badges */}
             <div className="flex flex-wrap items-center gap-2 pt-1">
-              <span className="font-body text-[10px] uppercase tracking-wider text-white/40 mr-1">
+              <span className="font-body text-[10px] uppercase tracking-wider text-[#0A1B54]/50 mr-1">
                 Composición:
               </span>
               {activeLayer.composition.map((comp) => (
                 <span
                   key={comp}
-                  className="border border-[#C5A059]/30 bg-[#C5A059]/10 px-2.5 py-1 font-body text-[11px] text-[#C5A059]"
+                  className="border border-[#0A1B54]/15 bg-white px-2.5 py-1 font-body text-[11px] text-[#0A1B54]/80"
                 >
                   ✓ {comp}
                 </span>
@@ -953,9 +953,9 @@ export function TechnicalDiagram() {
         </AnimatePresence>
 
         {/* Industrial Certification Footer */}
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between border-t border-white/10 pt-4 text-2xs font-body text-white/40 gap-2">
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between border-t border-[#0A1B54]/10 pt-4 text-2xs font-body text-[#0A1B54]/50 gap-2">
           <span>Garantía biomecánica certificada por 10 a 15 años • ISO 9001</span>
-          <span className="text-[#C5A059]">
+          <span className="text-[#C5A059] font-medium">
             Manufacturado en planta industrial Oasis — Bogotá D.C.
           </span>
         </div>

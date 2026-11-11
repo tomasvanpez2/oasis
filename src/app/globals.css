@@ -26,8 +26,8 @@ html {
 }
 
 body {
-  background-color: var(--color-night);
-  color: #ffffff;
+  background-color: #FFFFFF;
+  color: #0A1B54;
   font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -40,20 +40,21 @@ h1, h2, h3, h4 {
   font-weight: 400;
   line-height: 0.9;
   letter-spacing: -0.04em;
+  color: #0A1B54;
 }
 
 /* ─── Selection ──────────────────────────────────────────────────────────── */
 ::selection {
   background: var(--color-gold);
-  color: var(--color-night);
+  color: #FFFFFF;
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-night);
+  background: #F7F7F6;
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-gold);
