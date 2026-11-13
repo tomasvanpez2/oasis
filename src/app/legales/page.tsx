@@ -21,45 +21,33 @@ function LegalesContent() {
     }
   }, [tabParam])
 
-  const TABS: { id: LegalTab; label: string; number: string; pdfUrl: string; pdfName: string }[] = [
+  const TABS: { id: LegalTab; label: string; number: string }[] = [
     {
       id: 'terminos',
       label: 'Términos y Condiciones Generales',
       number: '01',
-      pdfUrl: '/docs/terminos-y-condiciones.pdf',
-      pdfName: 'Términos y Condiciones.pdf',
     },
     {
       id: 'datos',
       label: 'Tratamiento de Datos Personales (Ley 1581)',
       number: '02',
-      pdfUrl: '/docs/politica-tratamiento-datos-personales.pdf',
-      pdfName: 'Política de Tratamiento de Datos.pdf',
     },
     {
       id: 'privacidad',
       label: 'Política de Privacidad & Cookies',
       number: '03',
-      pdfUrl: '/docs/politica-privacidad.pdf',
-      pdfName: 'Política de Privacidad.pdf',
     },
     {
       id: 'fraude',
       label: 'Prevención de Fraude & Devolución',
       number: '04',
-      pdfUrl: '/docs/politica-prevencion-fraude-devolucion.pdf',
-      pdfName: 'Política de Fraude y Devolución.pdf',
     },
     {
       id: 'garantia',
       label: 'Garantía Industrial & Ficha Técnica',
       number: '05',
-      pdfUrl: '/docs/colchones-oasis-ficha-tecnica.pdf',
-      pdfName: 'Ficha Técnica Oficial.pdf',
     },
   ]
-
-  const currentTabMeta = TABS.find((t) => t.id === activeTab) || TABS[0]
 
   return (
     <main className="bg-white min-h-screen text-[#0A1B54]">
@@ -113,29 +101,29 @@ function LegalesContent() {
           >
             <div>
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
-                Razón Comercial & Titular:
+                Razón Social:
               </p>
               <p className="mt-1 font-body text-sm text-[#0A1B54] font-medium">
                 Oasis Colchones y Muebles
               </p>
               <p className="font-body text-xs text-[#0A1B54]/60">
-                Titular: Luna Valentina Ramírez Vallejo
+                Línea Oficial de Descanso
               </p>
             </div>
             <div className="sm:border-l sm:border-[#0A1B54]/10 sm:pl-6">
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
-                NIT de Operación:
+                NIT:
               </p>
               <p className="mt-1 font-mono text-sm text-[#0A1B54] font-medium">
                 1011091483-4
               </p>
               <p className="font-body text-xs text-[#0A1B54]/60">
-                Persona Natural Responsable
+                Registro Tributario DIAN
               </p>
             </div>
             <div className="lg:border-l lg:border-[#0A1B54]/10 lg:pl-6">
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
-                Domicilio y Sede Física:
+                Dirección:
               </p>
               <p className="mt-1 font-body text-sm text-[#0A1B54]">
                 Carrera 5 #2-01, Local 11
@@ -146,7 +134,7 @@ function LegalesContent() {
             </div>
             <div className="lg:border-l lg:border-[#0A1B54]/10 lg:pl-6">
               <p className="font-mono text-2xs uppercase tracking-wider text-[#C5A059]">
-                Canal Oficial de Atención:
+                Teléfono:
               </p>
               <a
                 href="http://wa.link/cfrej0"
@@ -154,7 +142,7 @@ function LegalesContent() {
                 rel="noopener noreferrer"
                 className="mt-1 font-mono text-sm text-[#0A1B54] hover:underline block font-semibold text-[#0A1B54]"
               >
-                WhatsApp: 350 403 5144
+                350 403 5144
               </a>
               <p className="font-body text-xs text-[#0A1B54]/60">
                 Lunes a Viernes: 10am – 6pm
@@ -198,24 +186,6 @@ function LegalesContent() {
                 )
               })}
 
-              {/* Direct PDF Download Box */}
-              <div className="pt-6 border-t border-[#0A1B54]/10 px-2">
-                <a
-                  href={currentTabMeta.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  className="w-full flex items-center justify-center gap-2.5 border border-[#C5A059] bg-[#C5A059]/10 px-4 py-3 font-body text-xs uppercase tracking-wider text-[#C5A059] hover:bg-[#C5A059] hover:text-[#070D38] transition-all duration-200 font-semibold text-center"
-                >
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Descargar PDF Oficial
-                </a>
-                <p className="mt-2 text-2xs font-body text-[#0A1B54]/40 text-center">
-                  Copia fiel original con validez legal probatoria.
-                </p>
-              </div>
             </div>
 
             {/* Document Body Content */}
@@ -224,26 +194,16 @@ function LegalesContent() {
               {/* TAB 1: TÉRMINOS Y CONDICIONES */}
               {activeTab === 'terminos' && (
                 <div className="space-y-6">
-                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                        Marco Regulatorio 01
-                      </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
-                        Términos y Condiciones Generales de Compra y Uso
-                      </h2>
-                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
-                        Vigentes desde el 4 de noviembre de 2026 • www.oasiscolchonesymuebles.com
-                      </p>
-                    </div>
-                    <a
-                      href="/docs/terminos-y-condiciones.pdf"
-                      target="_blank"
-                      download
-                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
-                    >
-                      Descargar PDF
-                    </a>
+                  <div className="border-b border-[#0A1B54]/10 pb-6">
+                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                      Marco Regulatorio 01
+                    </span>
+                    <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
+                      Términos y Condiciones Generales de Compra y Uso
+                    </h2>
+                    <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
+                      Vigentes desde el 4 de noviembre de 2026 • www.oasiscolchonesymuebles.com
+                    </p>
                   </div>
 
                   <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
@@ -252,7 +212,7 @@ function LegalesContent() {
                         1. Quiénes somos
                       </h3>
                       <p>
-                        El sitio <strong>www.oasiscolchonesymuebles.com</strong> (el “Sitio”) es operado por <strong>Oasis Colchones y Muebles</strong>, persona natural con NIT <strong>1011091483-4</strong>, con domicilio en Carrera 5 #2-01, Local 11, Cota, Cundinamarca, Colombia. Titular: <strong>Luna Valentina Ramírez Vallejo</strong>. Canal de atención al cliente: WhatsApp <strong>350 403 5144</strong>, de lunes a viernes, de 10:00 a. m. a 6:00 p. m.
+                        El sitio <strong>www.oasiscolchonesymuebles.com</strong> (el “Sitio”) es operado por la razón social <strong>Oasis Colchones y Muebles</strong>, con NIT <strong>1011091483-4</strong>, con domicilio en Carrera 5 #2-01, Local 11, Cota, Cundinamarca, Colombia. Canal de atención y teléfono: <strong>350 403 5144</strong>, de lunes a viernes, de 10:00 a. m. a 6:00 p. m.
                       </p>
                     </section>
 
@@ -316,26 +276,16 @@ function LegalesContent() {
               {/* TAB 2: TRATAMIENTO DE DATOS PERSONALES (HABEAS DATA) */}
               {activeTab === 'datos' && (
                 <div className="space-y-6">
-                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                        Marco Regulatorio 02
-                      </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
-                        Política de Tratamiento de Datos Personales (Ley 1581 de 2012)
-                      </h2>
-                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
-                        Habeas Data • Vigente desde el 4 de noviembre de 2026
-                      </p>
-                    </div>
-                    <a
-                      href="/docs/politica-tratamiento-datos-personales.pdf"
-                      target="_blank"
-                      download
-                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
-                    >
-                      Descargar PDF
-                    </a>
+                  <div className="border-b border-[#0A1B54]/10 pb-6">
+                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                      Marco Regulatorio 02
+                    </span>
+                    <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
+                      Política de Tratamiento de Datos Personales (Ley 1581 de 2012)
+                    </h2>
+                    <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
+                      Habeas Data • Vigente desde el 4 de noviembre de 2026
+                    </p>
                   </div>
 
                   <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
@@ -344,7 +294,7 @@ function LegalesContent() {
                         1. Responsable del Tratamiento
                       </h3>
                       <p>
-                        <strong>Oasis Colchones y Muebles</strong>, NIT <strong>1011091483-4</strong>, titular <strong>Luna Valentina Ramírez Vallejo</strong>. Domicilio: Carrera 5 #2-01, Local 11, Cota, Cundinamarca, Colombia. Teléfono y WhatsApp oficial: <strong>350 403 5144</strong>. Sitio web: www.oasiscolchonesymuebles.com.
+                        Razón social: <strong>Oasis Colchones y Muebles</strong>, NIT <strong>1011091483-4</strong>. Domicilio: Carrera 5 #2-01, Local 11, Cota, Cundinamarca, Colombia. Teléfono y WhatsApp oficial: <strong>350 403 5144</strong>. Sitio web: www.oasiscolchonesymuebles.com.
                       </p>
                     </section>
 
@@ -400,26 +350,16 @@ function LegalesContent() {
               {/* TAB 3: POLÍTICA DE PRIVACIDAD & COOKIES */}
               {activeTab === 'privacidad' && (
                 <div className="space-y-6">
-                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                        Marco Regulatorio 03
-                      </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
-                        Política de Privacidad y Manejo de Cookies
-                      </h2>
-                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
-                        Transparencia digital • Vigente desde el 4 de noviembre de 2026
-                      </p>
-                    </div>
-                    <a
-                      href="/docs/politica-privacidad.pdf"
-                      target="_blank"
-                      download
-                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
-                    >
-                      Descargar PDF
-                    </a>
+                  <div className="border-b border-[#0A1B54]/10 pb-6">
+                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                      Marco Regulatorio 03
+                    </span>
+                    <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
+                      Política de Privacidad y Manejo de Cookies
+                    </h2>
+                    <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
+                      Transparencia digital • Vigente desde el 4 de noviembre de 2026
+                    </p>
                   </div>
 
                   <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
@@ -461,26 +401,16 @@ function LegalesContent() {
               {/* TAB 4: PREVENCIÓN DE FRAUDE Y DEVOLUCIÓN */}
               {activeTab === 'fraude' && (
                 <div className="space-y-6">
-                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                        Marco Regulatorio 04
-                      </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
-                        Política de Prevención de Fraude y Devolución de Dinero
-                      </h2>
-                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
-                        Seguridad en transacciones • Vigente desde el 4 de noviembre de 2026
-                      </p>
-                    </div>
-                    <a
-                      href="/docs/politica-prevencion-fraude-devolucion.pdf"
-                      target="_blank"
-                      download
-                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
-                    >
-                      Descargar PDF
-                    </a>
+                  <div className="border-b border-[#0A1B54]/10 pb-6">
+                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                      Marco Regulatorio 04
+                    </span>
+                    <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
+                      Política de Prevención de Fraude y Devolución de Dinero
+                    </h2>
+                    <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
+                      Seguridad en transacciones • Vigente desde el 4 de noviembre de 2026
+                    </p>
                   </div>
 
                   <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">
@@ -520,26 +450,16 @@ function LegalesContent() {
               {/* TAB 5: GARANTÍA INDUSTRIAL & FICHA TÉCNICA */}
               {activeTab === 'garantia' && (
                 <div className="space-y-6">
-                  <div className="border-b border-[#0A1B54]/10 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
-                        Protocolo Técnico 05
-                      </span>
-                      <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
-                        Garantía Industrial de Fábrica & Ficha Técnica Oficial
-                      </h2>
-                      <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
-                        Resortes Bonell, Pocket y Núcleos de Espuma D120/D26 • Garantía Directa de Fábrica (1 a 8 Años)
-                      </p>
-                    </div>
-                    <a
-                      href="/docs/colchones-oasis-ficha-tecnica.pdf"
-                      target="_blank"
-                      download
-                      className="inline-flex items-center gap-2 border border-[#0A1B54]/20 bg-[#FAF9F7] px-3 py-1.5 font-body text-2xs uppercase tracking-wider text-[#0A1B54] hover:border-[#C5A059] hover:text-[#C5A059] transition-all self-start"
-                    >
-                      Descargar Ficha Técnica PDF
-                    </a>
+                  <div className="border-b border-[#0A1B54]/10 pb-6">
+                    <span className="font-mono text-2xs uppercase tracking-widest text-[#C5A059]">
+                      Protocolo Técnico 05
+                    </span>
+                    <h2 className="mt-1 font-display text-2xl sm:text-3xl font-normal text-[#0A1B54]">
+                      Garantía Industrial de Fábrica & Ficha Técnica Oficial
+                    </h2>
+                    <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
+                      Resortes Bonell, Pocket y Núcleos de Espuma D120/D26 • Garantía Directa de Fábrica (1 a 8 Años)
+                    </p>
                   </div>
 
                   <div className="space-y-6 font-body text-xs sm:text-sm text-[#0A1B54]/80 leading-relaxed">

@@ -730,7 +730,7 @@
     {
       "id": "oasis-colchon-pillow-top-pocket-resortes-independientes",
       "slug": "colchon-pillow-top-pocket-resortes-independientes",
-      "name": "Colchón Pillow Top Pocket Resortes Independientes",
+      "name": "Colchón Pillow Top Pocket",
       "tagline": "Cero transferencia de movimiento con resortes ensacados individuales y 42 cm de altura",
       "description": "Panel Pocket de resortes independientes con marco de acero, Algodón Laminado, Cazata D120 y Espuma Penta D26. Altura: 42 cm.",
       "longDescription": "Panel Pocket de resortes independientes con marco de acero, Algodón Laminado, Cazata D120 y Espuma Penta D26. Altura: 42 cm.",
@@ -883,30 +883,30 @@
       "height": "30 cm"
     },
     {
-      "id": "oasis-base-cama-baul-con-pistones-hidraulicos",
-      "slug": "base-cama-baul-con-pistones-hidraulicos",
-      "name": "Base Cama Baúl con Pistones Hidráulicos",
-      "tagline": "Máximo almacenamiento bajo la cama con sistema de elevación asistida por gas",
-      "description": "Base baúl con pistones hidráulicos que facilitan la apertura sin esfuerzo. Estructura interna de gran capacidad con fondo tapizado y madera inmunizada.",
-      "longDescription": "Base baúl con pistones hidráulicos que facilitan la apertura sin esfuerzo. Estructura interna de gran capacidad con fondo tapizado y madera inmunizada.",
+      "id": "oasis-base-cama-baul",
+      "slug": "base-cama-baul",
+      "name": "Base Cama Baúl",
+      "tagline": "Máximo almacenamiento bajo la cama con sistema de elevación asistida",
+      "description": "Base baúl diseñada para facilitar la apertura y optimizar el almacenamiento. Estructura interna de gran capacidad con fondo tapizado y madera inmunizada.",
+      "longDescription": "Base baúl diseñada para facilitar la apertura y optimizar el almacenamiento. Estructura interna de gran capacidad con fondo tapizado y madera inmunizada.",
       "category": "bases",
       "technology": [
-        "Elevación Hidráulica Segura",
+        "Elevación Asistida y Segura",
         "Espacio de Almacenamiento XL",
         "Topes de Retención"
       ],
       "materials": [
-        "Pistones Hidráulicos a Gas de Alta Presión",
+        "Herrajes y Sistema de Elevación Reforzado",
         "Madera Pino Inmunizada",
         "Fondo interior protector",
         "Tapizado de Lujo"
       ],
-      "imageUrl": "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-1.webp",
+      "imageUrl": "/images/products/base-cama-baul/foto-1.webp",
       "imageGallery": [
-        "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-1.webp",
-        "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-2.webp",
-        "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-3.webp",
-        "/images/products/base-cama-baul-con-pistones-hidraulicos/foto-4.webp"
+        "/images/products/base-cama-baul/foto-1.webp",
+        "/images/products/base-cama-baul/foto-2.webp",
+        "/images/products/base-cama-baul/foto-3.webp",
+        "/images/products/base-cama-baul/foto-4.webp"
       ],
       "variants": [
         {
@@ -955,7 +955,7 @@
     {
       "id": "oasis-base-cama-nido-doble-cama-auxiliar",
       "slug": "base-cama-nido-doble-cama-auxiliar",
-      "name": "Base Cama Nido Doble Cama Auxiliar",
+      "name": "Base Cama Nido",
       "tagline": "Dos camas en el espacio de una con carrito deslizable inferior",
       "description": "Cama principal superior con cama auxiliar extraíble inferior mediante ruedas de nylon suaves. Ideal para cuartos infantiles, visitas o espacios reducidos.",
       "longDescription": "Cama principal superior con cama auxiliar extraíble inferior mediante ruedas de nylon suaves. Ideal para cuartos infantiles, visitas o espacios reducidos.",
@@ -1093,7 +1093,7 @@
     {
       "id": "oasis-espaldar-sencillo-tapizado",
       "slug": "espaldar-sencillo-tapizado",
-      "name": "Espaldar Sencillo Tapizado",
+      "name": "Espaldar Sencillo",
       "tagline": "Cabecero clásico con acolchado capitoneado y anclaje universal",
       "description": "Espaldar decorativo y ergonómico con anclaje a pared o ajuste a la base. Estructura de pino inmunizado con espuma de confort.",
       "longDescription": "Espaldar decorativo y ergonómico con anclaje a pared o ajuste a la base. Estructura de pino inmunizado con espuma de confort.",
@@ -1161,7 +1161,7 @@
     {
       "id": "oasis-conjunto-base-cama-y-espaldar-nube",
       "slug": "conjunto-base-cama-y-espaldar-nube",
-      "name": "Conjunto Base Cama y Espaldar Nube",
+      "name": "Combo Base Cama y Espaldar Nube",
       "tagline": "Diseño orgánico curvilíneo en bouclé y telas premium con textura tipo nube",
       "description": "Juego completo de cama y cabecero con diseño envolvente moderno de bordes redondeados y acolchado ultra suave.",
       "longDescription": "Juego completo de cama y cabecero con diseño envolvente moderno de bordes redondeados y acolchado ultra suave.",
@@ -1230,7 +1230,7 @@
     {
       "id": "oasis-conjunto-base-cama-y-espaldar-de-lujo",
       "slug": "conjunto-base-cama-y-espaldar-de-lujo",
-      "name": "Conjunto Base Cama y Espaldar de Lujo",
+      "name": "Combo Base Cama y Espaldar de Lujo",
       "tagline": "Elegancia arquitectónica lineal con tapizado reforzado y máxima prestancia",
       "description": "Juego de base cama y cabecero alto de diseño lineal contemporáneo. Acabados de alta costura para dormitorios principales.",
       "longDescription": "Juego de base cama y cabecero alto de diseño lineal contemporáneo. Acabados de alta costura para dormitorios principales.",

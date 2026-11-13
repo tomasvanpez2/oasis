@@ -141,7 +141,7 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
   {
     id: 'oasis-colchon-pillow-top-pocket-resortes-independientes',
     slug: 'colchon-pillow-top-pocket-resortes-independientes',
-    name: 'Colchón Pillow Top Pocket Resortes Independientes',
+    name: 'Colchón Pillow Top Pocket',
     tagline: 'Cero transferencia de movimiento con resortes ensacados individuales y 42 cm de altura',
     description: 'El buque insignia de Oasis. Panel Pocket de resortes individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.',
     longDescription: 'El buque insignia de Oasis. Panel Pocket de resortes individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.',

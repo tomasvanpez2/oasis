@@ -140,7 +140,7 @@ export function Footer() {
       <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-[#0A1B54]/10 pt-8 sm:flex-row sm:items-center">
         <div>
           <p className="font-body text-xs text-[#0A1B54]/60">
-            © {new Date().getFullYear()} Oasis Colchones y Muebles — NIT: 1011091483-4 (Titular: Luna Valentina Ramírez Vallejo). Bogotá, Colombia.
+            © {new Date().getFullYear()} Oasis Colchones y Muebles — NIT: 1011091483-4 — Carrera 5 #2-01, Local 11, Cota — Tel: 350 403 5144
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-2xs text-[#0A1B54]/50 font-body">
             <Link href="/legales?tab=terminos" className="hover:text-[#C5A059] transition-colors">
