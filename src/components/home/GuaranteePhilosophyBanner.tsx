@@ -46,7 +46,7 @@ export function GuaranteePhilosophyBanner() {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="font-display text-3xl sm:text-4xl lg:text-5xl font-normal text-[#0A1B54] leading-tight"
               >
-                15 Años de Ingeniería.<br />
+                Garantía Real de Fábrica.<br />
                 <span className="italic text-[#C5A059] font-light">Cero letra pequeña.</span>
               </motion.h2>
 
@@ -57,7 +57,7 @@ export function GuaranteePhilosophyBanner() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="font-body text-xs sm:text-sm text-[#0A1B54]/75 max-w-xl leading-relaxed"
               >
-                En Oasis no derivamos las garantías a aseguradoras externas ni intermediarios comerciales. Cada colchón manufacturado en nuestra nave de Bogotá cuenta con respaldo directo de fábrica: si el núcleo presenta una pérdida de altura superior a 2.5 cm, respondemos con peritaje e intervención técnica de planta.
+                En Oasis no derivamos las garantías a aseguradoras externas ni intermediarios comerciales. Cada colchón manufacturado en nuestra nave de Bogotá cuenta con respaldo directo de fábrica según la ficha técnica de cada referencia: respondemos con peritaje e intervención técnica directa de planta.
               </motion.p>
 
               {/* Action Links */}
@@ -102,16 +102,16 @@ export function GuaranteePhilosophyBanner() {
             <div className="lg:col-span-5 space-y-4">
               {[
                 {
-                  metric: '15',
+                  metric: '1 a 8',
                   unit: 'AÑOS',
-                  title: 'Garantía Estructural Certificada',
-                  desc: 'Válida sobre deformación de resortes, desprendimiento de soldadura o fatiga prematura de núcleos de alta densidad.',
+                  title: 'Garantía Estructural de Fábrica',
+                  desc: 'Válida sobre deformación de resortes o fatiga prematura de núcleos de espuma según ficha técnica oficial.',
                 },
                 {
-                  metric: '100K',
-                  unit: 'CICLOS',
-                  title: 'Ensayo de Fatiga Biomecánica',
-                  desc: 'Prensa mecánica rodante simula 12 años de uso intensivo continuo para asegurar resiliencia elástica.',
+                  metric: '100%',
+                  unit: 'BOGOTÁ',
+                  title: 'Manufactura Directa en Planta',
+                  desc: 'Procesos controlados de espumación y ensamble de resortes Bonell y Pocket en nuestra sede capitalina.',
                 },
                 {
                   metric: '0%',

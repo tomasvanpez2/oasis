@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useCartStore } from '@/store/cartStore'
 import { formatCOP } from '@/lib/utils'
 import Link from 'next/link'
+import { isOnlyAccessories } from '@/lib/shipping'
 
 export function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQuantity, getTotalPrice, getTotalItems } =
@@ -69,7 +70,7 @@ export function CartDrawer() {
             <div className="flex items-center justify-between border-b border-[#0A1B54]/10 px-8 py-6">
               <div>
                 <p className="font-body text-2xs uppercase tracking-widest text-[#0A1B54]/50">
-                  Tu selección de fábrica
+                  Tu selección
                 </p>
                 <h2 className="font-display text-2xl font-normal text-[#0A1B54]">
                   Carrito {totalItems > 0 && `(${totalItems})`}
@@ -171,14 +172,16 @@ export function CartDrawer() {
               <div className="border-t border-[#0A1B54]/10 px-8 py-6 space-y-4 bg-[#F9F9F8]">
                 <div className="flex items-center justify-between">
                   <p className="font-body text-2xs uppercase tracking-widest text-[#0A1B54]/60">
-                    Subtotal directo de fábrica
+                    Subtotal
                   </p>
                   <p className="font-display text-2xl text-[#0A1B54]">
                     {formatCOP(totalPrice)}
                   </p>
                 </div>
                 <p className="font-body text-2xs text-[#C5A059] leading-relaxed">
-                  * Flete Transporte Propio liquidado en checkout según tu zona.
+                  {isOnlyAccessories(items)
+                    ? 'Envío por Coordinadora (Pago contra entrega)'
+                    : '* Flete Transporte Propio liquidado en checkout según tu zona.'}
                 </p>
                 <Link
                   href="/checkout"

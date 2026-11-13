@@ -25,9 +25,9 @@ const STORY_STEPS: StoryStep[] = [
   },
   {
     step: '03',
-    title: 'Prueba de Resistencia Dinámica',
-    body: 'Sometemos cada modelo a rigurosos ciclos de fatiga mecánica en nuestro banco de pruebas de planta antes de autorizar el despacho final.',
-    highlight: 'Garantía real probada en máquina.',
+    title: 'Control Estricto de Calidad',
+    body: 'Sometemos cada modelo a rigurosa inspección dimensional, costura y resiliencia en nuestro taller de planta antes de autorizar el despacho final.',
+    highlight: 'Garantía real comprobada en planta.',
   },
   {
     step: '04',
@@ -45,24 +45,24 @@ interface StepRangeConfig {
 
 const STEP_RANGES: StepRangeConfig[] = [
   {
-    inputRange: [0.0, 0.18, 0.26],
+    inputRange: [0.0, 0.16, 0.24],
     opacityRange: [1, 1, 0],
-    yRange: [0, 0, -24],
+    yRange: [0, 0, -20],
   },
   {
-    inputRange: [0.19, 0.27, 0.43, 0.51],
+    inputRange: [0.18, 0.26, 0.44, 0.52],
     opacityRange: [0, 1, 1, 0],
-    yRange: [24, 0, 0, -24],
+    yRange: [20, 0, 0, -20],
   },
   {
-    inputRange: [0.44, 0.52, 0.68, 0.76],
+    inputRange: [0.46, 0.54, 0.72, 0.80],
     opacityRange: [0, 1, 1, 0],
-    yRange: [24, 0, 0, -24],
+    yRange: [20, 0, 0, -20],
   },
   {
-    inputRange: [0.69, 0.77, 1.0],
+    inputRange: [0.74, 0.82, 1.0],
     opacityRange: [0, 1, 1],
-    yRange: [24, 0, 0],
+    yRange: [20, 0, 0],
   },
 ]
 
@@ -121,8 +121,7 @@ export function ScrollStory() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-white border-t border-[#0A1B54]/10"
-      style={{ height: '400vh' }}
+      className="relative w-full bg-white border-t border-[#0A1B54]/10 h-[170vh] sm:h-[200vh] lg:h-[240vh]"
     >
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-white">
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">

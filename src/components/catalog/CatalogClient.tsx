@@ -89,7 +89,7 @@ export function CatalogClient({ initialProducts = [] }: CatalogClientProps) {
           Mostrando {filtered.length} de {products.length} productos
         </span>
         <span className="font-body text-2xs text-[#C5A059] font-medium">
-          Garantía directa de 10 a 15 años • Despacho Transporte Propio
+          Garantía directa de fábrica según ficha técnica • Despacho Transporte Propio
         </span>
       </div>
 

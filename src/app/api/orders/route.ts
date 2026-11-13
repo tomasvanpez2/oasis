@@ -48,8 +48,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Datos de orden o ítems inválidos' }, { status: 400 })
     }
 
-    // Zero-Trust: Recálculo en servidor de flete e importe total con Transporte Propio
-    const shippingResolution = resolveShippingFromLocation(customer.city, customer.localidad || customer.department)
+    // Zero-Trust: Recálculo en servidor de flete e importe total (100% flete o $0 para accesorios)
+    const shippingResolution = resolveShippingFromLocation(customer.city, customer.localidad || customer.department, items)
     const trustedShippingFee = shippingResolution.isCovered ? shippingResolution.zone.price : 0
     const trustedShippingZone = shippingResolution.zone.name
 

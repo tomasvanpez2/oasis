@@ -373,7 +373,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
               OASIS COLCHONES
             </p>
             <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059] mt-0.5">
-              Comprobante Oficial de Compra Directa de Fábrica
+              Comprobante Oficial de Compra
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -562,7 +562,7 @@ export function SuccessReceipt({ reference, transactionId }: SuccessReceiptProps
         {/* ── SECURITY AUDIT & DIRECT FACTORY WARRANTY ────────────────────── */}
         <div className="mt-10 border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between text-2xs font-body text-white/40 gap-4">
           <p>
-            🛡️ Certificado de Garantía Industrial de Fábrica: 10 a 15 Años. Fabricado en Bogotá D.C.
+            🛡️ Certificado de Garantía Oficial. Fabricado en Bogotá D.C.
           </p>
           <div className="flex gap-4">
             <button

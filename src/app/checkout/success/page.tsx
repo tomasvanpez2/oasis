@@ -9,7 +9,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Recibo Oficial de Compra | Oasis Colchones',
-  description: 'Comprobante de transacción y orden de producción directa de fábrica.',
+  description: 'Comprobante de transacción y orden de producción.',
 }
 
 interface PageProps {

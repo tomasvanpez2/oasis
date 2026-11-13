@@ -306,7 +306,7 @@ function LegalesContent() {
                         7. Garantía Legal
                       </h3>
                       <p>
-                        Nuestros colchones y bases cuentan con garantía industrial contra defectos de fabricación en resortes, estructuras de madera y núcleos de espuma de 10 a 15 años según la referencia. La garantía no cubre desgaste natural por uso, manchas por derrames o manipulación indebida.
+                        Nuestros colchones y bases cuentan con garantía industrial contra defectos de fabricación en resortes, estructuras de madera y núcleos de espuma según la referencia (de 1 a 8 años, de acuerdo con la ficha técnica oficial de fábrica). La garantía no cubre desgaste natural por uso, manchas por derrames o manipulación indebida.
                       </p>
                     </section>
                   </div>
@@ -529,7 +529,7 @@ function LegalesContent() {
                         Garantía Industrial de Fábrica & Ficha Técnica Oficial
                       </h2>
                       <p className="mt-1 font-body text-xs text-[#0A1B54]/60">
-                        Resortes Bonell, Pocket y Núcleos de Espuma D120/D26 • 10 a 15 Años
+                        Resortes Bonell, Pocket y Núcleos de Espuma D120/D26 • Garantía Directa de Fábrica (1 a 8 Años)
                       </p>
                     </div>
                     <a
@@ -548,67 +548,95 @@ function LegalesContent() {
                         1. Cobertura Estructural de Manufactura
                       </h3>
                       <p>
-                        Oasis Colchones y Muebles garantiza la resistencia y durabilidad de los resortes en acero de alto carbono (Bonell de 5 vueltas y Pocket ensacados independientes) y la densidad de sus espumas ortopédicas certificadas (Cazata D120, Espuma Rosada D26 y Espuma Penta D26).
+                        Oasis Colchones y Muebles garantiza la resistencia y durabilidad de los resortes en acero de alto carbono (Bonell de 5 vueltas y Pocket ensacados independientes) y la densidad de sus espumas ortopédicas (Cazata D120, Espuma Rosada D26 y Espuma Penta D26) de acuerdo con los años especificados en la ficha técnica de cada producto.
                       </p>
                     </section>
 
                     <section>
                       <h3 className="font-display text-base sm:text-lg text-[#0A1B54] mb-2 text-[#C5A059]">
-                        2. Tabla de Referencias y Especificaciones
+                        2. Tabla de Referencias y Especificaciones Oficiales
                       </h3>
                       <div className="mt-3 overflow-x-auto border border-[#0A1B54]/10">
                         <table className="w-full text-left font-body text-xs">
                           <thead className="bg-white border-b border-[#0A1B54]/10 text-[#0A1B54]/60 uppercase font-mono text-[10px]">
                             <tr>
                               <th className="p-3">Línea / Modelo</th>
-                              <th className="p-3">Núcleo</th>
+                              <th className="p-3">Núcleo Oficial</th>
                               <th className="p-3">Altura</th>
-                              <th className="p-3">Firmeza</th>
+                              <th className="p-3">Gráfica Firmeza</th>
                               <th className="p-3">Garantía</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5 text-[#0A1B54]/80">
                             <tr>
                               <td className="p-3 font-medium text-[#0A1B54]">Colchón Pillow Top Pocket</td>
-                              <td className="p-3">Resortes Pocket + Cazata D120 + Penta D26</td>
-                              <td className="p-3">42 cm</td>
-                              <td className="p-3 text-[#C5A059]">Media-Suave</td>
-                              <td className="p-3 font-mono">15 Años</td>
-                            </tr>
-                            <tr>
-                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Pillow Top Original</td>
-                              <td className="p-3">Panel Bonell 5v + Politubos + Cazata D120</td>
-                              <td className="p-3">35 cm</td>
-                              <td className="p-3 text-[#C5A059]">Media</td>
-                              <td className="p-3 font-mono">15 Años</td>
+                              <td className="p-3">Resortes Pocket con Marco de Acero + Algodón Laminado + Politex + D26 + Cazata D120 + Penta D26</td>
+                              <td className="p-3 font-mono">42 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.10</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">8 Años</td>
                             </tr>
                             <tr>
                               <td className="p-3 font-medium text-[#0A1B54]">Colchón Pillow Top Encapsulado</td>
-                              <td className="p-3">Bonell Encapsulado + Tacos Perimetrales</td>
-                              <td className="p-3">35 cm</td>
-                              <td className="p-3 text-[#C5A059]">Media-Firme</td>
-                              <td className="p-3 font-mono">15 Años</td>
+                              <td className="p-3">Panel Bonell 5v + Politubos de Yumbolón + Algodón Laminado + Politex + D26 + Cazata D120 + Rosada D26</td>
+                              <td className="p-3 font-mono">35 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.9</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">8 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Pillow Top Original</td>
+                              <td className="p-3">Panel Bonell 5v (Sin Politubos) + Algodón Laminado + Politex + Rosada D26 + Cazata D120 + Penta D26</td>
+                              <td className="p-3 font-mono">35 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.8</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">6 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Imitación Pillow Antiescaras</td>
+                              <td className="p-3">Panel Bonell 5v + Algodón Laminado + Cazata D120 + Espuma Rosada Troquelada D26</td>
+                              <td className="p-3 font-mono">32 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.7</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">6 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Imitación Pillow Penta</td>
+                              <td className="p-3">Panel Bonell 5v + Algodón Laminado + Cazata D120 + Espuma Penta D26</td>
+                              <td className="p-3 font-mono">32 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.6</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">6 Años</td>
                             </tr>
                             <tr>
                               <td className="p-3 font-medium text-[#0A1B54]">Colchón Ortopédico Clínico</td>
-                              <td className="p-3">Cazata D120 (10cm) + Doble Rosada D26 (5cm)</td>
-                              <td className="p-3">22 cm</td>
-                              <td className="p-3 text-[#C5A059]">Alta (Firme)</td>
-                              <td className="p-3 font-mono">10 Años</td>
+                              <td className="p-3">Lámina Cazata D120 (10 cm) + 2 Láminas Espuma Rosada D26 (5 cm c/u)</td>
+                              <td className="p-3 font-mono">24 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.5</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">5 Años</td>
                             </tr>
                             <tr>
                               <td className="p-3 font-medium text-[#0A1B54]">Colchón Ortopédico Resortado</td>
-                              <td className="p-3">Panel Bonell + Cazata D120 + Rosada D26</td>
-                              <td className="p-3">28 cm</td>
-                              <td className="p-3 text-[#C5A059]">Media-Alta</td>
-                              <td className="p-3 font-mono">10 Años</td>
+                              <td className="p-3">Panel Bonell 5v + 2 Láminas Algodón Laminado + 2 Láminas Cazata D120 (sin D26)</td>
+                              <td className="p-3 font-mono">25 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.4</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">6 Años</td>
                             </tr>
                             <tr>
                               <td className="p-3 font-medium text-[#0A1B54]">Colchón Semi-Ortopédico Resortado</td>
-                              <td className="p-3">Panel Bonell 5v + Algodón Laminado + Rosada D26</td>
-                              <td className="p-3">26 cm</td>
-                              <td className="p-3 text-[#C5A059]">Media</td>
-                              <td className="p-3 font-mono">10 Años</td>
+                              <td className="p-3">Panel Bonell 5v + 2 Láminas Algodón Laminado + 2 Láminas Espuma Rosada D26</td>
+                              <td className="p-3 font-mono">25 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.3</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">4 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchón Semi-Anatómico de Espuma Rosada D26</td>
+                              <td className="p-3">Una lámina Espuma Rosada D26 (10 cm) + Una lámina Cazata D120 (2.8 cm)</td>
+                              <td className="p-3 font-mono">17 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.2</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">2 Años</td>
+                            </tr>
+                            <tr>
+                              <td className="p-3 font-medium text-[#0A1B54]">Colchoneta de Espuma Rosada D26</td>
+                              <td className="p-3">Una lámina Espuma Rosada D26 (10 cm)</td>
+                              <td className="p-3 font-mono">12 cm</td>
+                              <td className="p-3 text-[#C5A059]">Ficha Técnica p.1</td>
+                              <td className="p-3 font-mono font-bold text-[#0A1B54]">1 Año</td>
                             </tr>
                           </tbody>
                         </table>

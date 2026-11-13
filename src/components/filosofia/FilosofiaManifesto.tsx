@@ -45,19 +45,7 @@ export function FilosofiaManifesto() {
               className="mt-8 border-l-2 border-[#C5A059] pl-6 py-2"
             >
               <p className="font-display italic text-xl sm:text-2xl text-[#0A1B54]/90 leading-relaxed font-light">
-                «Por eso, fabricamos nuestros colchones con materiales de calidad y estructuras que puedes ver por dentro.»
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-8 inline-block border border-[#C5A059]/40 bg-[#C5A059]/10 px-5 py-3"
-            >
-              <p className="font-display text-lg sm:text-xl font-medium text-[#0A1B54] tracking-wide">
-                En Oasis, la calidad no se promete, se muestra.
+                «Por eso, fabricamos nuestros colchones con materias primas nobles y una ingeniería de capas honesta que garantiza un descanso reparador y duradero.»
               </p>
             </motion.div>
           </div>

@@ -1,5 +1,6 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+
+import React, { useState, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -8,12 +9,15 @@ import { useCartStore } from '@/store/cartStore'
 import { formatCOP } from '@/lib/utils'
 import { SecurityBadges } from './SecurityBadges'
 import {
-  ALLOWED_CITIES,
+  APPROVED_SHIPPING_ZONES,
   BOGOTA_LOCALIDADES,
   isValidBogotaLocalidad,
+  isOnlyAccessories,
+  COORDINADORA_ACCESSORIES_TEXT,
   type ShippingZone,
 } from '@/lib/shipping'
 
+// Zod Schema con validación estricta de zonas aprobadas
 const customerSchema = z
   .object({
     fullName: z.string().min(3, 'Nombre completo requerido (mínimo 3 caracteres)'),
@@ -25,24 +29,23 @@ const customerSchema = z
       .regex(/^[0-9+ ]+$/, 'Solo números y espacios'),
     documentType: z.enum(['CC', 'CE', 'NIT', 'PP']),
     document: z.string().min(6, 'Número de documento válido (mínimo 6 dígitos)'),
-    city: z.enum(ALLOWED_CITIES, {
-      errorMap: () => ({ message: 'Debes seleccionar una ciudad válida (Cota, Chía, Cajicá o Bogotá)' }),
-    }),
+    shippingZoneId: z.string().min(1, 'Debes seleccionar una zona de envío aprobada'),
+    city: z.string().min(1, 'Ciudad requerida'),
     localidad: z.string().optional(),
     address: z.string().min(8, 'Dirección de entrega completa y nomenclatura'),
     notes: z.string().optional(),
-    shippingZoneId: z.string().optional(),
     acceptTerms: z.boolean().refine((val) => val === true, {
       message:
         'Debes aceptar los términos y la política de tratamiento de datos conforme a la ley colombiana para continuar con el pago',
     }),
   })
   .superRefine((data, ctx) => {
+    // Si la ciudad es Bogotá, la localidad es obligatoria y debe ser oficial
     if (data.city === 'Bogotá') {
       if (!data.localidad || data.localidad.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Debes seleccionar la localidad de Bogotá para liquidar el flete de Transporte Propio',
+          message: 'Debes seleccionar la localidad de Bogotá para la coordinación de la entrega',
           path: ['localidad'],
         })
       } else if (!isValidBogotaLocalidad(data.localidad)) {
@@ -72,7 +75,7 @@ const SELECT_CLASS =
 const LABEL_CLASS = 'block font-body text-2xs uppercase tracking-[0.18em] text-[#0A1B54]/60 mb-2 font-medium'
 const ERROR_CLASS = 'mt-1.5 font-body text-xs text-red-500 font-light'
 
-export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
+export function CheckoutForm({ onError, onZoneChange, selectedZoneId }: CheckoutFormProps) {
   const {
     items,
     getTotalPrice,
@@ -81,10 +84,16 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
     shippingZone,
     shippingResolution,
     updateShippingLocation,
+    setShippingZone,
   } = useCartStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  // Determinar reactivamente si el carrito contiene EXCLUSIVAMENTE accesorios
+  const onlyAccessories = useMemo(() => isOnlyAccessories(items), [items])
+
+  const initialZoneId = selectedZoneId || shippingZone?.id || 'bogota-grupo-1'
 
   const {
     register,
@@ -100,59 +109,85 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
       phone: '',
       documentType: 'CC',
       document: '',
-      city: undefined,
+      shippingZoneId: initialZoneId,
+      city: 'Bogotá',
       localidad: '',
       address: '',
       notes: '',
-      shippingZoneId: shippingZone?.id || 'bogota-grupo-1',
       acceptTerms: false,
     },
   })
 
+  const watchedZoneId = watch('shippingZoneId')
   const watchedCity = watch('city')
   const watchedLocalidad = watch('localidad')
 
+  // Sincronizar zona seleccionada con ciudad y estado de flete
   useEffect(() => {
-    if (watchedCity) {
-      const isBogota = watchedCity === 'Bogotá'
-      const loc = isBogota ? watchedLocalidad || '' : undefined
+    if (watchedZoneId) {
+      const foundZone = APPROVED_SHIPPING_ZONES.find((z) => z.id === watchedZoneId)
+      if (foundZone) {
+        setValue('city', foundZone.city)
+        setShippingZone(foundZone)
+        if (onZoneChange) {
+          onZoneChange(foundZone.id)
+        }
 
-      if (!isBogota || (isBogota && watchedLocalidad)) {
-        updateShippingLocation(watchedCity, loc)
+        if (foundZone.city !== 'Bogotá') {
+          setValue('localidad', '')
+          updateShippingLocation(foundZone.city)
+        } else if (watchedLocalidad) {
+          updateShippingLocation('Bogotá', watchedLocalidad)
+        }
       }
+    }
+  }, [watchedZoneId, setValue, setShippingZone, onZoneChange, updateShippingLocation, watchedLocalidad])
+
+  useEffect(() => {
+    if (watchedCity === 'Bogotá' && watchedLocalidad) {
+      updateShippingLocation('Bogotá', watchedLocalidad)
     }
   }, [watchedCity, watchedLocalidad, updateShippingLocation])
 
-  useEffect(() => {
-    if (watchedCity && watchedCity !== 'Bogotá') {
-      setValue('localidad', '')
-    }
-  }, [watchedCity, setValue])
-
-  useEffect(() => {
-    if (shippingZone?.id) {
-      setValue('shippingZoneId', shippingZone.id)
-      if (onZoneChange) {
-        onZoneChange(shippingZone.id)
-      }
-    }
-  }, [shippingZone, setValue, onZoneChange])
-
   const subtotal = getTotalPrice()
-  const activeZone: ShippingZone = shippingZone || {
-    id: 'bogota-grupo-1',
-    name: 'Bogotá (Zona Principal)',
-    price: 30000,
-    cities: ['Bogotá'],
-    description: 'Tarifa inicial para localidades base de Bogotá D.C.',
-  }
-  const shippingFee = typeof shipping === 'number' ? shipping : activeZone.price
-  const isCovered = shippingResolution ? shippingResolution.isCovered : false
-  const grandTotal = isCovered ? subtotal + shippingFee : subtotal
+  const activeZone: ShippingZone =
+    APPROVED_SHIPPING_ZONES.find((z) => z.id === watchedZoneId) ||
+    shippingZone ||
+    APPROVED_SHIPPING_ZONES[3]
+
+  // Flete: Si es exclusivamente accesorios = $0. Si no, flete 100% de la zona
+  const shippingFee = onlyAccessories ? 0 : (typeof shipping === 'number' ? shipping : activeZone.price)
+  const isCovered = onlyAccessories ? true : (shippingResolution ? shippingResolution.isCovered : true)
+  const grandTotal = subtotal + shippingFee
+
+  // Filtrar localidades de Bogotá según el grupo seleccionado
+  const filteredLocalidades = useMemo(() => {
+    if (watchedZoneId === 'bogota-grupo-1') {
+      return ['Suba', 'Engativá', 'Fontibón', 'Barrios Unidos', 'Teusaquillo', 'Chapinero', 'Usaquén']
+    }
+    if (watchedZoneId === 'bogota-grupo-2') {
+      return [
+        'Kennedy',
+        'Bosa',
+        'Puente Aranda',
+        'Los Mártires',
+        'Santa Fe',
+        'La Candelaria',
+        'Antonio Nariño',
+        'Tunjuelito',
+        'Rafael Uribe Uribe',
+        'San Cristóbal',
+        'Ciudad Bolívar',
+        'Usme',
+        'Sumapaz',
+      ]
+    }
+    return BOGOTA_LOCALIDADES
+  }, [watchedZoneId])
 
   const onSubmit = async (data: CustomerFormData) => {
-    if (!isCovered) {
-      setSubmitError('Por favor selecciona una ciudad y localidad con cobertura para continuar.')
+    if (!isCovered && !onlyAccessories) {
+      setSubmitError('Por favor selecciona una zona autorizada de entrega para continuar.')
       return
     }
 
@@ -174,12 +209,21 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             localidad: data.localidad,
             address: data.address,
             notes: data.notes,
-            shippingZoneId: data.shippingZoneId || activeZone.id,
-            shippingZoneName: activeZone.name,
+            shippingZoneId: onlyAccessories ? 'coordinadora-contra-entrega' : (data.shippingZoneId || activeZone.id),
+            shippingZoneName: onlyAccessories ? COORDINADORA_ACCESSORIES_TEXT : activeZone.name,
           },
           items,
-          shippingPrice: shippingFee,
-          shippingZone: activeZone,
+          shippingPrice: onlyAccessories ? 0 : shippingFee,
+          shippingZone: onlyAccessories
+            ? {
+                id: 'coordinadora-contra-entrega',
+                name: COORDINADORA_ACCESSORIES_TEXT,
+                city: data.city,
+                price: 0,
+                estimatedDays: '2 a 4 días hábiles',
+                coverage: 'Cobertura nacional por Coordinadora Mercantil (Pago contra entrega)',
+              }
+            : activeZone,
         }),
       })
 
@@ -254,13 +298,15 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
       >
         <div>
           <p className="font-body text-2xs uppercase tracking-[0.2em] text-[#C5A059]">
-            Checkout Seguro Directo de Fábrica
+            Checkout Seguro Oasis
           </p>
           <h2 className="mt-1 font-display text-3xl font-normal text-[#0A1B54]">
             Datos de entrega y facturación
           </h2>
           <p className="mt-2 font-body text-xs text-[#0A1B54]/60">
-            Flete de transporte liquidado automáticamente con Transporte Propio (Origen Oficial: Bodega Normandía, Bogotá D.C.).
+            {onlyAccessories
+              ? 'Despacho asegurado para accesorios. El flete se abona a Coordinadora contra entrega.'
+              : 'Flete de transporte liquidado al 100% con Transporte Propio (Origen: Bodega Normandía, Bogotá D.C.).'}
           </p>
         </div>
 
@@ -273,7 +319,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
-          {/* Full Name */}
+          {/* Nombre completo */}
           <div>
             <label className={LABEL_CLASS}>Nombre completo del titular *</label>
             <input
@@ -286,7 +332,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             {errors.fullName && <p className={ERROR_CLASS}>{errors.fullName.message}</p>}
           </div>
 
-          {/* Email + Phone */}
+          {/* Email + Teléfono */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
               <label className={LABEL_CLASS}>Correo electrónico *</label>
@@ -314,7 +360,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             </div>
           </div>
 
-          {/* Document type + number */}
+          {/* Tipo doc + Número */}
           <div className="grid grid-cols-[130px_1fr] gap-4">
             <div>
               <label className={LABEL_CLASS}>Tipo doc. *</label>
@@ -348,102 +394,125 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             </div>
           </div>
 
-          {/* CIUDAD Y SELECTOR CONDICIONAL DE LOCALIDAD */}
+          {/* ── SELECTOR ESTRICTO DE ZONAS DE ENVÍO HARDCODEADAS APROBADAS ── */}
           <div className="space-y-4">
-            <div className={`grid grid-cols-1 gap-4 ${watchedCity === 'Bogotá' ? 'sm:grid-cols-2' : 'sm:grid-cols-1'}`}>
-              {/* Selector Ciudad */}
-              <div>
-                <label className={LABEL_CLASS}>Ciudad de Entrega (Transporte Propio) *</label>
-                <div className="relative">
-                  <select
-                    {...register('city')}
-                    className={SELECT_CLASS}
-                    disabled={isSubmitting}
-                    defaultValue=""
-                  >
-                    <option value="" disabled className="text-[#0A1B54]/40">
-                      Selecciona una ciudad
+            <div>
+              <label className={LABEL_CLASS}>
+                Zona de Envío Aprobada (Transporte Propio) *
+              </label>
+              <div className="relative">
+                <select
+                  id="shippingZoneId"
+                  {...register('shippingZoneId')}
+                  className={SELECT_CLASS}
+                  disabled={isSubmitting}
+                >
+                  <option value="" disabled className="text-[#0A1B54]/40">
+                    Selecciona una zona de envío autorizada
+                  </option>
+                  {/* Restricción estricta: Únicamente las zonas aprobadas del documento fuente existen como option */}
+                  {APPROVED_SHIPPING_ZONES.map((zone) => (
+                    <option key={zone.id} value={zone.id}>
+                      {zone.name} — {formatCOP(zone.price)}
                     </option>
-                    {ALLOWED_CITIES.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#0A1B54]/40">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </div>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#0A1B54]/40">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </div>
-                {errors.city && <p className={ERROR_CLASS}>{errors.city.message}</p>}
               </div>
-
-              {/* Selector Condicional de Localidad para Bogotá */}
-              <AnimatePresence mode="wait">
-                {watchedCity === 'Bogotá' && (
-                  <motion.div
-                    key="localidad-selector"
-                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <label className={LABEL_CLASS}>Localidad Oficial de Bogotá *</label>
-                    <div className="relative">
-                      <select
-                        {...register('localidad')}
-                        className={SELECT_CLASS}
-                        disabled={isSubmitting}
-                        defaultValue=""
-                      >
-                        <option value="" disabled className="text-[#0A1B54]/40">
-                          Selecciona una de las 20 localidades
-                        </option>
-                        {BOGOTA_LOCALIDADES.map((loc) => (
-                          <option key={loc} value={loc}>
-                            {loc}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#0A1B54]/40">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M6 9l6 6 6-6" />
-                        </svg>
-                      </div>
-                    </div>
-                    {errors.localidad && <p className={ERROR_CLASS}>{errors.localidad.message}</p>}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {errors.shippingZoneId && <p className={ERROR_CLASS}>{errors.shippingZoneId.message}</p>}
             </div>
+
+            {/* Selector Condicional de Localidad para Bogotá */}
+            <AnimatePresence mode="wait">
+              {activeZone.city === 'Bogotá' && (
+                <motion.div
+                  key="localidad-selector"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <label className={LABEL_CLASS}>Localidad Oficial de Bogotá *</label>
+                  <div className="relative">
+                    <select
+                      {...register('localidad')}
+                      className={SELECT_CLASS}
+                      disabled={isSubmitting}
+                      defaultValue=""
+                    >
+                      <option value="" disabled className="text-[#0A1B54]/40">
+                        Selecciona tu localidad
+                      </option>
+                      {filteredLocalidades.map((loc) => (
+                        <option key={loc} value={loc}>
+                          {loc}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#0A1B54]/40">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </div>
+                  </div>
+                  {errors.localidad && <p className={ERROR_CLASS}>{errors.localidad.message}</p>}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* HUD TRANSPORTE PROPIO */}
+          {/* ── HUD LOGÍSTICA QUIET LUXURY: ACCESORIOS O TRANSPORTE PROPIO ── */}
           <div className="border border-[#C5A059]/40 bg-[#FAF9F7] p-5 space-y-4 rounded transition-all duration-300">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-[#C5A059] animate-pulse" />
                 <label className="block font-body text-xs uppercase tracking-[0.18em] text-[#0A1B54] font-semibold">
-                  Cálculo Oficial Transporte Propio
+                  {onlyAccessories ? 'Despacho Coordinadora (Accesorios)' : 'Cálculo Oficial Transporte Propio'}
                 </label>
               </div>
               <span className="font-mono text-[10px] border border-[#C5A059]/60 bg-[#C5A059]/10 px-2 py-0.5 text-[#0A1B54] uppercase tracking-wider font-medium">
-                Tarifa Blindada
+                {onlyAccessories ? 'Pago Contra Entrega' : 'Tarifa 100% Transparente'}
               </span>
             </div>
 
-            {/* Display de solo lectura animado con Framer Motion */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={`${activeZone.id}-${shippingFee}-${isCovered}-${watchedCity}-${watchedLocalidad}`}
+                key={`${onlyAccessories ? 'acc' : activeZone.id}-${shippingFee}`}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 className="space-y-3"
               >
-                {isCovered ? (
+                {onlyAccessories ? (
+                  <div>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#0A1B54]/10 pb-3">
+                      <div>
+                        <span className="font-body text-2xs uppercase tracking-wider text-[#0A1B54]/50 block">
+                          Modalidad de entrega:
+                        </span>
+                        <p className="font-display text-base text-[#0A1B54] font-medium">
+                          {COORDINADORA_ACCESSORIES_TEXT}
+                        </p>
+                      </div>
+                      <div className="text-left sm:text-right">
+                        <span className="font-body text-2xs uppercase tracking-wider text-[#0A1B54]/50 block">
+                          Costo inyectado al total:
+                        </span>
+                        <span className="font-display text-lg text-[#0A1B54] font-medium">
+                          $0 COP
+                        </span>
+                      </div>
+                    </div>
+                    <p className="mt-2 font-body text-[11px] text-[#0A1B54]/70 leading-relaxed">
+                      Tu pedido contiene exclusivamente accesorios. El valor del envío nacional es liquidado y abonado directamente a Coordinadora Mercantil al momento de recibir la mercancía.
+                    </p>
+                  </div>
+                ) : (
                   <>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#0A1B54]/10 pb-3">
                       <div>
@@ -456,7 +525,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                       </div>
                       <div className="text-left sm:text-right">
                         <span className="font-body text-2xs uppercase tracking-wider text-[#0A1B54]/50 block">
-                          Tarifa liquidada:
+                          Flete oficial (100% cliente):
                         </span>
                         <span className="font-display text-lg text-[#C5A059] font-medium">
                           {formatCOP(activeZone.price)} COP
@@ -481,23 +550,12 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                       </div>
                     </div>
                   </>
-                ) : (
-                  <div className="border border-[#0A1B54]/10 bg-white p-3 rounded">
-                    <p className="font-body text-xs text-[#0A1B54]/80 font-medium">
-                      {watchedCity === 'Bogotá' && !watchedLocalidad
-                        ? '📍 Selecciona tu localidad de Bogotá para liquidar la tarifa exacta.'
-                        : '📍 Selecciona tu ciudad de destino para liquidar el flete de Transporte Propio.'}
-                    </p>
-                    <p className="mt-1 font-body text-2xs text-[#0A1B54]/50">
-                      Cobertura autorizada con flota propia en Cota, Chía, Cajicá y las 20 localidades oficiales de Bogotá D.C.
-                    </p>
-                  </div>
                 )}
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* Address */}
+          {/* Dirección exacta */}
           <div>
             <label className={LABEL_CLASS}>Dirección exacta y nomenclatura de entrega *</label>
             <input
@@ -510,7 +568,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             {errors.address && <p className={ERROR_CLASS}>{errors.address.message}</p>}
           </div>
 
-          {/* Notes */}
+          {/* Notas */}
           <div>
             <label className={LABEL_CLASS}>Notas para la cuadrilla de despacho en bodega (opcional)</label>
             <textarea
@@ -522,15 +580,23 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             />
           </div>
 
-          {/* Logistics Assurance Banner */}
+          {/* Garantía Logística */}
           <div className="border border-[#0A1B54]/15 bg-[#FAF9F7] p-4 flex items-start gap-3">
-            <span className="text-[#C5A059] text-base">🚛</span>
+            <span className="text-[#C5A059] text-base">{onlyAccessories ? '📦' : '🚛'}</span>
             <p className="font-body text-xs text-[#0A1B54]/80 leading-relaxed">
-              <strong>Despacho Oficial con Transporte Propio:</strong> El costo de transporte oficial ({formatCOP(activeZone.price)}) se liquida de forma automática y se transfiere de manera transparente al total a pagar en Wompi. Tu colchón viaja con cuadrilla y flota propia desde nuestra planta en Normandía, Bogotá D.C.
+              {onlyAccessories ? (
+                <>
+                  <strong>Despacho de Accesorios:</strong> Tu pedido viaja asegurado con empaque sellado de fábrica vía Coordinadora Mercantil bajo modalidad de pago contra entrega.
+                </>
+              ) : (
+                <>
+                  <strong>Despacho Oficial con Transporte Propio:</strong> El costo de transporte oficial ({formatCOP(activeZone.price)}) se cobra al 100% de manera transparente en tu liquidación en Wompi. Tu colchón viaja con cuadrilla y flota propia desde nuestra planta en Normandía, Bogotá D.C.
+                </>
+              )}
             </p>
           </div>
 
-          {/* Terms and Colombian Legal Consent checkbox */}
+          {/* Checkbox de Términos y Habeas Data */}
           <div className="pt-2 border-t border-[#0A1B54]/10">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
@@ -567,7 +633,7 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                 >
                   Política de Prevención de Fraude y Devolución
                 </a>{' '}
-                de Oasis Colchones y Muebles. Autorizo el tratamiento de mis datos personales para la emisión de factura electrónica y coordinación del despacho con Transporte Propio.
+                de Oasis Colchones y Muebles. Autorizo el tratamiento de mis datos personales para la emisión de factura electrónica y coordinación del despacho.
               </span>
             </label>
             {errors.acceptTerms && (
@@ -575,10 +641,10 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
             )}
           </div>
 
-          {/* Submit button */}
+          {/* Botón de Pago Wompi */}
           <button
             type="submit"
-            disabled={isSubmitting || items.length === 0 || !isCovered}
+            disabled={isSubmitting || items.length === 0 || (!isCovered && !onlyAccessories)}
             className="w-full border border-[#0A1B54] bg-[#0A1B54] py-4 font-body text-xs uppercase tracking-widest text-white font-semibold transition-all duration-300 hover:bg-[#07133B] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
@@ -586,16 +652,11 @@ export function CheckoutForm({ onError, onZoneChange }: CheckoutFormProps) {
                 <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Redirigiendo a pasarela segura Wompi...
               </span>
-            ) : !isCovered ? (
-              watchedCity === 'Bogotá' && !watchedLocalidad
-                ? 'Selecciona una Localidad para continuar'
-                : 'Selecciona una Ciudad de entrega'
             ) : (
               `Pagar Orden Segura con Wompi • ${formatCOP(grandTotal)}`
             )}
           </button>
 
-          {/* Official Security Badges */}
           <SecurityBadges />
         </form>
       </motion.div>

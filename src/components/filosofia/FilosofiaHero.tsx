@@ -7,7 +7,7 @@ import { TextSplitReveal } from '@/components/ui/TextSplitReveal'
 
 export function FilosofiaHero() {
   return (
-    <section className="relative min-h-[85vh] overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-24 bg-white">
+    <section className="relative overflow-hidden pt-24 pb-12 lg:pt-28 lg:pb-16 bg-white">
       {/* Background architectural image with quiet luxury overlay */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -35,7 +35,7 @@ export function FilosofiaHero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12 flex min-h-[70vh] flex-col justify-end">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12 flex flex-col justify-end pt-4 lg:pt-8">
         <div className="max-w-3xl">
           <motion.div
             initial={{ opacity: 0, y: 14 }}

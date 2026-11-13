@@ -7,8 +7,8 @@
       "slug": "colchoneta-de-espuma-rosada-d26",
       "name": "Colchoneta de Espuma Rosada D26",
       "tagline": "Práctica, fresca y de alta durabilidad en espuma certificada D26",
-      "description": "Colchoneta anatómica fabricada en Espuma Rosada de alta densidad D26 (10 cm). Ideal para espacios auxiliares, sofás cama y descanso flexible.",
-      "longDescription": "Colchoneta anatómica fabricada en Espuma Rosada de alta densidad D26 (10 cm). Ideal para espacios auxiliares, sofás cama y descanso flexible.",
+      "description": "Colchoneta anatómica en Espuma Rosada D26 (10 cm). Revestimiento en satín sencillo acolchado. Altura: 12 cm.",
+      "longDescription": "Colchoneta anatómica en Espuma Rosada D26 (10 cm). Revestimiento en satín sencillo acolchado. Altura: 12 cm.",
       "category": "colchonetas",
       "technology": [
         "Espuma de Alta Densidad D26",
@@ -16,9 +16,8 @@
         "Fácil Transporte"
       ],
       "materials": [
-        "Espuma Rosada Densidad D26 (10 cm)",
-        "Revestimiento Satín Sencillo acolchado",
-        "Tela poliéster transpirable"
+        "Una lámina de Espuma Rosada D26 de 10 cm",
+        "Revestimiento Satín Sencillo (Lámina D15 de 1 cm + tela poliéster)"
       ],
       "imageUrl": "/images/products/colchoneta-de-espuma-rosada-d26/ambientada.webp",
       "imageGallery": [
@@ -68,26 +67,28 @@
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Medio",
-      "technicalDiagramUrl": "/images/products/colchoneta-de-espuma-rosada-d26/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchoneta-de-espuma-rosada-d26/diagrama.webp",
+      "height": "12 cm",
+      "warranty": "1 Año",
+      "firmnessImage": "/images/products/colchoneta-de-espuma-rosada-d26/firmeza.webp"
     },
     {
       "id": "oasis-colchon-semi-anatomico-de-espuma-rosada-d26",
       "slug": "colchon-semi-anatomico-de-espuma-rosada-d26",
       "name": "Colchón Semi-Anatómico de Espuma Rosada D26",
       "tagline": "Soporte ergonómico continuo sin resortes con acolchado Jacquard",
-      "description": "Núcleo continuo de Espuma Rosada D26 de 18 cm de espesor. Diseñado para un descanso ergonómico firme y silencioso con tapizado en tela Jacquard.",
-      "longDescription": "Núcleo continuo de Espuma Rosada D26 de 18 cm de espesor. Diseñado para un descanso ergonómico firme y silencioso con tapizado en tela Jacquard.",
+      "description": "Núcleo combinado de Espuma Rosada D26 (10 cm) y Cazata D120 (2.8 cm). Tapizado Jacquard doble acolchado. Altura: 17 cm.",
+      "longDescription": "Núcleo combinado de Espuma Rosada D26 (10 cm) y Cazata D120 (2.8 cm). Tapizado Jacquard doble acolchado. Altura: 17 cm.",
       "category": "colchones",
       "technology": [
-        "Espuma HR Biomecánica",
-        "Jacquard Acolchado",
+        "Núcleo Dual D26 + D120",
+        "Jacquard Acolchado Algodón",
         "Silencioso Zero-Motion"
       ],
       "materials": [
-        "Lámina de Espuma Rosada D26 (18 cm)",
-        "Jacquard doble acolchado",
-        "Lámina D15 1 cm + guata 200g"
+        "Una lámina de Espuma Rosada D26 de 10 cm",
+        "Una lámina de Cazata D120 de 2.8 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/ambientada.webp",
       "imageGallery": [
@@ -137,16 +138,18 @@
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Firme",
-      "technicalDiagramUrl": "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/diagrama.webp",
+      "height": "17 cm",
+      "warranty": "2 Años",
+      "firmnessImage": "/images/products/colchon-semi-anatomico-de-espuma-rosada-d26/firmeza.webp"
     },
     {
       "id": "oasis-colchon-semi-ortopedico-resortado",
       "slug": "colchon-semi-ortopedico-resortado",
       "name": "Colchón Semi-Ortopédico Resortado",
       "tagline": "Estructura resortada Bonell clásica con soporte ortopédico equilibrado",
-      "description": "Panel de resortes tipo Bonell de 5 vueltas con marco perimetral y láminas aislantes en algodón laminado y espuma rosada D26. Altura: 26 cm.",
-      "longDescription": "Panel de resortes tipo Bonell de 5 vueltas con marco perimetral y láminas aislantes en algodón laminado y espuma rosada D26. Altura: 26 cm.",
+      "description": "Panel Bonell 5 vueltas con 2 láminas de Algodón Laminado (5 mm) y 2 láminas de Espuma Rosada D26 (3 cm). Altura: 25 cm.",
+      "longDescription": "Panel Bonell 5 vueltas con 2 láminas de Algodón Laminado (5 mm) y 2 láminas de Espuma Rosada D26 (3 cm). Altura: 25 cm.",
       "category": "colchones",
       "technology": [
         "Resortes Bonell",
@@ -154,10 +157,10 @@
         "Refuerzo Perimetral"
       ],
       "materials": [
-        "Panel Bonell 5 vueltas (acero alto carbono)",
-        "Láminas de Algodón Laminado 5mm",
-        "Espuma Rosada D26",
-        "Jacquard Acolchado"
+        "Un panel Resortado tipo Bonell 5 vueltas",
+        "2 láminas de Algodón Laminado de 5 mm",
+        "2 láminas de Espuma Rosada D26 de 3 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-semi-ortopedico-resortado/ambientada.webp",
       "imageGallery": [
@@ -204,14 +207,14 @@
           "stock": 15
         },
         {
-          "size": "Tipo Libro Doble (140×190)",
-          "dimensions": "140 × 190 cm (Plegable)",
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
           "price": 1270000,
           "stock": 10
         },
         {
-          "size": "Tipo Libro Queen (160×190)",
-          "dimensions": "160 × 190 cm (Plegable)",
+          "size": "Tipo Libro King (200×200)",
+          "dimensions": "200 × 200 cm (Plegable)",
           "price": 1480000,
           "stock": 10
         }
@@ -219,16 +222,18 @@
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Medio",
-      "technicalDiagramUrl": "/images/products/colchon-semi-ortopedico-resortado/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-semi-ortopedico-resortado/diagrama.webp",
+      "height": "25 cm",
+      "warranty": "4 Años",
+      "firmnessImage": "/images/products/colchon-semi-ortopedico-resortado/firmeza.webp"
     },
     {
       "id": "oasis-colchon-ortopedico-resortado",
       "slug": "colchon-ortopedico-resortado",
       "name": "Colchón Ortopédico Resortado",
       "tagline": "Mayor rigidez biomecánica y amortiguación reforzada para la columna",
-      "description": "Panel Bonell 5 vueltas reforzado con láminas de Cazata prensada D120 de alta firmeza y Espuma Rosada D26. Altura: 28 cm. Firmeza media-alta.",
-      "longDescription": "Panel Bonell 5 vueltas reforzado con láminas de Cazata prensada D120 de alta firmeza y Espuma Rosada D26. Altura: 28 cm. Firmeza media-alta.",
+      "description": "Panel Bonell 5 vueltas con 2 láminas de Algodón Laminado (5 mm) y 2 láminas de Cazata D120 de 2.8 cm (sin D26). Altura: 25 cm.",
+      "longDescription": "Panel Bonell 5 vueltas con 2 láminas de Algodón Laminado (5 mm) y 2 láminas de Cazata D120 de 2.8 cm (sin D26). Altura: 25 cm.",
       "category": "colchones",
       "technology": [
         "Soporte Ortopédico Reforzado",
@@ -236,10 +241,10 @@
         "Doble Cara Útil"
       ],
       "materials": [
-        "Panel Bonell Acero 5 vueltas",
-        "Láminas Cazata D120 (firmeza ortopédica)",
-        "Espuma Rosada D26",
-        "Jacquard Acolchado"
+        "Un panel Resortado tipo Bonell 5 vueltas",
+        "2 láminas de Algodón Laminado de 5 mm",
+        "2 láminas de Cazata D120 de 2.8 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-ortopedico-resortado/ambientada.webp",
       "imageGallery": [
@@ -286,14 +291,14 @@
           "stock": 15
         },
         {
-          "size": "Tipo Libro Doble (140×190)",
-          "dimensions": "140 × 190 cm (Plegable)",
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
           "price": 1335000,
           "stock": 10
         },
         {
-          "size": "Tipo Libro Queen (160×190)",
-          "dimensions": "160 × 190 cm (Plegable)",
+          "size": "Tipo Libro King (200×200)",
+          "dimensions": "200 × 200 cm (Plegable)",
           "price": 1540000,
           "stock": 10
         }
@@ -301,16 +306,18 @@
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Firme",
-      "technicalDiagramUrl": "/images/products/colchon-ortopedico-resortado/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-ortopedico-resortado/diagrama.webp",
+      "height": "25 cm",
+      "warranty": "6 Años",
+      "firmnessImage": "/images/products/colchon-ortopedico-resortado/firmeza.webp"
     },
     {
       "id": "oasis-colchon-ortopedico-clinico",
       "slug": "colchon-ortopedico-clinico",
       "name": "Colchón Ortopédico Clínico",
       "tagline": "Máxima firmeza recomendada por especialistas para cuidado postural",
-      "description": "Núcleo macizo de Cazata prensada D120 de 10 cm con doble cara en Espuma Rosada D26 de 5 cm. Firmeza alta sin resortes para alivio de espalda.",
-      "longDescription": "Núcleo macizo de Cazata prensada D120 de 10 cm con doble cara en Espuma Rosada D26 de 5 cm. Firmeza alta sin resortes para alivio de espalda.",
+      "description": "Núcleo macizo de Cazata D120 de 10 cm con 2 láminas de Espuma Rosada D26 de 5 cm. Firmeza ortopédica clínica sin resortes. Altura: 24 cm.",
+      "longDescription": "Núcleo macizo de Cazata D120 de 10 cm con 2 láminas de Espuma Rosada D26 de 5 cm. Firmeza ortopédica clínica sin resortes. Altura: 24 cm.",
       "category": "colchones",
       "technology": [
         "Núcleo Clínico D120",
@@ -318,9 +325,9 @@
         "Tratamiento Hipoalergénico"
       ],
       "materials": [
-        "Cazata Prensada D120 (10 cm)",
-        "Doble lámina Espuma Rosada D26 (5 cm c/u)",
-        "Jacquard doble acolchado con algodón"
+        "Una lámina de Cazata D120 de 10 cm",
+        "2 láminas de Espuma Rosada D26 de 5 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-ortopedico-clinico/ambientada.webp",
       "imageGallery": [
@@ -365,33 +372,23 @@
           "dimensions": "200 × 200 cm",
           "price": 1560000,
           "stock": 15
-        },
-        {
-          "size": "Tipo Libro Doble (140×190)",
-          "dimensions": "140 × 190 cm (Plegable)",
-          "price": 1500000,
-          "stock": 10
-        },
-        {
-          "size": "Tipo Libro Queen (160×190)",
-          "dimensions": "160 × 190 cm (Plegable)",
-          "price": 1760000,
-          "stock": 10
         }
       ],
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Firme",
-      "technicalDiagramUrl": "/images/products/colchon-ortopedico-clinico/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-ortopedico-clinico/diagrama.webp",
+      "height": "24 cm",
+      "warranty": "5 Años",
+      "firmnessImage": "/images/products/colchon-ortopedico-clinico/firmeza.webp"
     },
     {
       "id": "oasis-colchon-imitacion-pillow-penta",
       "slug": "colchon-imitacion-pillow-penta",
       "name": "Colchón Imitación Pillow Penta",
       "tagline": "Acolchado de confort envolvente en Espuma Penta con núcleo Bonell",
-      "description": "Estructura resortada Bonell de 5 vueltas con capas de amortiguación en Cazata D120 y terminación superior en Espuma Penta D26 de 3 cm. Altura: 32 cm.",
-      "longDescription": "Estructura resortada Bonell de 5 vueltas con capas de amortiguación en Cazata D120 y terminación superior en Espuma Penta D26 de 3 cm. Altura: 32 cm.",
+      "description": "Panel Bonell 5 vueltas con Algodón Laminado, Cazata D120 (2.8 cm) y Espuma Penta D26 (3 cm). Altura: 32 cm.",
+      "longDescription": "Panel Bonell 5 vueltas con Algodón Laminado, Cazata D120 (2.8 cm) y Espuma Penta D26 (3 cm). Altura: 32 cm.",
       "category": "colchones",
       "technology": [
         "Espuma Penta Ultra-Confort",
@@ -399,10 +396,11 @@
         "Acolchado Ergonómico"
       ],
       "materials": [
-        "Panel Bonell 5 vueltas",
-        "Láminas Cazata D120 (2.8 cm)",
-        "Espuma Penta D26 (3 cm)",
-        "Jacquard acolchado"
+        "Un panel Resortado tipo Bonell 5 vueltas",
+        "2 láminas de Algodón Laminado de 5 mm",
+        "2 láminas de Cazata D120 de 2.8 cm",
+        "2 láminas de Espuma Penta D26 de 3 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-imitacion-pillow-penta/ambientada.webp",
       "imageGallery": [
@@ -449,14 +447,14 @@
           "stock": 10
         },
         {
-          "size": "Tipo Libro Doble (140×190)",
-          "dimensions": "140 × 190 cm (Plegable)",
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
           "price": 1760000,
           "stock": 8
         },
         {
-          "size": "Tipo Libro Queen (160×190)",
-          "dimensions": "160 × 190 cm (Plegable)",
+          "size": "Tipo Libro King (200×200)",
+          "dimensions": "200 × 200 cm (Plegable)",
           "price": 2120000,
           "stock": 8
         }
@@ -464,16 +462,18 @@
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Medio",
-      "technicalDiagramUrl": "/images/products/colchon-imitacion-pillow-penta/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-imitacion-pillow-penta/diagrama.webp",
+      "height": "32 cm",
+      "warranty": "6 Años",
+      "firmnessImage": "/images/products/colchon-imitacion-pillow-penta/firmeza.webp"
     },
     {
       "id": "oasis-colchon-imitacion-pillow-antiescaras",
       "slug": "colchon-imitacion-pillow-antiescaras",
       "name": "Colchón Imitación Pillow Antiescaras",
       "tagline": "Superficie troquelada que distribuye la presión y favorece la microcirculación",
-      "description": "Diseñado para descanso prolongado con láminas de Espuma Rosada Troquelada D26 de 3 cm sobre panel Bonell y Cazata D120. Previene puntos de presión.",
-      "longDescription": "Diseñado para descanso prolongado con láminas de Espuma Rosada Troquelada D26 de 3 cm sobre panel Bonell y Cazata D120. Previene puntos de presión.",
+      "description": "Panel Bonell 5 vueltas con Algodón Laminado, Cazata D120 y Espuma Rosada Troquelada D26 antiescaras (3 cm). Altura: 32 cm.",
+      "longDescription": "Panel Bonell 5 vueltas con Algodón Laminado, Cazata D120 y Espuma Rosada Troquelada D26 antiescaras (3 cm). Altura: 32 cm.",
       "category": "colchones",
       "technology": [
         "Espuma Troquelada Activa",
@@ -481,10 +481,11 @@
         "Alivio de Presión"
       ],
       "materials": [
-        "Espuma Troquelada Antiescaras D26",
-        "Cazata D120 (2.8 cm)",
-        "Panel Bonell 5 vueltas",
-        "Jacquard Hipoalergénico"
+        "Un panel Resortado tipo Bonell 5 vueltas",
+        "2 láminas de Algodón Laminado de 5 mm",
+        "2 láminas de Cazata D120 de 2.8 cm",
+        "2 láminas de Espuma Rosada Troquelada D26 de 3 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-imitacion-pillow-antiescaras/ambientada.webp",
       "imageGallery": [
@@ -531,14 +532,14 @@
           "stock": 10
         },
         {
-          "size": "Tipo Libro Doble (140×190)",
-          "dimensions": "140 × 190 cm (Plegable)",
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
           "price": 1760000,
           "stock": 8
         },
         {
-          "size": "Tipo Libro Queen (160×190)",
-          "dimensions": "160 × 190 cm (Plegable)",
+          "size": "Tipo Libro King (200×200)",
+          "dimensions": "200 × 200 cm (Plegable)",
           "price": 2120000,
           "stock": 8
         }
@@ -546,27 +547,32 @@
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Firme",
-      "technicalDiagramUrl": "/images/products/colchon-imitacion-pillow-antiescaras/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-imitacion-pillow-antiescaras/diagrama.webp",
+      "height": "32 cm",
+      "warranty": "6 Años",
+      "firmnessImage": "/images/products/colchon-imitacion-pillow-antiescaras/firmeza.webp"
     },
     {
       "id": "oasis-colchon-pillow-top-original",
       "slug": "colchon-pillow-top-original",
       "name": "Colchón Pillow Top Original",
       "tagline": "Colchoneta superior Pillow Top auténtica para un descanso de alta gama",
-      "description": "Colchón con colchoneta Pillow Top integrada en ambas caras. Panel Bonell de 5 vueltas con politubos y láminas combinadas de Cazata D120 y Espuma Penta D26. Altura: 35 cm.",
-      "longDescription": "Colchón con colchoneta Pillow Top integrada en ambas caras. Panel Bonell de 5 vueltas con politubos y láminas combinadas de Cazata D120 y Espuma Penta D26. Altura: 35 cm.",
+      "description": "Panel Bonell 5 vueltas sin politubos, con capas aislantes en Algodón Laminado, Politex, Cazata D120 y Espuma Penta D26. Altura: 35 cm.",
+      "longDescription": "Panel Bonell 5 vueltas sin politubos, con capas aislantes en Algodón Laminado, Politex, Cazata D120 y Espuma Penta D26. Altura: 35 cm.",
       "category": "colchones",
       "technology": [
         "Pillow Top Superior e Inferior",
-        "Aislante Polietileno",
+        "Aislamiento Térmico y Acústico",
         "Doble Sensación Confort"
       ],
       "materials": [
-        "Panel Bonell con Politubos de Yumbolón",
-        "Láminas Cazata D120",
-        "Espuma Penta D26",
-        "Jacquard Doble Acolchado"
+        "Un panel Resortado tipo Bonell 5 vueltas",
+        "2 láminas de Algodón Laminado de 5 mm",
+        "2 láminas de Politex de 5 mm",
+        "2 láminas de Espuma Rosada D26 de 1.5 cm",
+        "2 láminas de Cazata D120 de 2.8 cm",
+        "2 láminas de Espuma Penta D26 de 3 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-pillow-top-original/ambientada.webp",
       "imageGallery": [
@@ -613,14 +619,14 @@
           "stock": 10
         },
         {
-          "size": "Tipo Libro Doble (140×190)",
-          "dimensions": "140 × 190 cm (Plegable)",
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
           "price": 2020000,
           "stock": 6
         },
         {
-          "size": "Tipo Libro Queen (160×190)",
-          "dimensions": "160 × 190 cm (Plegable)",
+          "size": "Tipo Libro King (200×200)",
+          "dimensions": "200 × 200 cm (Plegable)",
           "price": 2435000,
           "stock": 6
         }
@@ -628,27 +634,33 @@
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Medio",
-      "technicalDiagramUrl": "/images/products/colchon-pillow-top-original/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-pillow-top-original/diagrama.webp",
+      "height": "35 cm",
+      "warranty": "6 Años",
+      "firmnessImage": "/images/products/colchon-pillow-top-original/firmeza.webp"
     },
     {
       "id": "oasis-colchon-pillow-top-encapsulado",
       "slug": "colchon-pillow-top-encapsulado",
       "name": "Colchón Pillow Top Encapsulado",
       "tagline": "Marco perimetral encapsulado con máxima estabilidad y cero deformaciones",
-      "description": "Estructura resortada Bonell encapsulada con tacos perimetrales de alta densidad que garantizan estabilidad en los bordes. Altura: 35 cm.",
-      "longDescription": "Estructura resortada Bonell encapsulada con tacos perimetrales de alta densidad que garantizan estabilidad en los bordes. Altura: 35 cm.",
+      "description": "Panel Bonell 5 vueltas reforzado con Politubos de Yumbolón, Algodón Laminado, Cazata D120 y Espuma Rosada D26. Altura: 35 cm.",
+      "longDescription": "Panel Bonell 5 vueltas reforzado con Politubos de Yumbolón, Algodón Laminado, Cazata D120 y Espuma Rosada D26. Altura: 35 cm.",
       "category": "colchones",
       "technology": [
-        "Borde Encapsulado High-Edge",
-        "Pillow Top Flotante",
-        "Máxima Resistencia Perimetral"
+        "Refuerzo Perimetral con Politubos de Yumbolón",
+        "Pillow Top Acolchado",
+        "Máxima Resistencia"
       ],
       "materials": [
-        "Estructura Encapsulada con Tacos D30",
-        "Panel Bonell 5 vueltas",
-        "Cazata D120 + Espuma Rosada D26",
-        "Jacquard de lujo"
+        "Un panel Resortado tipo Bonell 5 vueltas",
+        "Politubos de Yumbolón",
+        "2 láminas de Algodón Laminado de 5 mm",
+        "2 láminas de Politex de 5 mm",
+        "2 láminas de Espuma Rosada D26 de 1.5 cm",
+        "2 láminas de Cazata D120 de 2.8 cm",
+        "2 láminas de Espuma Rosada D26 de 3 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-pillow-top-encapsulado/ambientada.webp",
       "imageGallery": [
@@ -695,31 +707,33 @@
           "stock": 8
         },
         {
-          "size": "Tipo Libro Doble (140×190)",
-          "dimensions": "140 × 190 cm (Plegable)",
-          "price": 2330000,
-          "stock": 5
-        },
-        {
           "size": "Tipo Libro Queen (160×190)",
           "dimensions": "160 × 190 cm (Plegable)",
+          "price": 2330000,
+          "stock": 6
+        },
+        {
+          "size": "Tipo Libro King (200×200)",
+          "dimensions": "200 × 200 cm (Plegable)",
           "price": 2750000,
-          "stock": 5
+          "stock": 6
         }
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Firme",
-      "technicalDiagramUrl": "/images/products/colchon-pillow-top-encapsulado/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-pillow-top-encapsulado/diagrama.webp",
+      "height": "35 cm",
+      "warranty": "8 Años",
+      "firmnessImage": "/images/products/colchon-pillow-top-encapsulado/firmeza.webp"
     },
     {
       "id": "oasis-colchon-pillow-top-pocket-resortes-independientes",
       "slug": "colchon-pillow-top-pocket-resortes-independientes",
       "name": "Colchón Pillow Top Pocket Resortes Independientes",
       "tagline": "Cero transferencia de movimiento con resortes ensacados individuales y 42 cm de altura",
-      "description": "El buque insignia de Oasis. Panel de resortes Pocket individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.",
-      "longDescription": "El buque insignia de Oasis. Panel de resortes Pocket individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.",
+      "description": "Panel Pocket de resortes independientes con marco de acero, Algodón Laminado, Cazata D120 y Espuma Penta D26. Altura: 42 cm.",
+      "longDescription": "Panel Pocket de resortes independientes con marco de acero, Algodón Laminado, Cazata D120 y Espuma Penta D26. Altura: 42 cm.",
       "category": "colchones",
       "technology": [
         "Zero Transfer Pocket Springs",
@@ -727,10 +741,13 @@
         "Doble Pillow Top 42cm"
       ],
       "materials": [
-        "Resortes Pocket Ensacados Independientes",
-        "Marco de Acero Perimetral",
-        "Láminas Cazata D120 + Penta D26",
-        "Jacquard de lujo 400g"
+        "Un panel Resortado Pocket con marco de acero",
+        "2 láminas de Algodón Laminado de 5 mm",
+        "2 láminas de Politex de 5 mm",
+        "2 láminas de Espuma Rosada D26 de 1.5 cm",
+        "2 láminas de Cazata D120 de 2.8 cm",
+        "2 láminas de Espuma Penta D26 de 3 cm",
+        "Jacquard doble acolchado (Lámina D15 de 1 cm, guata 200 y tela algodón)"
       ],
       "imageUrl": "/images/products/colchon-pillow-top-pocket-resortes-independientes/ambientada.webp",
       "imageGallery": [
@@ -777,14 +794,14 @@
           "stock": 8
         },
         {
-          "size": "Tipo Libro Doble (140×190)",
-          "dimensions": "140 × 190 cm (Plegable)",
+          "size": "Tipo Libro Queen (160×190)",
+          "dimensions": "160 × 190 cm (Plegable)",
           "price": 2385000,
           "stock": 5
         },
         {
-          "size": "Tipo Libro Queen (160×190)",
-          "dimensions": "160 × 190 cm (Plegable)",
+          "size": "Tipo Libro King (200×200)",
+          "dimensions": "200 × 200 cm (Plegable)",
           "price": 3005000,
           "stock": 5
         }
@@ -792,8 +809,10 @@
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
       "updatedAt": "2026-11-08T18:00:00.000Z",
-      "firmness": "Medio",
-      "technicalDiagramUrl": "/images/products/colchon-pillow-top-pocket-resortes-independientes/diagrama.webp"
+      "technicalDiagramUrl": "/images/products/colchon-pillow-top-pocket-resortes-independientes/diagrama.webp",
+      "height": "42 cm",
+      "warranty": "8 Años",
+      "firmnessImage": "/images/products/colchon-pillow-top-pocket-resortes-independientes/firmeza.webp"
     },
     {
       "id": "oasis-base-cama-sencilla",
@@ -859,7 +878,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "2 Años",
+      "height": "30 cm"
     },
     {
       "id": "oasis-base-cama-baul-con-pistones-hidraulicos",
@@ -927,7 +948,9 @@
       ],
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "2 Años",
+      "height": "30 cm"
     },
     {
       "id": "oasis-base-cama-nido-doble-cama-auxiliar",
@@ -993,7 +1016,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "2 Años",
+      "height": "30 cm"
     },
     {
       "id": "oasis-base-cama-con-cajones-laterales",
@@ -1061,7 +1086,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "2 Años",
+      "height": "30 cm"
     },
     {
       "id": "oasis-espaldar-sencillo-tapizado",
@@ -1127,7 +1154,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "2 Años",
+      "height": "30 cm"
     },
     {
       "id": "oasis-conjunto-base-cama-y-espaldar-nube",
@@ -1194,7 +1223,9 @@
       ],
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "2 Años",
+      "height": "30 cm"
     },
     {
       "id": "oasis-conjunto-base-cama-y-espaldar-de-lujo",
@@ -1262,7 +1293,9 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "2 Años",
+      "height": "30 cm"
     },
     {
       "id": "oasis-almohada-ortopedica-ergonomica",
@@ -1316,30 +1349,31 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     },
     {
-      "id": "oasis-almohada-cervical-gel-12-memory-foam",
-      "slug": "almohada-cervical-gel-12-memory-foam",
-      "name": "Almohada Cervical Gel 12 Memory Foam",
+      "id": "oasis-almohada-cervical-gel-12-viscoelastica",
+      "slug": "almohada-cervical-gel-12-viscoelastica",
+      "name": "Almohada Cervical Gel 12 Espuma Viscoelástica Anatómica",
       "tagline": "Espuma viscoelástica con lámina Cooling Pad Gel para un descanso siempre fresco",
       "description": "Espuma viscoelástica 100% con efecto memoria y tecnología Cooling Pad Gel que mantiene la temperatura fresca. Funda removible y lavable.",
       "longDescription": "Espuma viscoelástica 100% con efecto memoria y tecnología Cooling Pad Gel que mantiene la temperatura fresca. Funda removible y lavable.",
       "category": "almohadas",
       "technology": [
         "Cooling Pad Gel Térmico",
-        "Recuperación Lenta Memory Foam",
+        "Recuperación Lenta Espuma Viscoelástica",
         "Protección Antiácaros"
       ],
       "materials": [
-        "100% Espuma Viscoelástica Memory Foam",
+        "100% Espuma Viscoelástica Espuma Viscoelástica",
         "Almohadilla Cooling Pad Gel",
         "Funda lavable transpirable"
       ],
-      "imageUrl": "/images/products/almohada-cervical-gel-12-memory-foam/foto-1.webp",
+      "imageUrl": "/images/products/almohada-cervical-gel-12-viscoelastica/foto-1.webp",
       "imageGallery": [
-        "/images/products/almohada-cervical-gel-12-memory-foam/foto-1.webp",
-        "/images/products/almohada-cervical-gel-12-memory-foam/foto-2.webp"
+        "/images/products/almohada-cervical-gel-12-viscoelastica/foto-1.webp",
+        "/images/products/almohada-cervical-gel-12-viscoelastica/foto-2.webp"
       ],
       "variants": [
         {
@@ -1357,12 +1391,13 @@
       ],
       "featured": true,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     },
     {
-      "id": "oasis-almohada-clasica-gel-14-memory-foam",
-      "slug": "almohada-clasica-gel-14-memory-foam",
-      "name": "Almohada Clásica Gel 14 Memory Foam",
+      "id": "oasis-almohada-clasica-gel-14-viscoelastica",
+      "slug": "almohada-clasica-gel-14-viscoelastica",
+      "name": "Almohada Clásica Gel 14 Espuma Viscoelástica Anatómica",
       "tagline": "Formato tradicional con gel refrigerante y soporte viscoelástico profundo",
       "description": "Diseño clásico tradicional con altura de 14 cm, lámina de gel refrescante y núcleo viscoelástico de lenta recuperación. Funda extraíble.",
       "longDescription": "Diseño clásico tradicional con altura de 14 cm, lámina de gel refrescante y núcleo viscoelástico de lenta recuperación. Funda extraíble.",
@@ -1377,10 +1412,10 @@
         "Lámina Refrigerante Cooling Gel",
         "Funda con cremallera lavable"
       ],
-      "imageUrl": "/images/products/almohada-clasica-gel-14-memory-foam/foto-1.webp",
+      "imageUrl": "/images/products/almohada-clasica-gel-14-viscoelastica/foto-1.webp",
       "imageGallery": [
-        "/images/products/almohada-clasica-gel-14-memory-foam/foto-1.webp",
-        "/images/products/almohada-clasica-gel-14-memory-foam/foto-2.webp"
+        "/images/products/almohada-clasica-gel-14-viscoelastica/foto-1.webp",
+        "/images/products/almohada-clasica-gel-14-viscoelastica/foto-2.webp"
       ],
       "variants": [
         {
@@ -1398,12 +1433,13 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     },
     {
-      "id": "oasis-almohada-clasica-soft-plus-memory-foam",
-      "slug": "almohada-clasica-soft-plus-memory-foam",
-      "name": "Almohada Clásica Soft Plus Memory Foam",
+      "id": "oasis-almohada-clasica-soft-plus-viscoelastica",
+      "slug": "almohada-clasica-soft-plus-viscoelastica",
+      "name": "Almohada Clásica Soft Plus Espuma Viscoelástica Anatómica",
       "tagline": "Sensación mullida envolvente en viscoelástica de alta pureza con funda gris",
       "description": "Espuma viscoelástica con tacto extra suave Soft Plus. Adaptabilidad anatómica inmediata y funda premium bicolor gris con negro lavable.",
       "longDescription": "Espuma viscoelástica con tacto extra suave Soft Plus. Adaptabilidad anatómica inmediata y funda premium bicolor gris con negro lavable.",
@@ -1418,10 +1454,10 @@
         "Funda Jacquard Bicolor Gris/Negro",
         "Tratamiento bactericida"
       ],
-      "imageUrl": "/images/products/almohada-clasica-soft-plus-memory-foam/foto-1.webp",
+      "imageUrl": "/images/products/almohada-clasica-soft-plus-viscoelastica/foto-1.webp",
       "imageGallery": [
-        "/images/products/almohada-clasica-soft-plus-memory-foam/foto-1.webp",
-        "/images/products/almohada-clasica-soft-plus-memory-foam/foto-2.webp"
+        "/images/products/almohada-clasica-soft-plus-viscoelastica/foto-1.webp",
+        "/images/products/almohada-clasica-soft-plus-viscoelastica/foto-2.webp"
       ],
       "variants": [
         {
@@ -1439,7 +1475,8 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     },
     {
       "id": "oasis-almohada-cervical-soft-plus-anatomica",
@@ -1451,7 +1488,7 @@
       "category": "almohadas",
       "technology": [
         "Doble Onda Anatómica",
-        "Memory Foam Certificada",
+        "Espuma Viscoelástica Certificada",
         "Protección Antipolvo y Ácaros"
       ],
       "materials": [
@@ -1479,7 +1516,8 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     },
     {
       "id": "oasis-almohada-entrepierna-y-rodillas-ergonomica",
@@ -1512,7 +1550,8 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     },
     {
       "id": "oasis-protector-de-colchon-termosellado-y-acolchado",
@@ -1605,7 +1644,8 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     },
     {
       "id": "oasis-juego-de-sabanas-genero-algodon-4852-unicolor",
@@ -1667,7 +1707,8 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     },
     {
       "id": "oasis-juego-de-sabanas-genero-algodon-4852-estampada",
@@ -1729,7 +1770,8 @@
       ],
       "featured": false,
       "createdAt": "2026-11-08T00:00:00.000Z",
-      "updatedAt": "2026-11-08T18:00:00.000Z"
+      "updatedAt": "2026-11-08T18:00:00.000Z",
+      "warranty": "1 Año"
     }
   ]
 }

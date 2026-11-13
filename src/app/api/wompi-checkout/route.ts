@@ -15,6 +15,8 @@ import {
   resolveShippingFromLocation,
   ALLOWED_CITIES,
   isValidBogotaLocalidad,
+  isOnlyAccessories,
+  COORDINADORA_ACCESSORIES_TEXT,
   type AllowedCity,
 } from '@/lib/shipping'
 import type { Order, CartItem, CustomerInfo } from '@/types'
@@ -71,60 +73,67 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // ── 2. ZERO-TRUST LOGISTICS: Server-side Transporte Propio Rate Enforcement ──
-    // Regla estricta: Solo 4 ciudades permitidas (Cota, Chía, Cajicá, Bogotá)
-    if (!ALLOWED_CITIES.includes(city as AllowedCity)) {
-      return NextResponse.json(
-        {
-          error:
-            'Ciudad no autorizada. El servicio logístico de Transporte Propio opera exclusivamente en Cota, Chía, Cajicá y Bogotá D.C.',
-        },
-        { status: 400 }
-      )
-    }
+    // ── 2. ZERO-TRUST LOGISTICS: Server-side Logistics Rate Enforcement ──
+    const onlyAccessories = isOnlyAccessories(items)
+    let trustedShippingFee = 0
+    let trustedShippingZoneName: string = COORDINADORA_ACCESSORIES_TEXT
+    let trustedShippingZoneId = 'coordinadora-contra-entrega'
 
-    // Regla estricta: Si la ciudad es Bogotá, la localidad es obligatoria y debe ser oficial
-    if (city === 'Bogotá') {
-      if (!localidad || typeof localidad !== 'string' || localidad.trim().length === 0) {
+    if (!onlyAccessories) {
+      // Regla estricta Transporte Propio: Solo 4 ciudades permitidas (Cota, Chía, Cajicá, Bogotá)
+      if (!ALLOWED_CITIES.includes(city as AllowedCity)) {
         return NextResponse.json(
           {
             error:
-              'Para despachos en Bogotá D.C. es estrictamente obligatorio seleccionar una de las 20 localidades oficiales.',
+              'Ciudad no autorizada. El servicio logístico de Transporte Propio opera exclusivamente en Cota, Chía, Cajicá y Bogotá D.C.',
           },
           { status: 400 }
         )
       }
 
-      if (!isValidBogotaLocalidad(localidad)) {
+      // Regla estricta: Si la ciudad es Bogotá, la localidad es obligatoria y debe ser oficial
+      if (city === 'Bogotá') {
+        if (!localidad || typeof localidad !== 'string' || localidad.trim().length === 0) {
+          return NextResponse.json(
+            {
+              error:
+                'Para despachos en Bogotá D.C. es estrictamente obligatorio seleccionar una de las 20 localidades oficiales.',
+            },
+            { status: 400 }
+          )
+        }
+
+        if (!isValidBogotaLocalidad(localidad)) {
+          return NextResponse.json(
+            {
+              error:
+                'La localidad indicada no corresponde a ninguna de las 20 localidades oficiales de Bogotá D.C.',
+            },
+            { status: 400 }
+          )
+        }
+      }
+
+      // Recálculo autoritativo e inmutable del flete al 100% (cero subsidios)
+      const shippingResolution = resolveShippingFromLocation(city, localidad, items)
+
+      if (!shippingResolution.isCovered) {
         return NextResponse.json(
           {
             error:
-              'La localidad indicada no corresponde a ninguna de las 20 localidades oficiales de Bogotá D.C.',
+              shippingResolution.warning ||
+              'El destino seleccionado se encuentra fuera de la cobertura de Transporte Propio.',
           },
           { status: 400 }
         )
       }
+
+      trustedShippingFee = shippingResolution.zone.price
+      trustedShippingZoneName = shippingResolution.zone.name
+      trustedShippingZoneId = shippingResolution.zone.id
     }
 
-    // Recálculo autoritativo e inmutable del flete en el servidor
-    const shippingResolution = resolveShippingFromLocation(city, localidad)
-
-    if (!shippingResolution.isCovered) {
-      return NextResponse.json(
-        {
-          error:
-            shippingResolution.warning ||
-            'El destino seleccionado se encuentra fuera de la cobertura de Transporte Propio.',
-        },
-        { status: 400 }
-      )
-    }
-
-    const trustedShippingFee = shippingResolution.zone.price
-    const trustedShippingZoneName = shippingResolution.zone.name
-    const trustedShippingZoneId = shippingResolution.zone.id
-
-    // ── 3. ZERO-TRUST FINANCIAL CALCULATIONS ──────────────────────────────────────
+    // ── 3. ZERO-TRUST FINANCIAL CALCULATIONS (100% Flete, 0 Subsidios) ────────────
     const trustedSubtotal = items.reduce(
       (acc, i) => acc + (Number(i.price) || 0) * (Number(i.quantity) || 1),
       0

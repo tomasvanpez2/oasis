@@ -36,18 +36,6 @@ export function FilosofiaValues() {
           Aquel sueño que comenzó en 1998, recorriendo pueblos en un camión con perseverancia y vocación, hoy sigue vivo desde nuestra sede y planta de producción en Bogotá. En Oasis Colchones y Muebles evolucionamos y ampliamos horizontes, manteniendo intacto el compromiso familiar con tu descanso.
         </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-6 inline-block border-l-2 border-[#C5A059] pl-4 text-left"
-        >
-          <p className="font-display italic text-lg sm:text-xl text-[#0A1B54]">
-            En Oasis, la calidad no se promete, se muestra.
-          </p>
-        </motion.div>
-
         {/* Notice: Button "Explorar catálogo" removed per strict requirement. Asesoría directa preserved. */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}

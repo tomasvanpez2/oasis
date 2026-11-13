@@ -29,8 +29,8 @@ export const TECHNICAL_LAYERS: TechnicalLayer[] = [
   {
     id: 'layer-1',
     num: '01',
-    name: 'Tejido Stretch Tencel & Algodón Orgánico',
-    shortName: 'Tejido Tencel 3cm',
+    name: 'Tejido Stretch Jacquard & Algodón',
+    shortName: 'Tejido Jacquard 3cm',
     category: 'Superficie Térmica y Transpirable',
     thickness: '3 cm',
     thicknessPx: 18,
@@ -39,8 +39,8 @@ export const TECHNICAL_LAYERS: TechnicalLayer[] = [
     technicalSpec: 'Gramaje 420 g/m² — Hipoalergénico y Termorregulador',
     badge: 'Capa Térmica Superior',
     description:
-      'Acolchado capitoné en rombos continuos de seda vegetal Tencel con tratamiento antiácaros. Absorbe y disipa la humedad corporal un 50% más rápido que el algodón convencional, manteniendo la temperatura de descanso equilibrada.',
-    composition: ['Fibra Tencel Lyocell', 'Algodón Orgánico Certificado', 'Tratamiento Sanitized® Antiácaros'],
+      'Acolchado capitoné en rombos continuos de tejido Jacquard con mezcla de algodón y tratamiento antiácaros. Disipa la humedad corporal manteniendo la temperatura de descanso equilibrada.',
+    composition: ['Tejido Jacquard Algodón', 'Fibra Siliconada', 'Tratamiento Sanitized® Antiácaros'],
     topBg: 'linear-gradient(135deg, #FBF9F5 0%, #ECE7DD 50%, #DDD6C8 100%)',
     topBorder: '#C5A059',
     frontBg: 'linear-gradient(180deg, #E6E0D3 0%, #C8C0AF 100%)',
@@ -51,18 +51,18 @@ export const TECHNICAL_LAYERS: TechnicalLayer[] = [
   {
     id: 'layer-2',
     num: '02',
-    name: 'Memory Foam Viscoelástica Celda Abierta',
-    shortName: 'Memory Foam 4cm',
+    name: 'Espuma Penta D26 de Gran Resiliencia',
+    shortName: 'Espuma Penta 4cm',
     category: 'Alivio Ergonómico de Presión',
     thickness: '4 cm',
     thicknessPx: 24,
     explodedZ: 68,
     assembledZ: -18,
-    technicalSpec: 'Densidad 60 kg/m³ — Micro-ventilación Gravedad Cero',
+    technicalSpec: 'Densidad D26 — Micro-ventilación Gravedad Cero',
     badge: 'Confort Ergonómico',
     description:
-      'Espuma viscoelástica termo-sensible de respuesta gradual. Se adapta al contorno anatómico mitigando el 94% de los puntos de presión en hombros y cadera, permitiendo una correcta descompresión vertebral.',
-    composition: ['Viscoelástica 60 kg/m³', 'Estructura Celular Abierta', 'Partículas Cooling Gel'],
+      'Espuma Penta D26 de respuesta elástica gradual. Se adapta al contorno anatómico mitigando los puntos de presión en hombros y cadera, permitiendo una correcta postura vertebral.',
+    composition: ['Espuma Penta D26', 'Estructura Microcelular', 'Acolchado Ergonómico'],
     topBg: 'linear-gradient(135deg, #DFB45E 0%, #C5A059 45%, #9E7A32 100%)',
     topBorder: '#E5C378',
     frontBg: 'linear-gradient(180deg, #B88E3E 0%, #7A5B20 100%)',
@@ -73,18 +73,18 @@ export const TECHNICAL_LAYERS: TechnicalLayer[] = [
   {
     id: 'layer-3',
     num: '03',
-    name: 'Núcleo de Transición Anatómica HR-40',
-    shortName: 'Núcleo HR-40 5cm',
+    name: 'Láminas de Transición en Cazata D120',
+    shortName: 'Cazata D120 5cm',
     category: 'Distribución Dinámica de Cargas',
     thickness: '5 cm',
     thicknessPx: 28,
     explodedZ: 0,
     assembledZ: -42,
-    technicalSpec: 'Espuma Alta Resiliencia — 7 Zonas Biomecánicas',
+    technicalSpec: 'Cazata Prensada D120 — Aislamiento Biomecánico',
     badge: 'Distribución Dinámica',
     description:
-      'Canales longitudinales de perfilado ergonómico que aíslan el peso corporal y modulan la firmeza entre el torso y las extremidades. Evita la sensación de hundimiento y asegura una postura fisiológica neutral.',
-    composition: ['Espuma HR-40 Resiliente', 'Corte Perfilado 7 Zonas', 'Termofusión sin Solventes'],
+      'Láminas prensadas de alta compresión Cazata D120 que aíslan el peso corporal y modulan la firmeza entre el torso y las extremidades. Evita la sensación de hundimiento y asegura estabilidad.',
+    composition: ['Cazata D120 Prensada', 'Aislamiento Biomecánico', 'Termofusión sin Solventes'],
     topBg: 'linear-gradient(135deg, #1C357E 0%, #132456 50%, #0E1A3D 100%)',
     topBorder: '#3A529B',
     frontBg: 'repeating-linear-gradient(90deg, #132456 0 18px, #0B1634 18px 22px)',
@@ -119,18 +119,18 @@ export const TECHNICAL_LAYERS: TechnicalLayer[] = [
   {
     id: 'layer-5',
     num: '05',
-    name: 'Base Estabilizadora Ortopédica HD-45',
-    shortName: 'Base HD-45 6cm',
+    name: 'Base Estabilizadora Ortopédica en Espuma D26',
+    shortName: 'Base Espuma D26 6cm',
     category: 'Cimiento Estructural y Durabilidad',
     thickness: '6 cm',
     thicknessPx: 32,
     explodedZ: -165,
     assembledZ: -126,
-    technicalSpec: 'Fieltro Termofijado + Cimiento de Alta Densidad — 120,000 Ciclos',
+    technicalSpec: 'Fieltro Termofijado + Cimiento de Espuma D26',
     badge: 'Sustentación Estructural',
     description:
-      'Cimiento rígido de alta densidad diseñado para soportar más de 120,000 ciclos continuos de carga sin deformación dimensional. Protege la matriz de resortes y garantiza la estabilidad del conjunto por más de 15 años.',
-    composition: ['Espuma HD-45 Ortopédica', 'Fieltro Termofijado 800g', 'Barrera Antideslizante'],
+      'Cimiento rígido de alta densidad diseñado para soportar uso intensivo garantizando la estabilidad y alineación del conjunto de acuerdo a la ficha técnica oficial de fábrica.',
+    composition: ['Espuma D26 Ortopédica', 'Fieltro Termofijado 800g', 'Barrera Antideslizante'],
     topBg: 'linear-gradient(135deg, #0D1E4E 0%, #07112E 60%, #030818 100%)',
     topBorder: '#1A2E6B',
     frontBg: 'linear-gradient(180deg, #0B173B 0%, #02050D 100%)',
@@ -241,7 +241,7 @@ export function TechnicalDiagram() {
       {/* ── EMBEDDED PROCEDURAL SVG TEXTURE DEFINITIONS (NO EXTERNAL IMAGES) ── */}
       <svg className="absolute h-0 w-0 pointer-events-none" aria-hidden="true">
         <defs>
-          {/* Capa 1: Capitoné de Rombos Continuos (Tencel Lyocell) */}
+          {/* Capa 1: Capitoné de Rombos Continuos (Tejido Jacquard Algodón) */}
           <pattern
             id="tech-tencelQuilt"
             width="28"
@@ -291,7 +291,7 @@ export function TechnicalDiagram() {
             <circle cx="9" cy="18" r="1" fill="#FFFFFF" fillOpacity="0.25" />
           </pattern>
 
-          {/* Capa 3: Canales de Perfilado Biomecánico HR-40 (7 Zonas) */}
+          {/* Capa 3: Láminas de Transición Anatómica Cazata D120 */}
           <pattern
             id="tech-hr40Channels"
             width="24"
@@ -404,7 +404,7 @@ export function TechnicalDiagram() {
             />
           </pattern>
 
-          {/* Capa 5: Malla Estructural Ortopédica HD-45 */}
+          {/* Capa 5: Base Estabilizadora en Espuma D26 */}
           <pattern
             id="tech-hd45Grid"
             width="20"
@@ -738,13 +738,13 @@ export function TechnicalDiagram() {
                       )}
 
                       {layer.id === 'layer-5' && (
-                        /* HD-45 Monolithic Technical Foundation Silkscreen */
+                        /* Base Técnica de Espuma D26 */
                         <div className="absolute inset-x-3 bottom-2 flex justify-between items-center pointer-events-none">
                           <span className="font-mono text-[7px] uppercase tracking-[0.2em] text-[#C5A059]">
-                            HD-45 HIGH RESILIENCE BASE • ISO 9001
+                            BASE ALTA DENSIDAD D26 • CERTIFICACIÓN OASIS
                           </span>
                           <span className="font-mono text-[7px] text-[#0A1B54]/50">
-                            120,000 CYCLES
+                            CALIDAD DE PLANTA
                           </span>
                         </div>
                       )}
@@ -763,10 +763,10 @@ export function TechnicalDiagram() {
                       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
                     </div>
 
-                    {/* ── BILLBOARDED LEADER LINE & FLOATING TEXT LABEL ────────── */}
+                    {/* ── DESKTOP BILLBOARDED LEADER LINE & FLOATING TEXT LABEL ────────── */}
                     {/* Counter-rotation to cancel isometric camera and face screen flat */}
                     <div
-                      className="absolute right-0 bottom-0 pointer-events-none"
+                      className="hidden md:block absolute right-0 bottom-0 pointer-events-none"
                       style={{
                         transform: 'rotateZ(42deg) rotateX(-58deg)',
                         transformOrigin: '0 0',
@@ -833,11 +833,11 @@ export function TechnicalDiagram() {
                           className={`group/label cursor-pointer whitespace-nowrap border px-3 py-1.5 backdrop-blur-md transition-all duration-300 ${
                             isActive
                               ? 'border-[#C5A059] bg-[#0A1B54] text-white shadow-[0_4px_16px_rgba(10,27,84,0.15)]'
-                              : 'border-[#0A1B54]/15 bg-white text-[#0A1B54] hover:border-[#C5A059] hover:bg-[#F9F9F8]'
+                              : 'border-[#0A1B54]/25 bg-white text-[#0A1B54] hover:border-[#C5A059] hover:bg-[#F9F9F8] shadow-2xs'
                           }`}
                         >
                           <div className="flex items-center gap-2">
-                            <span className="font-mono text-[10px] font-bold text-[#C5A059]">
+                            <span className="font-mono text-[10px] font-bold text-[#9E7A32]">
                               {layer.num}
                             </span>
                             <span
@@ -847,7 +847,7 @@ export function TechnicalDiagram() {
                             >
                               {layer.shortName}
                             </span>
-                            <span className="font-mono text-[9px] uppercase tracking-wider text-[#C5A059] border-l border-[#0A1B54]/15 pl-1.5 font-medium">
+                            <span className="font-mono text-[9px] uppercase tracking-wider text-[#9E7A32] border-l border-[#0A1B54]/15 pl-1.5 font-medium">
                               {layer.thickness}
                             </span>
                           </div>
@@ -859,6 +859,34 @@ export function TechnicalDiagram() {
               })}
             </motion.div>
           </div>
+        </div>
+
+        {/* ── MOBILE ACCESSIBLE LAYER TAGS (NO OVERLAP, HIGH CONTRAST WCAG AA) ── */}
+        <div className="md:hidden absolute right-3 top-6 bottom-6 flex flex-col justify-around z-30 pointer-events-auto">
+          {TECHNICAL_LAYERS.map((layer) => {
+            const isChipActive = layer.id === activeLayerId
+            return (
+              <button
+                key={layer.id}
+                type="button"
+                onClick={() => setActiveLayerId(layer.id)}
+                className={`text-left border px-2.5 py-1.5 transition-all shadow-sm ${
+                  isChipActive
+                    ? 'border-[#C5A059] bg-[#0A1B54] text-white shadow-md'
+                    : 'border-[#0A1B54]/25 bg-white text-[#0A1B54] hover:border-[#C5A059]'
+                }`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className={`font-mono text-[10px] font-bold ${isChipActive ? 'text-[#C5A059]' : 'text-[#9E7A32]'}`}>
+                    {layer.num}
+                  </span>
+                  <span className="font-body text-2xs font-semibold">
+                    {layer.shortName}
+                  </span>
+                </div>
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -954,7 +982,7 @@ export function TechnicalDiagram() {
 
         {/* Industrial Certification Footer */}
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-between border-t border-[#0A1B54]/10 pt-4 text-2xs font-body text-[#0A1B54]/50 gap-2">
-          <span>Garantía biomecánica certificada por 10 a 15 años • ISO 9001</span>
+          <span>Garantía oficial directa de fábrica según ficha técnica</span>
           <span className="text-[#C5A059] font-medium">
             Manufacturado en planta industrial Oasis — Bogotá D.C.
           </span>

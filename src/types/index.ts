@@ -26,7 +26,10 @@ export interface Product {
   imageUrl: string
   imageGallery: string[]
   technicalDiagramUrl?: string
-  firmness?: 'Suave' | 'Medio' | 'Firme'
+  firmnessImage?: string
+  height?: string
+  warranty?: string
+  firmness?: 'Suave' | 'Medio' | 'Firme' | string
   variants: ProductVariant[]
   featured: boolean
   createdAt: string
@@ -50,6 +53,7 @@ export interface CartItem {
   price: number
   quantity: number
   imageUrl: string
+  category?: string
   biCategory?: BICategory
 }
 
@@ -76,6 +80,7 @@ export interface CartState {
   setShippingZone: (zone: ShippingZone) => void
   getShippingFee: () => number
   getGrandTotal: () => number
+  isOnlyAccessories: () => boolean
 }
 
 // ─── Business Intelligence Categories ────────────────────────────────────────

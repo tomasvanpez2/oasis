@@ -14,8 +14,8 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
     slug: 'colchon-ortopedico-resortado',
     name: 'Colchón Ortopédico Resortado',
     tagline: 'Mayor rigidez biomecánica y amortiguación reforzada para la columna',
-    description: 'Panel Bonell 5 vueltas reforzado con láminas de Cazata prensada D120 de alta firmeza y Espuma Rosada D26. Altura: 28 cm. Firmeza media-alta.',
-    longDescription: 'Panel Bonell 5 vueltas reforzado con láminas de Cazata prensada D120 de alta firmeza y Espuma Rosada D26. Altura: 28 cm. Firmeza media-alta.',
+    description: 'Panel Bonell 5 vueltas con 2 láminas de Algodón Laminado de 5 mm y 2 láminas de Cazata prensada D120 de 2.8 cm (sin D26). Altura: 25 cm.',
+    longDescription: 'Panel Bonell 5 vueltas con 2 láminas de Algodón Laminado de 5 mm y 2 láminas de Cazata prensada D120 de 2.8 cm (sin D26). Altura: 25 cm.',
     category: 'colchones',
     technology: [
       'Soporte Ortopédico Reforzado',
@@ -23,10 +23,10 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       'Doble Cara Útil'
     ],
     materials: [
-      'Panel Bonell Acero 5 vueltas',
-      'Láminas Cazata D120 (firmeza ortopédica)',
-      'Espuma Rosada D26',
-      'Jacquard Acolchado'
+      'Un panel Resortado tipo Bonell 5 vueltas',
+      '2 láminas de Algodón Laminado de 5 mm',
+      '2 láminas de Cazata D120 de 2.8 cm',
+      'Jacquard doble acolchado'
     ],
     imageUrl: '/images/products/colchon-ortopedico-resortado/ambientada.webp',
     imageGallery: [
@@ -35,7 +35,9 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       '/images/products/colchon-ortopedico-resortado/lado.webp',
       '/images/products/colchon-ortopedico-resortado/detalle.webp'
     ],
-    firmness: 'Firme',
+    firmnessImage: '/images/products/colchon-ortopedico-resortado/firmeza.webp',
+    height: '25 cm',
+    warranty: '6 Años',
     variants: [
       { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 770000, stock: 30 },
       { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 770000, stock: 30 },
@@ -43,8 +45,8 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       { size: 'Doble (140×190)', dimensions: '140 × 190 cm', price: 930000, stock: 30 },
       { size: 'Queen (160×190)', dimensions: '160 × 190 cm', price: 1135000, stock: 20 },
       { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 1340000, stock: 15 },
-      { size: 'Tipo Libro Doble (140×190)', dimensions: '140 × 190 cm (Plegable)', price: 1335000, stock: 10 },
-      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 1540000, stock: 10 }
+      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 1335000, stock: 10 },
+      { size: 'Tipo Libro King (200×200)', dimensions: '200 × 200 cm (Plegable)', price: 1540000, stock: 10 }
     ],
     featured: true,
     createdAt: '2026-11-08T00:00:00.000Z',
@@ -55,8 +57,8 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
     slug: 'colchon-ortopedico-clinico',
     name: 'Colchón Ortopédico Clínico',
     tagline: 'Máxima firmeza recomendada por especialistas para cuidado postural',
-    description: 'Núcleo macizo de Cazata prensada D120 de 10 cm con doble cara en Espuma Rosada D26 de 5 cm. Firmeza alta sin resortes para alivio de espalda.',
-    longDescription: 'Núcleo macizo de Cazata prensada D120 de 10 cm con doble cara en Espuma Rosada D26 de 5 cm. Firmeza alta sin resortes para alivio de espalda.',
+    description: 'Núcleo macizo de Cazata D120 de 10 cm con 2 láminas de Espuma Rosada D26 de 5 cm. Firmeza ortopédica clínica sin resortes. Altura: 24 cm.',
+    longDescription: 'Núcleo macizo de Cazata D120 de 10 cm con 2 láminas de Espuma Rosada D26 de 5 cm. Firmeza ortopédica clínica sin resortes. Altura: 24 cm.',
     category: 'colchones',
     technology: [
       'Núcleo Clínico D120',
@@ -64,8 +66,8 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       'Tratamiento Hipoalergénico'
     ],
     materials: [
-      'Cazata Prensada D120 (10 cm)',
-      'Doble lámina Espuma Rosada D26 (5 cm c/u)',
+      'Una lámina de Cazata D120 de 10 cm',
+      '2 láminas de Espuma Rosada D26 de 5 cm',
       'Jacquard doble acolchado con algodón'
     ],
     imageUrl: '/images/products/colchon-ortopedico-clinico/ambientada.webp',
@@ -75,16 +77,16 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       '/images/products/colchon-ortopedico-clinico/lado.webp',
       '/images/products/colchon-ortopedico-clinico/detalle.webp'
     ],
-    firmness: 'Firme',
+    firmnessImage: '/images/products/colchon-ortopedico-clinico/firmeza.webp',
+    height: '24 cm',
+    warranty: '5 Años',
     variants: [
       { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 940000, stock: 25 },
       { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 940000, stock: 25 },
       { size: 'Semidoble (120×190)', dimensions: '120 × 190 cm', price: 990000, stock: 25 },
       { size: 'Doble (140×190)', dimensions: '140 × 190 cm', price: 1100000, stock: 25 },
       { size: 'Queen (160×190)', dimensions: '160 × 190 cm', price: 1300000, stock: 20 },
-      { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 1560000, stock: 15 },
-      { size: 'Tipo Libro Doble (140×190)', dimensions: '140 × 190 cm (Plegable)', price: 1500000, stock: 8 },
-      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 1760000, stock: 8 }
+      { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 1560000, stock: 15 }
     ],
     featured: true,
     createdAt: '2026-11-08T00:00:00.000Z',
@@ -95,18 +97,21 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
     slug: 'colchon-pillow-top-original',
     name: 'Colchón Pillow Top Original',
     tagline: 'Confort de lujo hotelero con doble Pillow Top en espuma Penta ultra-suave',
-    description: 'Estructura resortada de 6 vueltas tipo Calibre 13 con láminas de soporte ortopédico Cazata D120 y doble capa Pillow Top en Espuma Penta de alta resiliencia. Altura: 36 cm.',
-    longDescription: 'Estructura resortada de 6 vueltas tipo Calibre 13 con láminas de soporte ortopédico Cazata D120 y doble capa Pillow Top en Espuma Penta de alta resiliencia. Altura: 36 cm.',
+    description: 'Panel Bonell 5 vueltas sin politubos, con capas aislantes en Algodón Laminado, Politex, Cazata D120 y Espuma Penta D26. Altura: 35 cm.',
+    longDescription: 'Panel Bonell 5 vueltas sin politubos, con capas aislantes en Algodón Laminado, Politex, Cazata D120 y Espuma Penta D26. Altura: 35 cm.',
     category: 'colchones',
     technology: [
       'Doble Pillow Top Integrado',
-      'Resorte Calibre 13 Reforzado',
+      'Panel Bonell 5 Vueltas (Sin Politubos)',
       'Termorregulación Activa'
     ],
     materials: [
-      'Resorte 6 vueltas Calibre 13 Fumbolón',
-      'Láminas Cazata D120',
-      'Espuma Penta D26',
+      'Un panel Resortado tipo Bonell 5 vueltas',
+      '2 láminas de Algodón Laminado de 5 mm',
+      '2 láminas de Politex de 5 mm',
+      '2 láminas de Espuma Rosada D26 de 1.5 cm',
+      '2 láminas de Cazata D120 de 2.8 cm',
+      '2 láminas de Espuma Penta D26 de 3 cm',
       'Jacquard Doble Acolchado'
     ],
     imageUrl: '/images/products/colchon-pillow-top-original/ambientada.webp',
@@ -116,7 +121,9 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       '/images/products/colchon-pillow-top-original/lado.webp',
       '/images/products/colchon-pillow-top-original/detalle.webp'
     ],
-    firmness: 'Medio',
+    firmnessImage: '/images/products/colchon-pillow-top-original/firmeza.webp',
+    height: '35 cm',
+    warranty: '6 Años',
     variants: [
       { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 1350000, stock: 15 },
       { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 1350000, stock: 15 },
@@ -124,8 +131,8 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       { size: 'Doble (140×190)', dimensions: '140 × 190 cm', price: 1560000, stock: 15 },
       { size: 'Queen (160×190)', dimensions: '160 × 190 cm', price: 1770000, stock: 12 },
       { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 2185000, stock: 10 },
-      { size: 'Tipo Libro Doble (140×190)', dimensions: '140 × 190 cm (Plegable)', price: 2020000, stock: 6 },
-      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 2435000, stock: 6 }
+      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 2020000, stock: 6 },
+      { size: 'Tipo Libro King (200×200)', dimensions: '200 × 200 cm (Plegable)', price: 2435000, stock: 6 }
     ],
     featured: true,
     createdAt: '2026-11-08T00:00:00.000Z',
@@ -136,8 +143,8 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
     slug: 'colchon-pillow-top-pocket-resortes-independientes',
     name: 'Colchón Pillow Top Pocket Resortes Independientes',
     tagline: 'Cero transferencia de movimiento con resortes ensacados individuales y 42 cm de altura',
-    description: 'El buque insignia de Oasis. Panel de resortes Pocket individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.',
-    longDescription: 'El buque insignia de Oasis. Panel de resortes Pocket individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.',
+    description: 'El buque insignia de Oasis. Panel Pocket de resortes individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.',
+    longDescription: 'El buque insignia de Oasis. Panel Pocket de resortes individuales con marco de acero, láminas de Cazata D120, Espuma Penta D26 y doble Pillow Top de máxima amortiguación. Altura: 42 cm.',
     category: 'colchones',
     technology: [
       'Zero Transfer Pocket Springs',
@@ -145,10 +152,13 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       'Doble Pillow Top 42cm'
     ],
     materials: [
-      'Resortes Pocket Ensacados Independientes',
-      'Marco de Acero Perimetral',
-      'Láminas Cazata D120 + Penta D26',
-      'Jacquard de lujo 400g'
+      'Un panel Resortado Pocket con marco de acero',
+      '2 láminas de Algodón Laminado de 5 mm',
+      '2 láminas de Politex de 5 mm',
+      '2 láminas de Espuma Rosada D26 de 1.5 cm',
+      '2 láminas de Cazata D120 de 2.8 cm',
+      '2 láminas de Espuma Penta D26 de 3 cm',
+      'Jacquard doble acolchado'
     ],
     imageUrl: '/images/products/colchon-pillow-top-pocket-resortes-independientes/ambientada.webp',
     imageGallery: [
@@ -157,7 +167,9 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       '/images/products/colchon-pillow-top-pocket-resortes-independientes/lado.webp',
       '/images/products/colchon-pillow-top-pocket-resortes-independientes/detalle.webp'
     ],
-    firmness: 'Medio',
+    firmnessImage: '/images/products/colchon-pillow-top-pocket-resortes-independientes/firmeza.webp',
+    height: '42 cm',
+    warranty: '8 Años',
     variants: [
       { size: 'Semisencillo (90×190)', dimensions: '90 × 190 cm', price: 1560000, stock: 15 },
       { size: 'Sencillo (100×190)', dimensions: '100 × 190 cm', price: 1560000, stock: 15 },
@@ -165,8 +177,8 @@ const INITIAL_FEATURED_PRODUCTS: Product[] = [
       { size: 'Doble (140×190)', dimensions: '140 × 190 cm', price: 1870000, stock: 15 },
       { size: 'Queen (160×190)', dimensions: '160 × 190 cm', price: 2185000, stock: 12 },
       { size: 'King (200×200)', dimensions: '200 × 200 cm', price: 2705000, stock: 8 },
-      { size: 'Tipo Libro Doble (140×190)', dimensions: '140 × 190 cm (Plegable)', price: 2385000, stock: 5 },
-      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 3005000, stock: 5 }
+      { size: 'Tipo Libro Queen (160×190)', dimensions: '160 × 190 cm (Plegable)', price: 2385000, stock: 5 },
+      { size: 'Tipo Libro King (200×200)', dimensions: '200 × 200 cm (Plegable)', price: 3005000, stock: 5 }
     ],
     featured: true,
     createdAt: '2026-11-08T00:00:00.000Z',
@@ -209,7 +221,7 @@ export function FeaturedProducts() {
             Modelos Biomecánicos Destacados.
           </h2>
           <p className="mt-2 font-body text-xs sm:text-sm text-[#0A1B54]/70 max-w-lg">
-            Modelos confeccionados en nuestra planta de Bogotá con certificación de fatiga y garantía directa de 10 a 15 años.
+            Modelos confeccionados en nuestra planta de Bogotá con respaldo y garantía directa de fábrica según ficha técnica oficial.
           </p>
         </div>
         <Link
@@ -224,11 +236,6 @@ export function FeaturedProducts() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
         {products.map((product, i) => {
           const minPrice = Math.min(...product.variants.map((v) => v.price))
-          const firmness =
-            product.firmness ||
-            (product.slug.includes('clinico') || product.slug.includes('resortado')
-              ? 'Firme'
-              : 'Medio')
           return (
             <motion.article
               key={product.id}
@@ -250,9 +257,9 @@ export function FeaturedProducts() {
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     {...(i < 2 ? {} : { loading: 'lazy' as const })}
                   />
-                  <div className="absolute left-3 top-3 border border-[#C5A059] bg-[#0A1B54] px-2.5 py-1 backdrop-blur-sm">
+                  <div className="absolute left-3 top-3 border border-[#C5A059] bg-[#0A1B54] px-2.5 py-1 backdrop-blur-sm shadow-sm">
                     <span className="font-body text-2xs uppercase tracking-wider text-white font-semibold">
-                      Firmeza: {firmness}
+                      Garantía: {product.warranty || '6 Años'}
                     </span>
                   </div>
                   <div className="absolute right-3 top-3 border border-[#0A1B54]/15 bg-white/90 px-2.5 py-1 backdrop-blur-sm">
@@ -272,6 +279,27 @@ export function FeaturedProducts() {
                   </p>
                 </div>
 
+                {/* Gráfica Oficial de Firmeza (Asset estático de ficha técnica, sin traducción a texto) */}
+                <div className="mt-4 flex items-center justify-between border-t border-[#0A1B54]/10 pt-3">
+                  <div>
+                    <span className="font-body text-2xs uppercase tracking-wider text-[#0A1B54]/60 font-semibold block">
+                      Firmeza Oficial
+                    </span>
+                    <span className="font-mono text-2xs text-[#C5A059]">
+                      Altura: {product.height || '25 cm'}
+                    </span>
+                  </div>
+                  <div className="relative aspect-[319/176] h-10 w-24 overflow-hidden">
+                    <Image
+                      src={product.firmnessImage || `/images/products/${product.slug}/firmeza.webp`}
+                      alt={`Gráfica de firmeza oficial — ${product.name}`}
+                      fill
+                      className="object-contain"
+                      sizes="96px"
+                    />
+                  </div>
+                </div>
+
                 {/* Tech Badges */}
                 <div className="mt-4 flex flex-wrap gap-2">
                   {product.technology.slice(0, 3).map((tech) => (
@@ -288,9 +316,8 @@ export function FeaturedProducts() {
               {/* Price & Action */}
               <div className="mt-8 flex items-center justify-between border-t border-[#0A1B54]/10 pt-6">
                 <div>
-                  <p className="font-body text-2xs uppercase tracking-wider text-[#0A1B54]/50">Precio de fábrica desde</p>
                   <p className="font-display text-2xl font-normal text-[#0A1B54]">
-                    {formatCOP(minPrice)}
+                    Desde {formatCOP(minPrice)}
                   </p>
                 </div>
                 <Link

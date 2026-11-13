@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useCartStore } from '@/store/cartStore'
 import { CheckoutForm } from './CheckoutForm'
-import { CartSummary } from './CartSummary'
+import { OrderSummary } from './OrderSummary'
 import { SuccessReceipt } from './SuccessReceipt'
 import Link from 'next/link'
 
@@ -103,7 +103,7 @@ function CheckoutContent() {
 
         {/* Summary */}
         <div className="px-8 py-12 lg:px-10">
-          <CartSummary selectedZoneId={selectedShippingZoneId} />
+          <OrderSummary selectedZoneId={selectedShippingZoneId} />
         </div>
       </div>
     </div>
